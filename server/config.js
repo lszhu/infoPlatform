@@ -25,14 +25,17 @@ var builtinAccount = {
 var dbServer = {
     address: 'localhost:',        // 数据库服务器地址
     port: '27017',                // 数据库服务端口
-    dbName: 'messagePostSys'           // 数据库名称
+    dbName: 'messagePostSys'      // 数据库名称
 };
 
 // 此处设定连接mongodb数据库的参数
 var dbParameters = {
-    user: 'messagePostSys',            // 数据库连接用户名称
+    user: 'website',               // 数据库连接用户名称
     pass: 'messagePostSys',        // 数据库连接用户密码
-    server: {socketOptions: {keepAlive: 1}}
+    server: {
+        socketOptions: {keepAlive: 1},
+        auto_reconnect: true
+    }
 };
 
 // 对查询数据库结果数目作出限制，以保证系统性能，避免假死

@@ -13,11 +13,13 @@ function connectDb() {
 
     mongoose.connection.on('error', function(err) {
         console.error('connection error:', err);
+        mongoose.disconnect();
+        //mongoose.connection.close();
         // if connection failed, retry after 10s
-        setTimeout(function() {
-            mongoose.connect('mongodb://' + db.server.address + ':' +
-                db.server.port + '/' + db.server.dbName, db.parameter);
-        }, 10000);
+        //setTimeout(function() {
+        //    mongoose.connect('mongodb://' + db.server.address + ':' +
+        //        db.server.port + '/' + db.server.dbName, db.parameter);
+        //}, 10000);
     });
     mongoose.connection.once('open', function() {
         console.log('database connected.');
@@ -124,42 +126,6 @@ function createModels() {
         description: String,
         groups: [String],
         rights: String
-        /*
-        rights: {
-            system: {
-                log: Boolean,
-                account: Boolean,
-                group: Boolean
-            },
-            projects: Boolean,
-            subjects: Boolean,
-            date: {
-                begin: Boolean,
-                end: Boolean
-            },
-            figures: {
-                readable: Boolean,
-                removable: Boolean
-            },
-            voucher: Boolean,
-            contract: Boolean,
-            archive: {
-                figure: Boolean,
-                cheque: Boolean,
-                contract: Boolean,
-                file: Boolean,
-                digital: Boolean,
-                original: Boolean
-            },
-            destroy: Boolean,
-            approval: Boolean,
-            lending: {
-                voucher: Boolean,
-                contract: Boolean,
-                file: Boolean
-            }
-        }
-         */
     });
 
     var groupSchema = new mongoose.Schema({
