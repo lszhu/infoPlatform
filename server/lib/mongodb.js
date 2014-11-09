@@ -35,87 +35,6 @@ function connectDb() {
 
 // create collection models
 function createModels() {
-    var archiveSchema = new mongoose.Schema({
-        id: String,
-        name: String,
-        category: String,
-        description: String,
-        keys: String,
-        page: Number,
-        secret: String,
-        expiration: Number,
-        path: String,
-        store: Number,
-        date: Date,
-        destroyed: Boolean,
-        lending: {
-            borrower: String,
-            time: Date
-        },
-        editor: String
-    });
-
-    var storeSchema = new mongoose.Schema({
-        id: Number,
-        room: {
-            id: Number,
-            name: String
-        },
-        cabinet: {
-            id: Number,
-            name: String
-        },
-        folder: {
-            id: Number,
-            name: String
-        },
-        description: String,
-        date: Date,
-        operator: String
-    });
-
-    var projectSchema = new mongoose.Schema({
-        id: String,
-        name: String,
-        description: String,
-        parent: String,
-        children: [String],
-        contract: [{
-            id: String,
-            name: String,
-            path: String,
-            store: String,
-            date: Date,
-            destroyed: Boolean
-        }],
-        file: [{
-            id: String,
-            name: String,
-            path: String,
-            store: String,
-            date: Date,
-            destroyed: Boolean
-        }]
-    });
-
-    var figureSchema = new mongoose.Schema({
-        id: String,
-        project: String,
-        date: Date,
-        voucher: {
-            id: String,
-            path: String,
-            store: String
-        },
-        subjectId: String,
-        subjectName: String,
-        description: String,
-        debit: Number,
-        credit: Number,
-        direction: String,
-        balance: Number,
-        deleted: Boolean
-    });
 
     var logSchema = new mongoose.Schema({
         time: Date,
@@ -175,24 +94,10 @@ function createModels() {
         }
     });
 
-    var lendingSchema = new mongoose.Schema({
-        time: Date,
-        borrower: String,
-        target: String,
-        reason: String,
-        retrieve: Date,
-        comment: String
-    });
-
     return {
-        archive: mongoose.model('archive', archiveSchema),
-        store: mongoose.model('store', storeSchema),
-        project: mongoose.model('project', projectSchema),
-        figure: mongoose.model('figure', figureSchema),
         log: mongoose.model('log', logSchema),
         account: mongoose.model('account', accountSchema),
-        group: mongoose.model('group', groupSchema),
-        lending: mongoose.model('lending', lendingSchema)
+        group: mongoose.model('group', groupSchema)
     };
 }
 
