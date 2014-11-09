@@ -34,7 +34,7 @@ var dbParameters = {
     pass: 'messagePostSys',        // 数据库连接用户密码
     server: {
         socketOptions: {keepAlive: 1},
-        auto_reconnect: true
+        auto_reconnect: false      // 请不要修改此参数
     }
 };
 

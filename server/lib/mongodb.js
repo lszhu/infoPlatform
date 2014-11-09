@@ -8,22 +8,29 @@ var maxReturnedDoc = require('../config').queryLimit;
 
 // initiate a connection to mongodb
 function connectDb() {
+    var reconnect;
     mongoose.connect('mongodb://' + db.server.address + ':' +
-        db.server.port + '/' + db.server.dbName, db.parameter);
+    db.server.port + '/' + db.server.dbName, db.parameter);
 
     mongoose.connection.on('error', function(err) {
         console.error('connection error:', err);
         mongoose.disconnect();
-        //mongoose.connection.close();
-        // if connection failed, retry after 10s
-        //setTimeout(function() {
-        //    mongoose.connect('mongodb://' + db.server.address + ':' +
-        //        db.server.port + '/' + db.server.dbName, db.parameter);
-        //}, 10000);
     });
-    mongoose.connection.once('open', function() {
+    mongoose.connection.on('connected', function() {
+        clearTimeout(reconnect);
         console.log('database connected.');
     });
+    mongoose.connection.on('disconnected', function() {
+        // if connection failed, retry after 10s
+        reconnect = setTimeout(function() {
+            mongoose.connect('mongodb://' + db.server.address + ':' +
+            db.server.port + '/' + db.server.dbName, db.parameter);
+        }, 10000);
+        console.log('database disconnected.');
+    });
+    //mongoose.connection.once('open', function() {
+    //    console.log('database connection opened.');
+    //});
 }
 
 // create collection models
