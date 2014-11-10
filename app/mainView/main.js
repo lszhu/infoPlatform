@@ -1,14 +1,14 @@
 'use strict';
 
-angular.module('myApp.view1', ['ngRoute'])
+angular.module('myApp.home', ['ngRoute'])
 
     .config(['$routeProvider', function($routeProvider) {
         $routeProvider
-            .when('/mainView/view1', {
+            .when('/main/view1', {
                 templateUrl: 'mainView/view1.html',
                 controller: 'View1Ctrl'
             })
-            .when('/mainView/home', {
+            .when('/main/home', {
                 templateUrl: 'mainView/home.html',
                 controller: 'View1Ctrl'
             });

@@ -1,0 +1,71 @@
+<div class="container">
+  <h3 class="page-header">企业信息查询</h3>
+
+  <h4>查询条件：</h4>
+  <form class="form-horizontal" name="queryCondition" role="form" ng-submit="queryVoucher()">
+    <div class="form-group col-sm-12">
+      <label for="voucherId" class="col-sm-2 control-label">单位名称</label>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" name="voucherId" ng-model="voucherId" id="voucherId" placeholder="输入凭证号数">
+      </div>
+      <label for="project" class="col-sm-2 control-label">单位地址</label>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" name="project" ng-model="project" id="project" placeholder="输入项目名称">
+      </div>
+    </div>
+    <div class="form-group col-sm-12">
+      <label for="subjectName" class="col-sm-2 control-label">单位类型</label>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" name="subjectName" ng-model="subjectName" id="subjectName" placeholder="输入科目名称">
+      </div>
+      <label for="description" class="col-sm-2 control-label">单位规模</label>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" name="description" ng-model="description" id="description" placeholder="输入摘要说明">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-offset-4 col-sm-3">
+        <button type="submit" ng-disabled="buttonDisabled()" class="btn btn-primary btn-block">&nbsp;&nbsp;查&nbsp;&nbsp;询&nbsp;&nbsp;</button>
+      </div>
+    </div>
+  </form>
+
+  <div class="col-md-8 col-md-offset-2" ng-show="message">
+    <div ng-class="msgClass" class="alert text-center" role="alert">
+      <strong>{{message}}</strong>
+    </div>
+  </div>
+
+  <table class="table table-striped table-bordered" id="figures">
+    <thead>
+    <tr>
+      <th>序号</th>
+      <th>单位名称</th>
+      <th>联系电话</th>
+      <th>单位地址</th>
+      <th>单位类型</th>
+      <th>单位规模</th>
+      <th>参保情况</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="figure in figures | filter: globalFilterKey">
+      <td>{{$index + 1}}</td>
+      <td>{{figure.project}}</td>
+      <td>{{toLocalDate(figure.date)}}</td>
+      <td ng-click="showVoucher($index)" ng-class="hasVoucher($index) ? 'pointer' : ''">
+        <span ng-show="hasVoucher($index)" class="glyphicon glyphicon-paperclip"></span>
+        {{figure.voucher.id}}</td>
+      <td>{{figure.subjectId}}</td>
+      <td>{{figure.subjectName}}</td>
+      <td>{{figure.description}}</td>
+      <td>{{figure.debit | currency:'¥'}}</td>
+      <td>{{figure.credit | currency:'¥'}}</td>
+      <td>{{figure.direction}}</td>
+      <td>{{figure.balance | currency:'¥'}}</td>
+    </tr>
+    </tbody>
+  </table>
+
+</div>
