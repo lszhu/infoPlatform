@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 var debug = require('debug')('expressTest');
-var app = require('../app');
+var app = require('../server');
 
 // get service TCP port from configuration
 var port = require('../config').port;
