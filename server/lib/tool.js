@@ -1,14 +1,9 @@
 var debug = require('debug')('tool');
 var path = require('path');
 var util = require('util');
-//var excel = require('j');
-var xlsx = require('xlsx');
 var fs = require('fs');
 
 var refPath = require('../config').path;
-
-var dictionary = readJsonFile(
-    path.join(__dirname, '../../staticData/dictionary.json'));
 
 
 // 解析读入并解析JSON文件

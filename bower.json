@@ -6,8 +6,10 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "bootstrap": "3.3.x",
     "jquery": "1.11.x",
+    "bootstrap": "3.3.x",
+    "fontawesome": "4.2.x",
+    "holderjs": "2.4.x",
     "angular": "1.2.x",
     "angular-route": "1.2.x",
     "angular-loader": "1.2.x",

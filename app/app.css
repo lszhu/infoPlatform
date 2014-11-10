@@ -1,38 +1,221 @@
-/* app css stylesheet */
+/* GLOBAL STYLES
+-------------------------------------------------- */
+/* Padding below the footer and lighter body text */
+html {
+  position: relative;
+  min-height: 100%;
+}
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  color: #5a5a5a;
+  margin-bottom: 200px;
 }
 
 a {
-  color: #00B7FF;
+  cursor: pointer;
+  color: black;
 }
 
-.menu {
-  list-style: none;
-  border-bottom: 0.1em solid black;
-  margin-bottom: 2em;
-  padding: 0 0 0.5em;
+/* CUSTOMIZE THE NAVBAR
+-------------------------------------------------- */
+
+.navbar {
+  background: #cde;
+  border-bottom: grey solid 1px;
 }
 
-.menu:before {
-  content: "[";
+.nav.navbar-nav li.active {
+  background: lightgray;
 }
 
-.menu:after {
-  content: "]";
+.nav.navbar-nav li > a {
+  font-weight: bold;
+  color: midnightblue;
+  cursor: pointer;
 }
 
-.menu > li {
-  display: inline;
+/* Special class on .container surrounding .navbar, used for positioning it into place. */
+.navbar-wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 20;
 }
 
-.menu > li:before {
-  content: "|";
-  padding-right: 0.3em;
+/* Flip around the padding for proper display in narrow viewports */
+.navbar-wrapper > .container {
+  padding-right: 0;
+  padding-left: 0;
+}
+.navbar-wrapper .navbar {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+.navbar-wrapper .navbar .container {
+  width: auto;
 }
 
-.menu > li:nth-child(1):before {
-  content: "";
-  padding: 0;
+/* Sticky footer styles
+-------------------------------------------------- */
+.footer {
+  position: absolute;
+  bottom: 0;
+  padding: 20px;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 200px;
+  background-color: cadetblue;
+  color: black;
+}
+
+/* CUSTOMIZE THE CAROUSEL
+-------------------------------------------------- */
+
+/* Carousel base class */
+.carousel {
+  height: 400px;
+  margin-bottom: 20px;
+}
+/* Since positioning the image, we need to help out the caption */
+.carousel-caption {
+  z-index: 10;
+}
+
+.carousel-caption h1 {
+  margin: 20px;
+  font-size: 2.5em;
+}
+
+/* Declare heights because of positioning of img element */
+.carousel .item {
+  height: 400px;
+  background-color: #777;
+}
+.carousel-inner > .item > img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  height: 400px;
+}
+
+
+/* MARKETING CONTENT
+-------------------------------------------------- */
+
+/* Center align the text within the three columns below the carousel */
+.marketing .col-lg-4 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+.marketing h2 {
+  font-weight: normal;
+}
+.marketing .col-lg-4 p {
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+
+/* Featurettes
+------------------------- */
+
+.featurette-divider {
+  margin: 80px 0; /* Space out the Bootstrap <hr> more */
+}
+
+/* Thin out the marketing headings */
+.featurette-heading {
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+
+/* RESPONSIVE CSS
+-------------------------------------------------- */
+
+@media (min-width: 768px) {
+  /* Navbar positioning foo */
+  .navbar-wrapper {
+    margin-top: 20px;
+  }
+  .navbar-wrapper .container {
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+  .navbar-wrapper .navbar {
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  /* The navbar becomes detached from the top, so we round the corners */
+  .navbar-wrapper .navbar {
+    border-radius: 4px;
+  }
+
+  /* Bump up size of carousel content */
+  .carousel-caption h1 {
+    font-size: 3em;
+  }
+  .carousel-caption p {
+    margin-bottom: 20px;
+    font-size: 21px;
+    line-height: 1.4;
+  }
+
+  .featurette-heading {
+    font-size: 50px;
+  }
+}
+
+@media (min-width: 992px) {
+  .carousel-caption h1 {
+    font-size: 4em;
+  }
+  .featurette-heading {
+    margin-top: 120px;
+  }
+}
+
+/* style used in each sub page
+=========================================================================*/
+
+/* mainView
+-------------------------------------------------------*/
+.veryBig {
+  font-size: 2em;
+  font-weight: bold;
+  color: darkblue;
+  text-align: center;
+}
+
+.login input {
+  height: auto;
+  font-size: 16px;
+  padding: 6px;
+}
+
+.panel-heading {
+  font-size: 1.5em;
+}
+
+.featurette-divider {
+  margin: 80px 0; /* Space out the Bootstrap <hr> more */
+}
+
+/* Thin out the marketing headings */
+.featurette-heading {
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+.related-site {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: black;
+  padding: 10px;
+  background-color: #b2dba1;
+  width: 100%;
 }

@@ -29,8 +29,8 @@ app.use('/users', users);
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
-    res.redirect('/404.html');
-    //res.render('404.html', {});
+    //res.redirect('/404.html');
+    res.sendFile(path.join(__dirname, '../app/404.html'));
     //next(err);
 });
 
