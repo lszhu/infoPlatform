@@ -226,3 +226,9 @@ label.remark {
   font-style: italic;
   font-weight: normal;
 }
+
+/* searchView
+-------------------------------------------------------*/
+.modal-dialog .modal-content {
+  background-color: lightgray;
+}

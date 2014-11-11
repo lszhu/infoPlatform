@@ -64,7 +64,7 @@
                 <li><a href="#">One more separated link</a></li>
               </ul>
             </li>
-            <li><a href="#/logout">查询</a></li>
+            <li><a href="" onclick="$('#searchOption').modal('show')">查询</a></li>
             <li><a href="#/logout">退出</a></li>
           </ul>
         </div>
@@ -73,6 +73,29 @@
 
   </div>
 </div>
+
+<!--  显示选择“搜索招聘信息”还是“应聘信息”的对话框  -->
+<div class="modal fade" id="searchOption">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title text-center"><strong>查询内容选择</strong></h4>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="col-sm-3 col-sm-offset-1">
+            <a type="button" class="btn btn-lg btn-primary" onclick="$('#searchOption').modal('hide'); href='#/search/enterprise';">招聘信息</a>
+          </div>
+          <div class="col-sm-3">
+            <a type="button" class="btn btn-lg btn-primary" onclick="$('#searchOption').modal('hide'); href='#/search/worker';">求职信息</a>
+          </div>
+        </div>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 
 <!-- Carousel
    ================================================== -->
