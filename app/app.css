@@ -219,3 +219,10 @@ a {
   background-color: #b2dba1;
   width: 100%;
 }
+
+/* messageView
+------------------------------------------------------*/
+label.remark {
+  font-style: italic;
+  font-weight: normal;
+}

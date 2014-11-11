@@ -1,0 +1,86 @@
+<div class="container">
+  <h3 class="page-header">发布求职应聘信息</h3>
+
+  <form class="form-horizontal" name="queryCondition" role="form" ng-submit="queryVoucher()">
+    <div class="form-group col-sm-12">
+      <label for="voucherId" class="col-sm-2 control-label">姓名</label>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" name="voucherId" ng-model="voucherId" id="voucherId" placeholder="输入单位名称全称">
+      </div>
+      <label class="control-label remark"><strong>必填，</strong>不能用简称，必须与身份证一致，否则无法通过省核</label>
+    </div>
+    <div class="form-group col-sm-12">
+      <label for="code" class="col-sm-2 control-label">身份证号</label>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" name="code" ng-model="code" id="code" placeholder="输入身份证号">
+      </div>
+      <label class="control-label remark"><strong>必填，</strong>必须正确输入且与上面的姓名对应，否则无法通过省核</label>
+    </div>
+    <div class="form-group col-sm-12">
+      <label for="phone" class="col-sm-2 control-label">联系电话</label>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" name="phone" ng-model="phone" id="phone" placeholder="可输入多个电话">
+      </div>
+      <label class="control-label remark"><strong>必填，</strong>请务必填写正确，如有多个号码，可用逗号或空格分开</label>
+    </div>
+    <div class="form-group col-sm-12">
+      <label for="contact" class="col-sm-2 control-label">其他联络方式</label>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" name="contact" ng-model="contact" id="contact" placeholder="输入各类联系方式">
+      </div>
+      <label class="control-label remark">QQ号或邮箱等联系方式，联系方式间用逗号或空格分开</label>
+    </div>
+    <div class="form-group col-sm-12">
+      <label for="education" class="col-sm-2 control-label">学历</label>
+      <div class="col-sm-4">
+        <select class="form-control" ng-model="education" id="education">
+          <option>本科及以上</option>
+          <option>大专</option>
+          <option>中专中技</option>
+          <option>高中</option>
+          <option>初中</option>
+          <option>小学及以下</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group col-sm-12">
+      <label for="seniority" class="col-sm-2 control-label">工作年限</label>
+      <div class="col-sm-4">
+        <select class="form-control" ng-model="seniority" id="seniority">
+          <option>一年及以下</option>
+          <option>二到五年</option>
+          <option>六到九年</option>
+          <option>十年以上</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group col-sm-12">
+      <label for="description" class="col-sm-2 control-label">工作经验</label>
+      <div class="col-sm-7">
+        <textarea class="form-control" name="description" ng-model="description" id="description" rows="5" placeholder="介绍自己的工作经验和技能长处"></textarea>
+      </div>
+    </div>
+    <div class="form-group col-sm-12">
+      <label for="description" class="col-sm-2 control-label">工资期望</label>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" name="description" ng-model="salary" id="salary" placeholder="输入大约">
+      </div>
+      <label class="control-label remark">请填写阿拉伯数字，不填表示面议</label>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-offset-4 col-sm-3">
+        <button type="submit" ng-disabled="buttonDisabled()" class="btn btn-primary btn-block">发&nbsp;&nbsp;布</button>
+      </div>
+    </div>
+  </form>
+
+  <div class="col-md-8 col-md-offset-2" ng-show="message">
+    <div ng-class="msgClass" class="alert text-center" role="alert">
+      <strong>{{message}}</strong>
+    </div>
+  </div>
+
+  </table>
+
+</div>

@@ -8,8 +8,8 @@ angular.module('myApp.search', ['ngRoute'])
                 templateUrl: 'searchView/worker.html',
                 controller: 'SearchCtrl'
             })
-            .when('/search/employer', {
-                templateUrl: 'searchView/employer.html',
+            .when('/search/enterprise', {
+                templateUrl: 'searchView/enterprise.html',
                 controller: 'SearchCtrl'
             });
     }])
