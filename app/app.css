@@ -8,6 +8,7 @@ html {
 body {
   color: #5a5a5a;
   margin-bottom: 200px;
+  background-image: url(images/background.jpg);
 }
 
 a {
@@ -227,8 +228,14 @@ label.remark {
   font-weight: normal;
 }
 
-/* searchView
+/* mainView
 -------------------------------------------------------*/
-.modal-dialog .modal-content {
-  background-color: lightgray;
+.modal-dialog .modal-content.search {
+  background-image: url(images/background.jpg);
+  height: 240px;
+}
+
+.modal-dialog .modal-content.type {
+  background-image: url(images/background.jpg);
+  height: 200px;
 }

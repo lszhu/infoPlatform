@@ -7,20 +7,41 @@
 </div>
  -->
 
+<!--  显示选择“发布招聘信息”还是“发布应聘信息”的对话框  -->
+<div class="modal fade" id="messageOption">
+  <div class="modal-dialog">
+    <div class="modal-content type">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title text-center"><strong>发布内容类型选择</strong></h4>
+      </div>
+      <div class="modal-body">
+        <div class="col-sm-12">
+          <div class="col-xs-1 col-xs-offset-0 col-sm-3 col-sm-offset-2">
+            <a type="button" class="btn btn-lg btn-primary" onclick="$('#searchOption').modal('hide'); href='#/message/employer';">招聘信息</a>
+          </div>
+          <div class="col-xs-1 col-xs-offset-5 col-sm-3 col-sm-offset-2">
+            <a type="button" class="btn btn-lg btn-primary" onclick="$('#searchOption').modal('hide'); href='#/message/employee';">求职信息</a>
+          </div>
+        </div>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 <div class="container">
   <!-- Example row of columns -->
   <div class="col-sm-12">
     <div class="col-sm-4">
-      <p><a class="veryBig btn btn-lg" href="#/message/policy" role="button"><i class="fa fa-lightbulb-o"></i> 政策法规 &raquo;</a></p>
+      <p><a class="veryBig" href="#/message/policy"><i class="fa fa-lightbulb-o"></i> 政策法规 &raquo;</a></p>
       <p>在此查阅国家颁布的劳动就业相关政策或归档，让企业或劳动者在符合相关规定前提下，能够尽可能争取到自己的和法权益。</p>
     </div>
     <div class="col-sm-4">
-      <p><a class="veryBig btn btn-lg" href="#/help/guide" role="button"><i class="fa fa-search"></i> 信息查询 &raquo;</a></p>
+      <p><a class="veryBig" href="" onclick="$('#searchOption').modal('show')" role="button"><i class="fa fa-search"></i> 信息查询 &raquo;</a></p>
       <p>个人可以对区域内的企业信息或发布的招聘信息进行分类查询，而企业或有独立法人的机构则可查询区域内的人力资源信息。</p>
      </div>
     <div class="col-sm-4">
-      <p><a class="veryBig btn btn-lg" href="#/help/guide" role="button"><i class="fa fa-comments"></i> 信息发布 &raquo;</a></p>
+      <p><a class="veryBig" href="" onclick="$('#messageOption').modal('show')" role="button"><i class="fa fa-comments"></i> 信息发布 &raquo;</a></p>
       <p>个人可发布求职信息，而企业或其他独立法人机构可以发布招聘信息，本站提供免费的网络媒介平台，推动区内劳动就业服务。</p>
     </div>
   </div>
