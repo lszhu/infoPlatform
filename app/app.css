@@ -230,12 +230,17 @@ label.remark {
 
 /* mainView
 -------------------------------------------------------*/
-.modal-dialog .modal-content.search {
+.modal-dialog .modal-content {
   background-image: url(images/background.jpg);
+}
+.modal-dialog .modal-content.search {
   height: 240px;
 }
 
 .modal-dialog .modal-content.type {
-  background-image: url(images/background.jpg);
   height: 200px;
+}
+
+.modal-dialog .modal-content label{
+  cursor: pointer;
 }

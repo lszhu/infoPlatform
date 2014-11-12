@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html lang="en" ng-app="myApp" class="no-js"> <!--<![endif]-->
+<!--[if lt IE 7]>      <html lang="zh-cn" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="zh-cn" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="zh-cn" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="zh-cn" ng-app="myApp" class="no-js"> <!--<![endif]-->
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -26,7 +26,7 @@
   <script src="bower_components/respond/dest/respond.min.js"></script>
   <![endif]-->
 </head>
-<body>
+<body ng-controller="MainCtrl">
 <!-- NAVBAR
 ================================================== -->
 <div class="navbar-wrapper">
@@ -53,18 +53,11 @@
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
-              <a href="" class="dropdown-toggle" data-toggle="dropdown">区域选择<span class="caret"></span></a>
-              <ul class="dropdown-menu" role="menu">
-                <li><a href="#">Action</a></li>
-                <li><a href="#">Another action</a></li>
-                <li><a href="#">Something else here</a></li>
-                <li class="divider"></li>
-                <li class="dropdown-header">Nav header</li>
-                <li><a href="#">Separated link</a></li>
-                <li><a href="#">One more separated link</a></li>
-              </ul>
+              <a href="" onclick="$('#district').modal('show')" ng-bind="districtName"><span class="caret"></span></a>
             </li>
-            <li><a href="" onclick="$('#searchOption').modal('show')">查询</a></li>
+            <li>
+              <a href="" onclick="$('#searchOption').modal('show')">查询<span class="caret"></span></a>
+            </li>
             <li><a href="#/logout">退出</a></li>
           </ul>
         </div>
@@ -72,6 +65,49 @@
     </nav>
   </div>
 </div>
+
+<!--  显示选择所属行政区的对话框  -->
+<div class="modal fade" id="district">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title text-center"><strong>设定所在区域</strong></h4>
+      </div>
+      <div class="modal-body">
+        <div class="col-sm-12">
+          <div class="col-sm-4">
+            <label ng-click="changeDistrict('..')">
+              <span class="fa fa-mail-reply"></span>
+              <span>&nbsp;返回上级行政区</span>
+              <span class="caret"></span>
+            </label>
+          </div>
+          <div class="col-sm-7">
+            <label ng-click="setDistrict(tmpDistrictId)" onclick="$('#district').modal('hide')">
+              <span class="fa fa-map-marker"></span>
+              <span>&nbsp;{{tmpDistrictName}}</span>
+            </label>
+          </div>
+          <div ng-show="tmpDistrictId.length < 8" class="col-sm-4" ng-repeat="(key, value) in districts[tmpDistrictId]">
+            <label ng-click="changeDistrict(key)">
+              {{value}}
+              <span class="caret"></span>
+            </label>
+          </div>
+          <div ng-hide="tmpDistrictId.length < 8" class="col-sm-4" ng-repeat="(key, value) in districts[tmpDistrictId]">
+            <label ng-click="setDistrict(key)" onclick="$('#district').modal('hide')">
+              <span class="fa fa-map-marker"></span>
+              {{value}}
+            </label>
+          </div>
+        </div>&nbsp;
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 <!--  显示选择搜索“招聘信息”还是“应聘信息”或者“企业信息”或“人才信息”的对话框  -->
 <div class="modal fade" id="searchOption">
