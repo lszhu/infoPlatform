@@ -9,6 +9,7 @@
     "jquery": "1.11.x",
     "bootstrap": "3.3.x",
     "fontawesome": "4.2.x",
+    "summernote": "0.5.x",
     "holderjs": "2.4.x",
     "angular": "1.2.x",
     "angular-route": "1.2.x",
