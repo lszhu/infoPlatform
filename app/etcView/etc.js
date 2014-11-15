@@ -25,6 +25,12 @@ angular.module('myApp.etc', ['ngRoute'])
             });
     }])
 
-    .controller('EtcCtrl', [function() {
-
-    }]);
+    .controller('EtcCtrl', ['$scope', '$http', '$document',
+        function($scope, $http, $document) {
+            $scope.showContents = function() {
+                //console.log($window);
+                var c = $document.find('.note-editable').html();
+                console.log(c);
+            }
+        }
+    ]);

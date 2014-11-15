@@ -1,0 +1,63 @@
+<div class="container">
+  <h3 class="page-header">投诉或建议</h3>
+  <div class="col-sm-12 text-center">
+    <strong>（请准确填写以下信息，本站会严格保密任何相关信息）</strong><br>
+  </div>
+  <div class="col-sm-12"><br></div>
+
+  <form class="form-horizontal" name="queryCondition" role="form" ng-submit="queryVoucher()">
+    <div class="form-group col-sm-12">
+      <label for="voucherId" class="col-sm-2 control-label">姓名</label>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" name="voucherId" ng-model="voucherId" id="voucherId" placeholder="输入单位名称全称">
+      </div>
+      <label class="control-label remark"><strong>必填，</strong>请正确填写，便于我们工作人员回访确认</label>
+    </div>
+    <div class="form-group col-sm-12">
+      <label for="code" class="col-sm-2 control-label">身份证号</label>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" name="code" ng-model="code" id="code" placeholder="输入身份证号">
+      </div>
+      <label class="control-label remark"><strong>必填，</strong>必须正确输入，否则无法通过审核</label>
+    </div>
+    <div class="form-group col-sm-12">
+      <label for="phone" class="col-sm-2 control-label">联系电话</label>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" name="phone" ng-model="phone" id="phone" placeholder="可输入多个电话">
+      </div>
+      <label class="control-label remark"><strong>必填，</strong>请务必填写正确，便于我们工作人员回访确认</label>
+    </div>
+
+    <div class="col-sm-12"><hr></div>
+
+    <div class="form-group col-sm-12">
+      <label class="col-sm-4 control-label">投诉或建议内容</label>
+      <label class="control-label remark">（在此可以填入多种格式的文本，甚至插入图片和表格等等）</label>
+    </div>
+
+    <!--  在线编辑器插入位置  -->
+    <div class="col-sm-12">
+      <div id="summernote"></div>
+    </div>
+
+    <div class="col-sm-12"><br></div>
+
+    <div class="form-group">
+      <div class="col-sm-offset-5 col-sm-2">
+        <button type="button" ng-disabled="buttonDisabled()" ng-click="showContents()" class="btn btn-primary btn-block">发&nbsp;&nbsp;布</button>
+      </div>
+    </div>
+
+    <div class="col-sm-12"><br></div>
+  </form>
+</div>
+
+<script>
+  // 插入在线编辑器
+  $(document).ready(function() {
+    $('#summernote').summernote({
+      height: 300,
+      lang: 'zh-CN'   // 默认语言为简体中文
+    });
+  });
+</script>

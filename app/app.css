@@ -136,6 +136,11 @@ a {
   letter-spacing: -1px;
 }
 
+/* summernote edit
+------------------------- */
+.note-editable {
+  background-color: #fff;
+}
 
 /* RESPONSIVE CSS
 -------------------------------------------------- */
@@ -177,9 +182,6 @@ a {
 @media (min-width: 992px) {
   .carousel-caption h1 {
     font-size: 4em;
-  }
-  .featurette-heading {
-    margin-top: 120px;
   }
 }
 

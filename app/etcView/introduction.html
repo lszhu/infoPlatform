@@ -1,7 +1,86 @@
 <div class="container">
-  <div id="summernote"></div>
+  <h3 class="page-header">刊登企业介绍信息</h3>
+
+  <form class="form-horizontal" name="queryCondition" role="form" ng-submit="queryVoucher()">
+    <div class="form-group col-sm-12">
+      <label for="voucherId" class="col-sm-2 control-label">单位名称</label>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" name="voucherId" ng-model="voucherId" id="voucherId" placeholder="输入单位名称全称">
+      </div>
+      <label class="control-label remark"><strong>必填，</strong>不能用简称，必须与在工商注册的一致，否则无法通过审核</label>
+    </div>
+    <div class="form-group col-sm-12">
+      <label for="code" class="col-sm-2 control-label">机构代码</label>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" name="code" ng-model="code" id="code" placeholder="输入组织机构代码">
+      </div>
+      <label class="control-label remark"><strong>必填，</strong>组织机构代码必须与在工商注册的一致，否则无法通过审核</label>
+    </div>
+
+    <div class="form-group col-sm-12">
+      <label for="picture" class="col-sm-2 control-label">宣传图片</label>
+      <div class="col-sm-4">
+        <input type="file" class="form-control" name="picture" ng-model="picture" id="picture">
+      </div>
+      <label class="control-label remark"><strong>必填，</strong>可以是反映车间、办公场所或产品等等的图片</label>
+    </div>
+    <div class="form-group col-sm-12">
+      <label for="address" class="col-sm-2 control-label">详细地址</label>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" name="address" ng-model="address" id="address" placeholder="输入详细地址">
+      </div>
+      <label class="control-label remark"><strong>必填，</strong>组织机构代码必须与在工商注册的一致，否则无法通过审核</label>
+    </div>
+
+    <div class="form-group col-sm-12">
+      <label for="phone" class="col-sm-2 control-label">联系电话</label>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" name="phone" ng-model="phone" id="phone" placeholder="可输入多个电话">
+      </div>
+      <label class="control-label remark"><strong>必填，</strong>请务必填写正确，如有多个号码，可用逗号或空格分开</label>
+    </div>
+    <div class="form-group col-sm-12">
+      <label for="contact" class="col-sm-2 control-label">其他联络方式</label>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" name="contact" ng-model="contact" id="contact" placeholder="输入各类联系方式">
+      </div>
+      <label class="control-label remark">QQ号或邮箱等联系方式，联系方式间用逗号或空格分开</label>
+    </div>
+    <div class="form-group col-sm-12">
+      <label for="synopsis" class="col-sm-2 control-label">概要介绍</label>
+      <div class="col-sm-4">
+        <textarea rows="5" class="form-control" name="synopsis" ng-model="synopsis" id="synopsis" placeholder="输入单位简介"></textarea>
+      </div>
+      <label class="control-label remark"><strong>必填，</strong>请控制字数在100-200之间，多出部分不会显示</label>
+    </div>
+  </form>
+
+  <div class="col-sm-12"><hr></div>
+
+  <div class="form-group col-sm-12">
+    <label class="col-sm-4 control-label">企业或单位详细介绍</label>
+    <label class="control-label remark">（在此可以填入对贵单位或企业的详细介绍，甚至插入图片和表格等等）</label>
+  </div>
+
+  <!--  在线编辑器插入位置  -->
+  <div class="col-sm-12">
+    <div id="summernote"></div>
+  </div>
+
+  <div class="col-sm-12"><br></div>
+
+  <div class="form-group">
+    <div class="col-sm-offset-5 col-sm-2">
+      <button type="button" ng-disabled="buttonDisabled()" ng-click="showContents()" class="btn btn-primary btn-block">发&nbsp;&nbsp;布</button>
+    </div>
+  </div>
+
+  <div class="col-sm-12"><br></div>
+
 </div>
+
 <script>
+  // 插入在线编辑器
   $(document).ready(function() {
     $('#summernote').summernote({
       height: 300,
