@@ -5,6 +5,8 @@ var debug = require('debug')('mongodb');
 var db = require('../config').db;
 // Specifies the maximum number of documents the query will return
 var maxReturnedDoc = require('../config').queryLimit;
+// mongodb schema used to create mongoose schema and model
+var schema = require('./schema');
 
 // initiate a connection to mongodb
 function connectDb() {
@@ -35,66 +37,15 @@ function connectDb() {
 
 // create collection models
 function createModels() {
-
-    var logSchema = new mongoose.Schema({
-        time: Date,
-        operator: String,
-        operation: String,
-        target: String,
-        comment: String,
-        status: String
-    });
-
-    var accountSchema = new mongoose.Schema({
-        username: String,
-        password: String,
-        enabled: Boolean,
-        description: String,
-        groups: [String],
-        rights: String
-    });
-
-    var groupSchema = new mongoose.Schema({
-        name: String,
-        comment: String,
-        accounts: [String],
-        rights: {
-            system: {
-                log: Boolean,
-                account: Boolean,
-                group: Boolean
-            },
-            projects: Boolean,
-            subjects: Boolean,
-            date: {
-                begin: Boolean,
-                end: Boolean
-            },
-            figures: {
-                readable: Boolean,
-                removable: Boolean
-            },
-            voucher: Boolean,
-            contract: Boolean,
-            archive: {
-                figure: Boolean,
-                cheque: Boolean,
-                contract: Boolean,
-                file: Boolean,
-                digital: Boolean,
-                original: Boolean
-            },
-            destroy: Boolean,
-            approval: Boolean,
-            lending: {
-                voucher: Boolean,
-                contract: Boolean,
-                file: Boolean
-            }
-        }
-    });
+    var organizationSchema = new mongoose.Schema(schema.organization);
+    var personSchema = new mongoose.Schema(schema.person);
+    var logSchema = new mongoose.Schema(schema.logs);
+    var accountSchema = new mongoose.Schema(schema.account);
+    var groupSchema = new mongoose.Schema(schema.group);
 
     return {
+        organization: mongoose.model('organization', organizationSchema),
+        person: mongoose.model('person', personSchema),
         log: mongoose.model('log', logSchema),
         account: mongoose.model('account', accountSchema),
         group: mongoose.model('group', groupSchema)
