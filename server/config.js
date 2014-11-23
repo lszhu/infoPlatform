@@ -5,8 +5,8 @@ var httpPort = 12345;
 var runningEnvironment = 'development';
 //var runningEnvironment = 'productivity';
 
-// 此处设置系统唯一标识，可用于一个服务器安装多个服务
-var sysId = 'messagePostSys';
+// 区域ID，可作为系统唯一标识，可用于一个服务器安装多个服务
+var districtId = '431103';
 
 // 存放上传文件的路径，建议用相对路径
 var uploadPath = '../../upload';
@@ -44,7 +44,7 @@ var queryLimit = 100000;
 module.exports = {
     port: httpPort,
     runningEnv: runningEnvironment,
-    sysId: sysId,
+    districtId: districtId,
     uploadPath: uploadPath,
     builtinAccount: builtinAccount,
     db: {

@@ -228,7 +228,7 @@ a {
 }
 
 /* messageView
-------------------------------------------------------*/
+-------------------------------------------------------*/
 label.remark {
   font-style: italic;
   font-weight: normal;
@@ -249,4 +249,12 @@ label.remark {
 
 .modal-dialog .modal-content label{
   cursor: pointer;
+}
+
+/* employer
+-------------------------------------------------------*/
+#postAlertMsg .modal-body .container{
+  height: 300px;
+  overflow: auto;
+  width: inherit;
 }

@@ -1,6 +1,6 @@
 var employer = {
     name: String,
-    orgCode: String,
+    code: String,
     phone: String,
     contact: String,
     position: String,
@@ -99,10 +99,10 @@ var group = {
 };
 var organization = {
     name: String,
-    orgCode: String,
+    code: String,
     districtId: String,
     legalPerson: String,
-    contacts: String,
+    contact: String,
     phone: String,
     address: String,
     type: String,
