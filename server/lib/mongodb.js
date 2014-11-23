@@ -37,6 +37,11 @@ function connectDb() {
 
 // create collection models
 function createModels() {
+    var employerSchema = new mongoose.Schema(schema.employer);
+    var employeeSchema = new mongoose.Schema(schema.employee);
+    var orgInfoSchema = new mongoose.Schema(schema.orgInfo);
+    var policySchema = new mongoose.Schema(schema.policy);
+    var messageSchema = new mongoose.Schema(schema.message);
     var organizationSchema = new mongoose.Schema(schema.organization);
     var personSchema = new mongoose.Schema(schema.person);
     var logSchema = new mongoose.Schema(schema.logs);
@@ -44,6 +49,11 @@ function createModels() {
     var groupSchema = new mongoose.Schema(schema.group);
 
     return {
+        employer: mongoose.model('employer', employerSchema),
+        employee: mongoose.model('employee', employeeSchema),
+        orgInfo: mongoose.model('orgInfo', orgInfoSchema),
+        policy: mongoose.model('policy', policySchema),
+        message: mongoose.model('message', messageSchema),
         organization: mongoose.model('organization', organizationSchema),
         person: mongoose.model('person', personSchema),
         log: mongoose.model('log', logSchema),
@@ -94,33 +104,11 @@ function getAccount(username, callback) {
     queryOne('account', {username: username}, callback);
 }
 
-function batchSaveFigures(docs, callback) {
-    var counter = {count: 0};
-    var error = [];
-    debug('there are %d rows to add.', docs.length);
-    for (var i = 0; i < docs.length; i++) {
-        counter.count++;
-        save('figure', {id: docs[i].id}, docs[i],
-            function(err) {
-                if (err) {
-                    error.push(err);
-                }
-                debug('a row of figures was saved to db');
-                counter.count--;
-                if (!counter.count) {
-                    callback(error.length ? error : undefined,
-                            docs.length - error.length);
-                }
-            });
-    }
-}
-
 module.exports = {
     query: query,
     queryOne: queryOne,
     save: save,
     remove: remove,
     count: count,
-    getAccount: getAccount,
-    batchSaveFigures: batchSaveFigures
+    getAccount: getAccount
 };
