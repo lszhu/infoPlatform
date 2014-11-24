@@ -26,6 +26,7 @@ var orgInfo = {
     districtId: String,
     address: String,
     phone: String,
+    contact: String,
     picture: String,
     overview: String,
     introduction: String
@@ -41,6 +42,12 @@ var message = {
     publisher: String,
     content: String,
     date: Date
+};
+var suggestion = {
+    name: String,
+    idNumber: String,
+    phone: String,
+    suggestion: String
 };
 var log = {
     time: Date,

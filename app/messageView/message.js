@@ -19,12 +19,14 @@ angular.module('myApp.message', ['ngRoute'])
     }])
 
     .controller('EmployerCtrl', ['$scope', '$http', function($scope, $http) {
+        // 信息上传函数
         $scope.postMsg = function() {
             $scope.employer = {
                 name: $scope.name,
                 code: $scope.code,
                 phone: $scope.phone,
                 contact: $scope.contact,
+                address: $scope.address,
                 position: $scope.position,
                 description: $scope.description,
                 education: $scope.education,
@@ -44,6 +46,7 @@ angular.module('myApp.message', ['ngRoute'])
                 });
         };
 
+        // 控制提交按钮的可用性
         $scope.postDisabled = function() {
             var name = $scope.name;
             var code = $scope.code;
@@ -52,6 +55,7 @@ angular.module('myApp.message', ['ngRoute'])
                 !code.trim() || !phone || !phone.trim();
         };
 
+        // 清除部分表单已填入的信息
         function clearMsg() {
             //$scope.name = '';
             //$scope.code = '';
@@ -65,6 +69,7 @@ angular.module('myApp.message', ['ngRoute'])
     }])
 
     .controller('EmployeeCtrl', ['$scope', '$http', function($scope, $http) {
+        // 信息上传函数
         $scope.postMsg = function() {
             $scope.employee = {
                 name: $scope.name,
@@ -91,6 +96,7 @@ angular.module('myApp.message', ['ngRoute'])
                 });
         };
 
+        // 控制提交按钮的可用性
         $scope.postDisabled = function() {
             var name = $scope.name;
             var idNumber = $scope.idNumber;
@@ -99,6 +105,7 @@ angular.module('myApp.message', ['ngRoute'])
                 !idNumber.trim() || !phone || !phone.trim();
         };
 
+        // 清除部分表单已填入的信息
         function clearMsg() {
             $scope.name = '';
             $scope.idNumber = '';

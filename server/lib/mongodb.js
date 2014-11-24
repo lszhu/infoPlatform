@@ -44,6 +44,7 @@ function createModels() {
     var messageSchema = new mongoose.Schema(schema.message);
     var organizationSchema = new mongoose.Schema(schema.organization);
     var personSchema = new mongoose.Schema(schema.person);
+    var suggestionSchema = new mongoose.Schema(schema.suggestion);
     var logSchema = new mongoose.Schema(schema.logs);
     var accountSchema = new mongoose.Schema(schema.account);
     var groupSchema = new mongoose.Schema(schema.group);
@@ -56,6 +57,7 @@ function createModels() {
         message: mongoose.model('message', messageSchema),
         organization: mongoose.model('organization', organizationSchema),
         person: mongoose.model('person', personSchema),
+        suggestion: mongoose.model('suggestion', suggestionSchema),
         log: mongoose.model('log', logSchema),
         account: mongoose.model('account', accountSchema),
         group: mongoose.model('group', groupSchema)

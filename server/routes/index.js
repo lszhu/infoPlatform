@@ -32,6 +32,16 @@ router.post('/postEmployee', function(req, res) {
     res.send({status: 'ok'});
 });
 
+/* save organization introduction posted by organization */
+router.post('/postOrgInfo', function(req, res) {
+    res.send({status: 'ok'});
+});
+
+/* save suggestion submitted by adviser */
+router.post('/postSuggestion', function(req, res) {
+    res.send({status: 'ok'});
+});
+
 /* GET clause page. */
 //router.get('/etc/clause', function(req, res) {
 //  res.sendFile(path.join(__dirname, '../../app/etcView/clause.html'));
