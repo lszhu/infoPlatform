@@ -25,13 +25,15 @@ angular.module('myApp.etc', ['ngRoute'])
             });
     }])
 
-    .controller('IntroductionCtrl', ['$scope', '$http',
-        function($scope, $http) {
+    .controller('IntroductionCtrl', ['$scope', '$http', '$document',
+        function($scope, $http, $document) {
             // 初始化企业信息
             $scope.employer = {};
 
             // 信息上传函数
             $scope.postMsg = function() {
+                $scope.employer.introduction =
+                    $document.find('.note-editable').html();
                 console.log('employer: %o', $scope.employer);
                 $http.post('/postOrgInfo', {employer: $scope.employer})
                     .success(function(res) {
@@ -61,13 +63,15 @@ angular.module('myApp.etc', ['ngRoute'])
         }
     ])
 
-    .controller('SuggestionCtrl', ['$scope', '$http',
-        function($scope, $http) {
+    .controller('SuggestionCtrl', ['$scope', '$http', '$document',
+        function($scope, $http, $document) {
             // 初始化投诉建议信息
             $scope.suggestion = {};
 
             // 信息上传函数
             $scope.postMsg = function() {
+                $scope.suggestion.suggestion =
+                    $document.find('.note-editable').html();
                 console.log('employer: %o', $scope.suggestion);
                 $http.post('/postSuggestion', {suggestion: $scope.suggestion})
                     .success(function(res) {
