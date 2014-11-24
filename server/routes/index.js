@@ -17,6 +17,18 @@ var district = require('../lib/districtId');
 //var districtId = '431103';
 var districtId = require('../config').districtId;
 
+/* shallow copy of the object and trim the leading&trailing spaces */
+function trimObject(obj) {
+    var trimmed = {};
+    for (var a in obj) {
+        if (!obj.hasOwnProperty(a)) {
+            continue;
+        }
+        trimmed[a] = obj[a].toString().trim();
+    }
+    return trimmed;
+}
+
 /* get district info */
 router.get('/district', function(req, res) {
     res.send({status: 'ok', district: district, districtId: districtId});
@@ -24,12 +36,38 @@ router.get('/district', function(req, res) {
 
 /* save message posted by employer */
 router.post('/postEmployer', function(req, res) {
-    res.send({status: 'ok'});
+    var employer = trimObject(req.body.employer);
+    debug('employer: ' + JSON.stringify(employer));
+    if (!employer.name || !employer.code || !employer.phone) {
+        res.send({status: 'paramErr', message: '提供的招聘信息不够完整'});
+        return;
+    }
+
+    db.save('employer', {code: employer.code}, employer, function(err) {
+        if (err) {
+            res.send({status: 'dbWriteErr', message: '招聘信息保存失败'});
+            return;
+        }
+        res.send({status: 'ok', message: '招聘信息保存成功'});
+    });
 });
 
 /* save message posted by job hunter */
 router.post('/postEmployee', function(req, res) {
-    res.send({status: 'ok'});
+    var employee = trimObject(req.body.employee);
+    debug('employee: ' + JSON.stringify(employee));
+    if (!employee.name || !employee.idNumber || !employee.phone) {
+        res.send({status: 'paramErr', message: '提供的求职信息不够完整'});
+        return;
+    }
+
+    db.save('employee', {idNumber: employee.idNumber}, employee, function(err) {
+        if (err) {
+            res.send({status: 'dbWriteErr', message: '求职信息保存失败'});
+            return;
+        }
+        res.send({status: 'ok', message: '求职信息保存成功'});
+    });
 });
 
 /* save organization introduction posted by organization */

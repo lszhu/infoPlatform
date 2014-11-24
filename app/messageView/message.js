@@ -21,7 +21,7 @@ angular.module('myApp.message', ['ngRoute'])
     .controller('EmployerCtrl', ['$scope', '$http', function($scope, $http) {
         // 信息上传函数
         $scope.postMsg = function() {
-            $scope.employer = {
+            var employer = {
                 name: $scope.name,
                 code: $scope.code,
                 phone: $scope.phone,
@@ -32,13 +32,13 @@ angular.module('myApp.message', ['ngRoute'])
                 education: $scope.education,
                 salary: $scope.salary
             };
-            $http.post('/postEmployer', $scope.employer)
+            $http.post('/postEmployer', {employer: employer})
                 .success(function(res) {
                     if (res.status == 'ok') {
                         alert('您成功发布了企业招聘信息！');
                         clearMsg();
                     } else {
-                        alert('信息发布失败，原因是：' + res.error);
+                        alert('信息发布失败，原因是：' + res.message);
                     }
                 })
                 .error(function(err) {
@@ -71,7 +71,7 @@ angular.module('myApp.message', ['ngRoute'])
     .controller('EmployeeCtrl', ['$scope', '$http', function($scope, $http) {
         // 信息上传函数
         $scope.postMsg = function() {
-            $scope.employee = {
+            var employee = {
                 name: $scope.name,
                 idNumber: $scope.idNumber,
                 phone: $scope.phone,
@@ -82,13 +82,13 @@ angular.module('myApp.message', ['ngRoute'])
                 position: $scope.position,
                 salary: $scope.salary
             };
-            $http.post('/postEmployee', $scope.employee)
+            $http.post('/postEmployee', {employee: employee})
                 .success(function(res) {
                     if (res.status == 'ok') {
                         alert('您成功发布了个人求职信息！');
                         clearMsg();
                     } else {
-                        alert('信息发布失败，原因是：' + res.error);
+                        alert('信息发布失败，原因是：' + res.message);
                     }
                 })
                 .error(function(err) {
