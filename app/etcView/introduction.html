@@ -1,11 +1,11 @@
 <div class="container">
   <h3 class="page-header">刊登企业介绍信息</h3>
 
-  <form class="form-horizontal" name="queryCondition" role="form" ng-submit="queryVoucher()">
+  <form class="form-horizontal" name="queryCondition" role="form">
     <div class="form-group col-sm-12">
-      <label for="voucherId" class="col-sm-2 control-label">单位名称</label>
+      <label for="name" class="col-sm-2 control-label">单位名称</label>
       <div class="col-sm-4">
-        <input type="text" class="form-control" name="voucherId" ng-model="voucherId" id="voucherId" placeholder="输入单位名称全称">
+        <input type="text" class="form-control" name="name" ng-model="name" id="name" placeholder="输入单位名称全称">
       </div>
       <label class="control-label remark"><strong>必填，</strong>不能用简称，必须与在工商注册的一致，否则无法通过审核</label>
     </div>
@@ -71,7 +71,7 @@
 
   <div class="form-group">
     <div class="col-sm-offset-5 col-sm-2">
-      <button type="button" ng-disabled="buttonDisabled()" ng-click="showContents()" class="btn btn-primary btn-block">发&nbsp;&nbsp;布</button>
+      <button type="button" ng-disabled="postDisabled()" ng-click="showContents()" class="btn btn-primary btn-block">发&nbsp;&nbsp;布</button>
     </div>
   </div>
 

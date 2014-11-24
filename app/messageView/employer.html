@@ -1,7 +1,7 @@
 <div class="container">
   <h3 class="page-header">发布企业招聘信息</h3>
 
-  <form class="form-horizontal" name="queryCondition" role="form" ng-submit="queryVoucher()">
+  <form class="form-horizontal" name="queryCondition" role="form">
     <div class="form-group col-sm-12">
       <label for="name" class="col-sm-2 control-label">单位名称</label>
       <div class="col-sm-4">
@@ -66,7 +66,7 @@
 
     <div class="form-group">
       <div class="col-sm-offset-4 col-sm-3">
-        <button  class="btn btn-primary btn-block" onclick="$('#postAlertMsg').modal('show')">发&nbsp;&nbsp;布</button>
+        <button ng-disabled="postDisabled()" class="btn btn-primary btn-block" onclick="$('#postAlertMsg').modal('show')">发&nbsp;&nbsp;布</button>
       </div>
     </div>
   </form>
@@ -87,10 +87,10 @@
         </div>
         <div class="modal-footer">
           <div class="col-sm-4 col-sm-offset-1">
-            <button type="button" class="col-sm-3 btn btn-success btn-block" data-dismiss="modal">不同意并取消发布</button>
+            <button type="button" class="btn btn-success btn-block" data-dismiss="modal">不同意并取消发布</button>
             </div>
           <div class="col-sm-4 col-sm-offset-2">
-            <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">同意条款并发布</button>
+            <button type="button" ng-click="postMsg()" class="btn btn-primary btn-block" data-dismiss="modal">同意条款并发布</button>
           </div>
         </div>
       </div><!-- /.modal-content -->

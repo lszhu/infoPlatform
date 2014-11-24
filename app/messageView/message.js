@@ -44,11 +44,19 @@ angular.module('myApp.message', ['ngRoute'])
                 });
         };
 
+        $scope.postDisabled = function() {
+            var name = $scope.name;
+            var code = $scope.code;
+            var phone = $scope.phone;
+            return !name || !name.trim() || !code ||
+                !code.trim() || !phone || !phone.trim();
+        };
+
         function clearMsg() {
-            $scope.name = '';
-            $scope.code = '';
-            $scope.phone = '';
-            $scope.contact = '';
+            //$scope.name = '';
+            //$scope.code = '';
+            //$scope.phone = '';
+            //$scope.contact = '';
             $scope.position = '';
             $scope.description = '';
             $scope.education = '';
@@ -56,18 +64,53 @@ angular.module('myApp.message', ['ngRoute'])
         }
     }])
 
-    .controller('EmployeeCtrl', [function() {
+    .controller('EmployeeCtrl', ['$scope', '$http', function($scope, $http) {
+        $scope.postMsg = function() {
+            $scope.employee = {
+                name: $scope.name,
+                idNumber: $scope.idNumber,
+                phone: $scope.phone,
+                contact: $scope.contact,
+                education: $scope.education,
+                seniority: $scope.seniority,
+                experience: $scope.experience,
+                position: $scope.position,
+                salary: $scope.salary
+            };
+            $http.post('/postEmployee', $scope.employee)
+                .success(function(res) {
+                    if (res.status == 'ok') {
+                        alert('您成功发布了个人求职信息！');
+                        clearMsg();
+                    } else {
+                        alert('信息发布失败，原因是：' + res.error);
+                    }
+                })
+                .error(function(err) {
+                    alert('信息发布失败，原因是：' + err);
+                });
+        };
 
+        $scope.postDisabled = function() {
+            var name = $scope.name;
+            var idNumber = $scope.idNumber;
+            var phone = $scope.phone;
+            return !name || !name.trim() || !idNumber ||
+                !idNumber.trim() || !phone || !phone.trim();
+        };
+
+        function clearMsg() {
+            $scope.name = '';
+            $scope.idNumber = '';
+            $scope.phone = '';
+            $scope.contact = '';
+            //$scope.position = '';
+            //$scope.experience = '';
+            //$scope.education = '';
+            //$scope.salary = '';
+        }
     }])
 
     .controller('PolicyCtrl', [function() {
 
-    }])
-
-    .directive('alertMsg', function() {
-        return {
-            restrict: 'E',
-            replace: true,
-            templateUrl: '/etcView/clause.html'
-        }
-    });
+    }]);

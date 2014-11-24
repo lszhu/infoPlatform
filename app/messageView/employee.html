@@ -3,16 +3,16 @@
 
   <form class="form-horizontal" name="queryCondition" role="form" ng-submit="queryVoucher()">
     <div class="form-group col-sm-12">
-      <label for="voucherId" class="col-sm-2 control-label">姓名</label>
+      <label for="name" class="col-sm-2 control-label">姓名</label>
       <div class="col-sm-4">
-        <input type="text" class="form-control" name="voucherId" ng-model="voucherId" id="voucherId" placeholder="输入单位名称全称">
+        <input type="text" class="form-control" name="name" ng-model="name" id="name" placeholder="输入单位名称全称">
       </div>
       <label class="control-label remark"><strong>必填，</strong>不能用简称，必须与身份证一致，否则无法通过审核</label>
     </div>
     <div class="form-group col-sm-12">
-      <label for="code" class="col-sm-2 control-label">身份证号</label>
+      <label for="idNumber" class="col-sm-2 control-label">身份证号</label>
       <div class="col-sm-4">
-        <input type="text" class="form-control" name="code" ng-model="code" id="code" placeholder="输入身份证号">
+        <input type="text" class="form-control" name="idNumber" ng-model="idNumber" id="idNumber" placeholder="输入身份证号">
       </div>
       <label class="control-label remark"><strong>必填，</strong>必须正确输入且与上面的姓名对应，否则无法通过审核</label>
     </div>
@@ -55,20 +55,20 @@
       </div>
     </div>
     <div class="form-group col-sm-12">
-      <label for="description" class="col-sm-2 control-label">工作经验</label>
+      <label for="experience" class="col-sm-2 control-label">工作经验</label>
       <div class="col-sm-7">
-        <textarea class="form-control" name="description" ng-model="description" id="description" rows="5" placeholder="介绍自己的工作经验和技能长处"></textarea>
+        <textarea class="form-control" name="experience" ng-model="experience" id="experience" rows="5" placeholder="介绍自己的工作经验和技能长处"></textarea>
       </div>
     </div>
     <div class="form-group col-sm-12">
-      <label for="job" class="col-sm-2 control-label">期望工作类型</label>
+      <label for="position" class="col-sm-2 control-label">期望工作类型</label>
       <div class="col-sm-4">
-        <input type="text" class="form-control" name="job" ng-model="job" id="job" placeholder="输入工作类型或工种">
+        <input type="text" class="form-control" name="position" ng-model="position" id="position" placeholder="输入工作类型或工种">
       </div>
       <label class="control-label remark">请填希望从事的工作类型或工种</label>
     </div>
     <div class="form-group col-sm-12">
-      <label for="description" class="col-sm-2 control-label">期望月收入</label>
+      <label for="salary" class="col-sm-2 control-label">期望月收入</label>
       <div class="col-sm-4">
         <input type="text" class="form-control" name="description" ng-model="salary" id="salary" placeholder="输入阿拉伯数字">
       </div>
@@ -77,15 +77,35 @@
 
     <div class="form-group">
       <div class="col-sm-offset-4 col-sm-3">
-        <button type="submit" ng-disabled="buttonDisabled()" class="btn btn-primary btn-block">发&nbsp;&nbsp;布</button>
+        <button ng-disabled="postDisabled()" class="btn btn-primary btn-block" onclick="$('#postAlertMsg').modal('show')">发&nbsp;&nbsp;布</button>
       </div>
     </div>
   </form>
 
-  <div class="col-md-8 col-md-offset-2" ng-show="message">
-    <div ng-class="msgClass" class="alert text-center" role="alert">
-      <strong>{{message}}</strong>
-    </div>
-  </div>
+  <!--  显示网站法律声明的对话框  -->
+  <div class="modal fade" id="postAlertMsg" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h2 class="modal-title text-center"><strong>信息发布协议声明</strong></h2>
+          <hr>
+        </div>
+        <div class="modal-body">
+          <div class="container alertMsg">
+            <alert-msg></alert-msg>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="col-sm-4 col-sm-offset-1">
+            <button type="button" class="btn btn-success btn-block" data-dismiss="modal">不同意并取消发布</button>
+          </div>
+          <div class="col-sm-4 col-sm-offset-2">
+            <button type="button" ng-click="postMsg()" class="btn btn-primary btn-block" data-dismiss="modal">同意条款并发布</button>
+          </div>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
 
 </div>

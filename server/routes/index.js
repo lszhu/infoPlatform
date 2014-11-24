@@ -19,7 +19,17 @@ var districtId = require('../config').districtId;
 
 /* get district info */
 router.get('/district', function(req, res) {
-  res.send({status: 'ok', district: district, districtId: districtId});
+    res.send({status: 'ok', district: district, districtId: districtId});
+});
+
+/* save message posted by employer */
+router.post('/postEmployer', function(req, res) {
+    res.send({status: 'ok'});
+});
+
+/* save message posted by job hunter */
+router.post('/postEmployee', function(req, res) {
+    res.send({status: 'ok'});
 });
 
 /* GET clause page. */
