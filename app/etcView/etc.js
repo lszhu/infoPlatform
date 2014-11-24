@@ -33,12 +33,12 @@ angular.module('myApp.etc', ['ngRoute'])
             // 信息上传函数
             $scope.postMsg = function() {
                 console.log('employer: %o', $scope.employer);
-                $http.post('/postOrgInfo', $scope.employer)
+                $http.post('/postOrgInfo', {employer: $scope.employer})
                     .success(function(res) {
                         if (res.status == 'ok') {
                             alert('您成功发布了企业介绍信息！');
                         } else {
-                            alert('信息发布失败，原因是：' + res.error);
+                            alert('信息发布失败，原因是：' + res.message);
                         }
                     })
                     .error(function(err) {
@@ -69,12 +69,12 @@ angular.module('myApp.etc', ['ngRoute'])
             // 信息上传函数
             $scope.postMsg = function() {
                 console.log('employer: %o', $scope.suggestion);
-                $http.post('/postSuggestion', $scope.suggestion)
+                $http.post('/postSuggestion', {suggestion: $scope.suggestion})
                     .success(function(res) {
                         if (res.status == 'ok') {
                             alert('您成功提交了投诉建议信息！');
                         } else {
-                            alert('信息提交失败，原因是：' + res.error);
+                            alert('信息提交失败，原因是：' + res.message);
                         }
                     })
                     .error(function(err) {

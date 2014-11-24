@@ -72,12 +72,40 @@ router.post('/postEmployee', function(req, res) {
 
 /* save organization introduction posted by organization */
 router.post('/postOrgInfo', function(req, res) {
-    res.send({status: 'ok'});
+    var employer = trimObject(req.body.employer);
+    debug('organization info: ' + JSON.stringify(employer));
+    if (!employer.name || !employer.code || !employer.address ||
+        !employer.phone || !employer.overview) {
+        res.send({status: 'paramErr', message: '提供的招聘信息不够完整'});
+        return;
+    }
+
+    db.save('orgInfo', {code: employer.code}, employer, function(err) {
+        if (err) {
+            res.send({status: 'dbWriteErr', message: '招聘信息保存失败'});
+            return;
+        }
+        res.send({status: 'ok', message: '招聘信息保存成功'});
+    });
 });
 
 /* save suggestion submitted by adviser */
 router.post('/postSuggestion', function(req, res) {
-    res.send({status: 'ok'});
+    var suggestion = trimObject(req.body.suggestion);
+    debug('suggestion: ' + JSON.stringify(suggestion));
+    if (!suggestion.name || !suggestion.idNumber || !suggestion.phone) {
+        res.send({status: 'paramErr', message: '提供的个人信息不够完整'});
+        return;
+    }
+
+    db.save('suggestion', {idNumber: suggestion.idNumber}, suggestion,
+        function(err) {
+            if (err) {
+                res.send({status: 'dbWriteErr', message: '建议信息保存失败'});
+                return;
+            }
+            res.send({status: 'ok', message: '投诉建议信息保存成功'});
+        });
 });
 
 /* GET clause page. */

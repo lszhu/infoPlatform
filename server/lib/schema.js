@@ -189,6 +189,7 @@ module.exports = {
     orgInfo: orgInfo,
     policy: policy,
     message: message,
+    suggestion: suggestion,
     log: log,
     account: account,
     group: group,
