@@ -1,6 +1,7 @@
 var employer = {
     name: String,
     code: String,
+    districtId: String,
     phone: String,
     contact: String,
     position: String,
@@ -12,6 +13,7 @@ var employer = {
 var employee = {
     name: String,
     IdNumber: String,
+    districtId: String,
     phone: String,
     contact: String,
     education: String,
@@ -32,18 +34,21 @@ var orgInfo = {
     introduction: String
 };
 var policy = {
+    districtId: String,
     title: String,
     publisher: String,
     content: String,
     date: Date
 };
 var message = {
+    districtId: String,
     title: String,
     publisher: String,
     content: String,
     date: Date
 };
 var suggestion = {
+    districtId: String,
     name: String,
     idNumber: String,
     phone: String,

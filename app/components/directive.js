@@ -4,7 +4,8 @@ angular.module('myApp.directive', [])
 
     .directive('alertMsg', function() {
         return {
-            restrict: 'E',
+            restrict: 'AE',
+            scope: false,
             replace: true,
             templateUrl: '/etcView/clause.html'
         }
