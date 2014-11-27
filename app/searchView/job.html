@@ -42,27 +42,25 @@
       <th>序号</th>
       <th>单位名称</th>
       <th>联系电话</th>
+      <th>其他联系方式</th>
       <th>单位地址</th>
-      <th>单位类型</th>
-      <th>单位规模</th>
-      <th>参保情况</th>
+      <th>职位名称</th>
+      <th>职位描述</th>
+      <th>学历要求</th>
+      <th>月薪</th>
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="figure in figures | filter: globalFilterKey">
+    <tr ng-repeat="job in jobs.list | filter: globalFilterKey">
       <td>{{$index + 1}}</td>
-      <td>{{figure.project}}</td>
-      <td>{{toLocalDate(figure.date)}}</td>
-      <td ng-click="showVoucher($index)" ng-class="hasVoucher($index) ? 'pointer' : ''">
-        <span ng-show="hasVoucher($index)" class="glyphicon glyphicon-paperclip"></span>
-        {{figure.voucher.id}}</td>
-      <td>{{figure.subjectId}}</td>
-      <td>{{figure.subjectName}}</td>
-      <td>{{figure.description}}</td>
-      <td>{{figure.debit | currency:'¥'}}</td>
-      <td>{{figure.credit | currency:'¥'}}</td>
-      <td>{{figure.direction}}</td>
-      <td>{{figure.balance | currency:'¥'}}</td>
+      <td>{{job.name}}</td>
+      <td>{{job.phone}}</td>
+      <td>{{job.contact}}</td>
+      <td>{{job.address}}</td>
+      <td>{{job.position}}</td>
+      <td>{{job.description}}</td>
+      <td>{{job.education}}</td>
+      <td>{{job.salary}}</td>
     </tr>
     </tbody>
   </table>

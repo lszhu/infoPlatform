@@ -34,6 +34,19 @@ router.get('/district', function(req, res) {
     res.send({status: 'ok', district: district, districtId: districtId});
 });
 
+/* get job info posted by employer */
+router.get('/jobService', function(req, res) {
+    // query items limit
+    var limit = 10000;
+    db.query('employer', {}, function(err, docs) {
+        if (err) {
+            res.send({status: 'dbReadErr', message: '数据库访问错误'});
+            return;
+        }
+        res.send({status: 'ok', jobList: docs});
+    }, undefined, limit);
+});
+
 /* save message posted by employer */
 router.post('/postEmployer', function(req, res) {
     var employer = trimObject(req.body.employer);

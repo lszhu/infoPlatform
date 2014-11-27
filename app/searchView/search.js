@@ -6,7 +6,7 @@ angular.module('myApp.search', ['ngRoute'])
         $routeProvider
             .when('/search/job', {
                 templateUrl: 'searchView/job.html',
-                controller: 'SearchCtrl'
+                controller: 'JobCtrl'
             })
             .when('/search/manpower', {
                 templateUrl: 'searchView/manpower.html',
@@ -20,6 +20,10 @@ angular.module('myApp.search', ['ngRoute'])
                 templateUrl: 'searchView/enterprise.html',
                 controller: 'SearchCtrl'
             });
+    }])
+
+    .controller('JobCtrl', ['$scope', 'job', function($scope, job) {
+        $scope.jobs = job;
     }])
 
     .controller('SearchCtrl', [function() {
