@@ -34,7 +34,8 @@ angular.module('myApp.etc', ['ngRoute'])
             $scope.postMsg = function() {
                 $scope.employer.introduction =
                     $document.find('.note-editable').html();
-                console.log('employer: %o', $scope.employer);
+                //console.log('employer: %o', $scope.employer);
+                $scope.employer.districtId = $scope.districtId;
                 $http.post('/postOrgInfo', {employer: $scope.employer})
                     .success(function(res) {
                         if (res.status == 'ok') {
@@ -72,7 +73,8 @@ angular.module('myApp.etc', ['ngRoute'])
             $scope.postMsg = function() {
                 $scope.suggestion.suggestion =
                     $document.find('.note-editable').html();
-                console.log('employer: %o', $scope.suggestion);
+                console.log('districtId: %s', $scope.districtId);
+                $scope.suggestion.districtId = $scope.districtId;
                 $http.post('/postSuggestion', {suggestion: $scope.suggestion})
                     .success(function(res) {
                         if (res.status == 'ok') {

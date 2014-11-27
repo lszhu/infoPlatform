@@ -24,6 +24,7 @@ angular.module('myApp.message', ['ngRoute'])
             var employer = {
                 name: $scope.name,
                 code: $scope.code,
+                districtId: $scope.districtId,
                 phone: $scope.phone,
                 contact: $scope.contact,
                 address: $scope.address,
@@ -74,6 +75,7 @@ angular.module('myApp.message', ['ngRoute'])
             var employee = {
                 name: $scope.name,
                 idNumber: $scope.idNumber,
+                districtId: $scope.districtId,
                 phone: $scope.phone,
                 contact: $scope.contact,
                 education: $scope.education,
@@ -82,6 +84,7 @@ angular.module('myApp.message', ['ngRoute'])
                 position: $scope.position,
                 salary: $scope.salary
             };
+            console.log('districtId: ' + $scope.districtId);
             $http.post('/postEmployee', {employee: employee})
                 .success(function(res) {
                     if (res.status == 'ok') {
@@ -111,10 +114,11 @@ angular.module('myApp.message', ['ngRoute'])
             $scope.idNumber = '';
             $scope.phone = '';
             $scope.contact = '';
-            //$scope.position = '';
-            //$scope.experience = '';
-            //$scope.education = '';
-            //$scope.salary = '';
+            $scope.education = '';
+            $scope.seniority = '';
+            $scope.experience = '';
+            $scope.position = '';
+            $scope.salary = '';
         }
     }])
 
