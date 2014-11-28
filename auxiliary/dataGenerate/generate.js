@@ -271,7 +271,8 @@ function createJob() {
         //address: tmp,
         position: position(),
         description: jobDescription(),
-        education: education()
+        education: education(),
+        date: modifiedDate()
         //salary: salary()
     };
     var tmp = address();

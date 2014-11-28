@@ -61,7 +61,10 @@ router.get('/district', function(req, res) {
 router.get('/jobService', function(req, res) {
     // query items limit
     var limit = 10000;
-    db.query('employer', {}, function(err, docs) {
+    var now = new Date();
+    // half a year before
+    var date = new Date(now.getFullYear(), now.getMonth() - 6, now.getDate());
+    db.query('employer', {date: {$gt: date}}, function(err, docs) {
         if (err) {
             res.send({status: 'dbReadErr', message: '数据库访问错误'});
             return;
@@ -78,6 +81,8 @@ router.post('/postEmployer', function(req, res) {
         res.send({status: 'paramErr', message: '提供的招聘信息不够完整'});
         return;
     }
+
+    employer.date = new Date();
 
     // be sure no organization code will be 0
     db.save('employer', {code: '0'}, employer, function(err) {
@@ -102,6 +107,8 @@ router.post('/postEmployee', function(req, res) {
         return;
     }
 
+    employer.date = new Date();
+
     db.save('employee', {idNumber: employee.idNumber}, employee, function(err) {
         if (err) {
             res.send({status: 'dbWriteErr', message: '求职信息保存失败'});
@@ -121,6 +128,8 @@ router.post('/postOrgInfo', function(req, res) {
         return;
     }
 
+    employer.date = new Date();
+
     db.save('orgInfo', {code: employer.code}, employer, function(err) {
         if (err) {
             res.send({status: 'dbWriteErr', message: '招聘信息保存失败'});
@@ -139,6 +148,8 @@ router.post('/postSuggestion', function(req, res) {
         return;
     }
 
+    employer.date = new Date();
+    
     db.save('suggestion', {idNumber: suggestion.idNumber}, suggestion,
         function(err) {
             if (err) {
