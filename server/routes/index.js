@@ -56,7 +56,8 @@ router.post('/postEmployer', function(req, res) {
         return;
     }
 
-    db.save('employer', {code: employer.code}, employer, function(err) {
+    // be sure no organization code will be 0
+    db.save('employer', {code: '0'}, employer, function(err) {
         if (err) {
             res.send({status: 'dbWriteErr', message: '招聘信息保存失败'});
             return;
