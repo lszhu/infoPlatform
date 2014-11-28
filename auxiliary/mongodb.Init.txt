@@ -1,0 +1,36 @@
+﻿// 数据库维护备忘
+// example for administrator
+use admin
+
+show users
+
+db.createUser(
+	{
+		user: 'admin',
+		pwd: 'letmein',
+		roles: ['root']
+	}
+);
+
+// example for each county
+
+use chequesys
+
+show users
+
+db.createUser(
+	{
+		user: 'chequesys',
+		pwd: 'chequeSys2014',
+		roles: ['readWrite']
+	}
+);
+
+db.projects.ensureIndex({name: 1}, {unique: true});
+db.projects.ensureIndex({id: 1});
+
+db.figures.ensureIndex({id: 1, project: 1}, {unique: true});
+db.figures.ensureIndex({project: 1});
+db.figures.ensureIndex({date: 1});
+db.figures.ensureIndex({subjectId: 1});
+db.figures.ensureIndex({project: 1, subjectId: 1});

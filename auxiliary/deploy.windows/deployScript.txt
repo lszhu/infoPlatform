@@ -1,0 +1,17 @@
+::backup database
+"C:\Program Files\MongoDB 2.6 Standard\bin\mongodump.exe" -u admin -p letmein --authenticationDatabase admin -d dbName -o D:\backPath\dataBackup
+
+::restore database
+"C:\Program Files\MongoDB 2.6 Standard\bin\mongorestore.exe" -u admin -p letmein --authenticationDatabase admin -d dbName --drop D:\backPath\dataBackup\dbName
+
+::map net driver
+net use J: \\10.142.113.99\hrSysDataBackup yourPassword /user:administrator
+
+::remove net driver
+net use J: /delete
+
+::run mongodb client with admin account
+"C:\Program Files\MongoDB 2.6 Standard\bin\mongo.exe" -u admin -p letmein  --authenticationDatabase admin
+
+::run mongodb client with normal account
+"C:\Program Files\MongoDB 2.6 Standard\bin\mongo.exe" -u hrsys -p letmein  localhost/hrsys
