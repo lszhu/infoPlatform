@@ -29,6 +29,29 @@ function trimObject(obj) {
     return trimmed;
 }
 
+// valid ID number
+function validIdNumber(idNumber) {
+    if (idNumber.length != 18 || 12 < idNumber.slice(10, 12) ||
+        idNumber.slice(6, 8) < 19 || 20 < idNumber.slice(6, 8)) {
+        return false;
+    }
+    var weights = [
+        '7', '9', '10', '5', '8', '4', '2', '1', '6',
+        '3', '7', '9', '10', '5', '8', '4', '2', '1'
+    ];
+    var sum = 0;
+    for (var i = 0; i < 17; i++) {
+        var digit = idNumber.charAt(i);
+        if (isNaN(Number(digit))) {
+            return false;
+        }
+        sum += digit * weights[i];
+    }
+    sum = (12 - sum % 11) % 11;
+    return sum == 10 && idNumber.charAt(17).toLowerCase() == 'x' ||
+        sum < 10 && sum == idNumber.charAt(17);
+}
+
 /* get district info */
 router.get('/district', function(req, res) {
     res.send({status: 'ok', district: district, districtId: districtId});
@@ -72,6 +95,10 @@ router.post('/postEmployee', function(req, res) {
     debug('employee: ' + JSON.stringify(employee));
     if (!employee.name || !employee.idNumber || !employee.phone) {
         res.send({status: 'paramErr', message: '提供的求职信息不够完整'});
+        return;
+    }
+    if (!validIdNumber(employee.idNumber)) {
+        res.send({status: 'paramErr', message: '提供的身份证号有误'});
         return;
     }
 

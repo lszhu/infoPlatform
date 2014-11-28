@@ -99,13 +99,21 @@ angular.module('myApp.message', ['ngRoute'])
                 });
         };
 
+        // 检测输入的身份证信息
+        $scope.checkIdNumber = function() {
+            $scope.idNumber = $scope.idNumber.trim();
+            if (!validIdNumber($scope.idNumber)) {
+                alert('身份证输入有无，请重新输入');
+            }
+        };
+
         // 控制提交按钮的可用性
         $scope.postDisabled = function() {
             var name = $scope.name;
             var idNumber = $scope.idNumber;
             var phone = $scope.phone;
-            return !name || !name.trim() || !idNumber ||
-                !idNumber.trim() || !phone || !phone.trim();
+            return !name || !name.trim() || !idNumber || !idNumber.trim() ||
+                !validIdNumber(idNumber.trim()) || !phone || !phone.trim();
         };
 
         // 清除部分表单已填入的信息
@@ -119,6 +127,29 @@ angular.module('myApp.message', ['ngRoute'])
             $scope.experience = '';
             $scope.position = '';
             $scope.salary = '';
+        }
+
+        // 验证身份证号的合法性
+        function validIdNumber(idNumber) {
+            if (idNumber.length != 18 || 12 < idNumber.slice(10, 12) ||
+                idNumber.slice(6, 8) < 19 || 20 < idNumber.slice(6, 8)) {
+                return false;
+            }
+            var weights = [
+                '7', '9', '10', '5', '8', '4', '2', '1', '6',
+                '3', '7', '9', '10', '5', '8', '4', '2', '1'
+            ];
+            var sum = 0;
+            for (var i = 0; i < 17; i++) {
+                var digit = idNumber.charAt(i);
+                if (isNaN(Number(digit))) {
+                    return false;
+                }
+                sum += digit * weights[i];
+            }
+            sum = (12 - sum % 11) % 11;
+            return sum == 10 && idNumber.charAt(17).toLowerCase() == 'x' ||
+                sum < 10 && sum == idNumber.charAt(17);
         }
     }])
 

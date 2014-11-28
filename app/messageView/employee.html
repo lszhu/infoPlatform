@@ -12,7 +12,7 @@
     <div class="form-group col-sm-12">
       <label for="idNumber" class="col-sm-2 control-label">身份证号</label>
       <div class="col-sm-4">
-        <input type="text" class="form-control" name="idNumber" ng-model="idNumber" id="idNumber" placeholder="输入身份证号">
+        <input type="text" ng-model="idNumber" ng-blur="checkIdNumber()" class="form-control" name="idNumber" id="idNumber" placeholder="输入身份证号">
       </div>
       <label class="control-label remark"><strong>必填，</strong>必须正确输入且与上面的姓名对应，否则无法通过审核</label>
     </div>
