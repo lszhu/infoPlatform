@@ -4,6 +4,7 @@ var employer = {
     districtId: String,
     phone: String,
     contact: String,
+    address: String,
     position: String,
     description: String,
     education: String,

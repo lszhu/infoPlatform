@@ -258,3 +258,16 @@ label.remark {
   overflow: auto;
   width: inherit;
 }
+
+/* job
+-------------------------------------------------------*/
+td div.index {
+    margin-top: 60px;
+    color: darkblue;
+    text-align: center;
+}
+
+table.employer {
+    margin: 0;
+    text-align: left;
+}

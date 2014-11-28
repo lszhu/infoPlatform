@@ -149,7 +149,7 @@ router.post('/postSuggestion', function(req, res) {
     }
 
     employer.date = new Date();
-    
+
     db.save('suggestion', {idNumber: suggestion.idNumber}, suggestion,
         function(err) {
             if (err) {

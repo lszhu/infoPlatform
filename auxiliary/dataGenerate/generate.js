@@ -167,7 +167,7 @@ function email() {
             name += alpha[tmp];
         }
     }
-    return name + '@' + domain + 'com';
+    return name + '@' + domain + '.com';
 }
 
 function phone() {
@@ -252,7 +252,7 @@ function salary() {
     if (random() < 0.6) {
         return;
     }
-    return floor(random() * 9 + 1) * 1000;
+    return floor((random() * random() * 5 + 1) * 10) * 100;
 }
 
 // 填写日期

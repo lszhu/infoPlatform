@@ -26,7 +26,7 @@ var politicalOutlook = [
 
 // 文化程度：
 var education = [
-    '本科及以上',
+    '本科',
     '大专',
     '中专中技',
     '高中',
