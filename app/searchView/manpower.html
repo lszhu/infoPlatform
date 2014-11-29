@@ -1,23 +1,23 @@
 <div class="container">
   <h3 class="page-header">人才求职信息查询</h3>
 
-  <form class="form-horizontal" name="queryCondition" role="form" ng-submit="queryVoucher()">
+  <form class="form-horizontal" name="queryCondition" role="form">
 
     <div class="form-group col-sm-12">
       <label class="col-sm-2 control-label">年龄</label>
       <div class="form-group col-sm-5">
-        <label for="amountFrom" class="col-sm-1 control-label">从</label>
+        <label for="ageFrom" class="col-sm-1 control-label">从</label>
         <div class="col-sm-4">
-          <input type="number" class="form-control" name="amountFrom" ng-model="amountFrom" id="amountFrom" placeholder="输入数字">
+          <input type="number" class="form-control" name="ageFrom" ng-model="manpower.ageFrom" id="ageFrom" placeholder="数字">
         </div>
-        <label for="amountTo" class="col-sm-1 control-label">到</label>
+        <label for="ageTo" class="col-sm-1 control-label">到</label>
         <div class="col-sm-4">
-          <input type="number" class="form-control" name="amountTo" ng-model="amountTo" id="amountTo" placeholder="输入数字">
+          <input type="number" class="form-control" name="ageTo" ng-model="manpower.ageTo" id="ageTo" placeholder="数字">
         </div>
       </div>
       <label for="sex" class="col-sm-2 control-label">性别</label>
-      <div class="col-sm-2">
-        <select class="form-control" ng-model="sex" id="sex">
+      <div class="col-sm-3">
+        <select class="form-control" ng-model="manpower.sex" id="sex">
           <option value="">不限</option>
           <option>男</option>
           <option>女</option>
@@ -27,49 +27,69 @@
     <div class="form-group col-sm-12">
       <label for="salary" class="col-sm-2 control-label">收入期望</label>
       <div class="form-group col-sm-4">
-        <select class="form-control" ng-model="salary" id="salary">
+        <select class="form-control" ng-model="manpower.salary" id="salary">
           <option value="">不限</option>
-          <option>10000 以上</option>
-          <option>5000 - 10000</option>
-          <option>3000 - 5000</option>
-          <option>1500 - 3000</option>
-          <option>1500 以下</option>
+          <option value="5">10000 以上</option>
+          <option value="4">5000 - 10000</option>
+          <option value="3">3000 - 5000</option>
+          <option value="2">1500 - 3000</option>
+          <option value="1">1500 以下</option>
         </select>
       </div>
 
       <label for="education" class="col-sm-2 col-sm-offset-1 control-label">学历</label>
-      <div class="col-sm-2">
-        <select class="form-control" ng-model="education" id="education">
+      <div class="col-sm-3">
+        <select class="form-control" ng-model="manpower.education" id="education">
           <option value="">不限</option>
-          <option>本科及以上</option>
+          <option>本科</option>
           <option>大专</option>
           <option>中专中技</option>
           <option>高中</option>
           <option>初中</option>
-          <option>小学及以下</option>
         </select>
       </div>
     </div>
     <div class="form-group col-sm-12">
       <label for="subjectName" class="col-sm-2 control-label">工作经验</label>
       <div class="form-group col-sm-4">
-        <input type="text" class="form-control" name="subjectName" ng-model="subjectName" id="subjectName" placeholder="从事过的工作类型">
+        <input type="text" class="form-control" name="subjectName" ng-model="manpower.subjectName" id="subjectName" placeholder="从事过的工作类型">
       </div>
 
     </div>
 
     <div class="form-group">
       <div class="col-sm-offset-4 col-sm-3">
-        <button type="submit" ng-disabled="buttonDisabled()" class="btn btn-primary btn-block">查&nbsp;&nbsp;询</button>
+        <button ng-click="searchManpower()" ng-disabled="postDisabled()" class="btn btn-primary btn-block">查&nbsp;&nbsp;询</button>
       </div>
     </div>
   </form>
 
-  <div class="col-md-8 col-md-offset-2" ng-show="message">
-    <div ng-class="msgClass" class="alert text-center" role="alert">
-      <strong>{{message}}</strong>
-    </div>
-  </div>
+  <!--  显示网站法律声明的对话框  -->
+  <div class="modal fade" id="postAlertMsg" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h2 class="modal-title text-center"><strong>信息发布协议声明</strong></h2>
+          <hr>
+        </div>
+        <div class="modal-body">
+          <div class="container alertMsg">
+            <alert-msg></alert-msg>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="col-sm-4 col-sm-offset-1">
+            <button type="button" class="btn btn-success btn-block" data-dismiss="modal">不同意并取消发布</button>
+          </div>
+          <div class="col-sm-4 col-sm-offset-2">
+            <button type="button" ng-click="postMsg()" class="btn btn-primary btn-block" data-dismiss="modal">同意条款并发布</button>
+          </div>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
 
   <table class="table table-striped table-bordered" id="figures">
     <thead>
@@ -78,27 +98,20 @@
       <th>姓名</th>
       <th>性别</th>
       <th>年龄</th>
-      <th>住址</th>
       <th>学历</th>
       <th>工作经验</th>
       <th>收入（期望）</th>
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="figure in figures | filter: globalFilterKey">
+    <tr ng-repeat="h in manpowerList | filter: globalFilterKey">
       <td>{{$index + 1}}</td>
-      <td>{{figure.project}}</td>
-      <td>{{toLocalDate(figure.date)}}</td>
-      <td ng-click="showVoucher($index)" ng-class="hasVoucher($index) ? 'pointer' : ''">
-        <span ng-show="hasVoucher($index)" class="glyphicon glyphicon-paperclip"></span>
-        {{figure.voucher.id}}</td>
-      <td>{{figure.subjectId}}</td>
-      <td>{{figure.subjectName}}</td>
-      <td>{{figure.description}}</td>
-      <td>{{figure.debit | currency:'¥'}}</td>
-      <td>{{figure.credit | currency:'¥'}}</td>
-      <td>{{figure.direction}}</td>
-      <td>{{figure.balance | currency:'¥'}}</td>
+      <td>{{h.name}}</td>
+      <td>{{getSex(h)}}</td>
+      <td>{{getAge(h)}}</td>
+      <td>{{h.education}}</td>
+      <td>{{h.experience}}</td>
+      <td>{{h.salary}}</td>
     </tr>
     </tbody>
   </table>

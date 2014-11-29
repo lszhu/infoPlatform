@@ -160,6 +160,39 @@ router.post('/postSuggestion', function(req, res) {
         });
 });
 
+/* search for manpower info */
+router.post('/searchManpower', function(req, res) {
+    var condition = {};
+    if (req.sex) {
+        condition.sex = req.sex;
+    }
+    if (req.education) {
+        condition.education = req.education;
+    }
+    if (req.experience) {
+        condition.experience = new RegExp(req.experience);
+    }
+    var salary = tool.salarySpan(req.salary);
+    if (salary) {
+        condition.salary = salary;
+    }
+
+    db.query('employee', condition, function(err, docs) {
+        if (err) {
+            console.log('db access error');
+            res.send({status: 'dbReadErr', message: 求职信息读取失败});
+            return;
+        }
+        var data = [];
+        for (var i = 0, len = docs.length; i < len; i++) {
+            if (tool.validAge(req.ageFrom, req.ageTo, docs[i].idNumber)) {
+                data.push(docs[i]);
+            }
+        }
+        res.send({status: 'ok', list: data});
+    });
+});
+
 /* GET clause page. */
 //router.get('/etc/clause', function(req, res) {
 //  res.sendFile(path.join(__dirname, '../../app/etcView/clause.html'));

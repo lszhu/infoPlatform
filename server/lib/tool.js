@@ -137,10 +137,39 @@ function readFile(relativePath, callback) {
     });
 }
 
+// 返回薪水范围的mongodb查询结构
+function salarySpan(index) {
+    if (!index || index <= 0 || index > 5) {
+        return;
+    }
+    var span = [
+        {},
+        {$lte: 1500},
+        {$gte: 1500, $lte: 3000},
+        {$gte: 3000, $lte: 5000},
+        {$gte: 5000, $lte: 10000},
+        {$gte: 10000}
+    ];
+    return span[index];
+}
+
+// 从身份证号验证年龄是否满足条件，只是粗略验证，不考虑月份和日期
+function validAge(from, to, idNumber) {
+    if (!idNumber) {
+        return false;
+    }
+    var birth = idNumber.toString().slice(6, 10);
+    var now = (new Date()).getFullYear();
+    return (!from || birth <= now - from ) && (!to || now - to <= birth);
+}
+
 module.exports = {
     log: log,
     period: period,
     interval: interval,
     readFile: readFile,
-    listFiles: listFiles
+    listFiles: listFiles,
+    readJsonFile: readJsonFile,
+    salarySpan: salarySpan,
+    validAge: validAge
 };

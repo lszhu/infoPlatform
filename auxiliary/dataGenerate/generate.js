@@ -354,14 +354,18 @@ function formatOrgData(org) {
         return;
     }
     var num = org[14] > 0 ? org[14] : 0;
+    var districtId = org[1] ? org[1].slice(0, 10) : countyId;
+    var tmp = address();
+    tmp = tmp.county + tmp.town + tmp.village;
+    tmp = org[8] ? org[8] : tmp;
     return {
         name: org[3],
         code: code,
-        districtId: org[1],
+        districtId: districtId,
         legalPerson: org[5],
         contact: org[6],
         phone: org[7],
-        address: org[8],
+        address: tmp,
         type: org[9],
         economicType: org[10],
         jobForm: org[11],
