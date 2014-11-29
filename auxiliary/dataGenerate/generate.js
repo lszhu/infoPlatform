@@ -33,6 +33,15 @@ function countRegion(districtId) {
     return counter;
 }
 
+// 随机选取行政区划代码
+function randomDistrictId() {
+    var tmp = Object.keys(district[countyId]);
+    var index = floor(random() * tmp.length);
+    tmp = Object.keys(district[tmp[index]]);
+    index = floor(random() * tmp.length);
+    return tmp[index];
+}
+
 // 随机生成姓名
 function name(nameSrc) {
     var name = '';
@@ -239,6 +248,16 @@ function jobDescription() {
     return list[floor(random() * len)];
 }
 
+// 工作年限
+function seniority() {
+    if (random() < 0.6) {
+        return '';
+    }
+    var list = staticData.seniority;
+    var len = list.length;
+    return list[floor(random() * len)];
+}
+
 // 学历
 function education() {
     if (random() < 0.6) {
@@ -269,6 +288,7 @@ function createJob() {
     var msg =  {
         name: orgName(nameResource),
         code: orgCode(),
+        districtId: randomDistrictId(),
         phone: phone(),
         contact: contact(),
         //address: tmp,
@@ -295,6 +315,55 @@ function addJob(n) {
             if (err) {
                 console.log('生成数据时遇到问题');
             }
+        });
+    }
+}
+
+// 创建一条求职信息内容
+function createManpower() {
+    // 随机生成16到61岁的年龄（毫秒数）
+    var age = (random() * 45 + 16) * 365 * 24 * 3600 * 1000;
+    // 由年龄推算出生年份，粗略估计即可
+    var birth = new Date(Date.now() - age);
+    var birthString = '' + birth.getFullYear();
+    var tmp = birth.getMonth() + 1;
+    birthString += (tmp < 10 ? '0' : '') + tmp;
+    tmp = birth.getDate();
+    birthString += (tmp < 10 ? '0' : '') + tmp;
+    //console.log(birthString + ': ' + idNumber(birthString));
+
+    var msg =  {
+        name: name(nameResource),
+        idNumber: idNumber(birthString),
+        districtId: randomDistrictId(),
+        phone: phone(),
+        contact: contact(),
+        education: education(),
+        seniority: seniority(),
+        experience: jobDescription(),
+        position: position(),
+        //salary: salary(),
+        date: new Date()
+    };
+    tmp = salary();
+    if (tmp) {
+        msg.salary = tmp;
+    }
+    return msg;
+}
+// 测试生成的求职信息
+//console.log(createManpower());
+
+// 增加n条伪造求职数据
+function addManpower(n) {
+    var manpower;
+    for (var i = 0; i < n; i++) {
+        manpower = createManpower();
+        db.save('employee', {idNumber: manpower.idNumber}, manpower,
+            function(err) {
+                if (err) {
+                    console.log('生成数据时遇到问题');
+                }
         });
     }
 }
@@ -398,8 +467,10 @@ function addOrg() {
 
 console.log(new Date());
 //console.log(parseCsv('org.csv'));
-addOrg();
-// 批量创建招聘信息并写入数据库
-//addJob(1000);
+//addOrg();
+// 批量创建伪造求职数据并写入数据库
+//addManpower(1000);
+// 批量创建伪造招聘信息并写入数据库
+addJob(1000);
 //console.log(createJob());
 console.log(new Date());

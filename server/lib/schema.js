@@ -13,7 +13,7 @@ var employer = {
 };
 var employee = {
     name: String,
-    IdNumber: String,
+    idNumber: String,
     districtId: String,
     phone: String,
     contact: String,

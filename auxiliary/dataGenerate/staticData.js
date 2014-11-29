@@ -191,6 +191,13 @@ var jobDescription = [
     '负责班组生产纪律，负责班组5S管理，完成领导交代其他工作事项。',
     '具备较强的专业能力，较强的文字驾驭能力，较强的沟通协调能力'
 ];
+var seniority = [
+    '一年及以下',
+    '二到五年',
+    '六到九年',
+    '十年以上'
+];
+
 module.exports = {
     nation: nations,
     workplace: workplace,
@@ -209,5 +216,6 @@ module.exports = {
     unemploymentCause: unemploymentCause,
     familyType: familyType,
     insurance: insurance,
-    jobDescription: jobDescription
+    jobDescription: jobDescription,
+    seniority: seniority
 };
