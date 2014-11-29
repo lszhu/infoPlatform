@@ -188,6 +188,17 @@ a {
 /* style used in each sub page
 =========================================================================*/
 
+td div.index {
+    margin-top: 60px;
+    color: darkblue;
+    text-align: center;
+}
+
+table.embedded {
+    margin: 0;
+    text-align: left;
+}
+
 /* mainView
 -------------------------------------------------------*/
 .veryBig {
@@ -261,13 +272,3 @@ label.remark {
 
 /* job
 -------------------------------------------------------*/
-td div.index {
-    margin-top: 60px;
-    color: darkblue;
-    text-align: center;
-}
-
-table.employer {
-    margin: 0;
-    text-align: left;
-}

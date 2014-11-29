@@ -42,7 +42,7 @@
       <tr ng-repeat="job in jobs.list | filter: globalFilterKey">
         <td><div class="index">{{$index + 1}}</div></td>
         <td>
-          <table class="table employer">
+          <table class="table embedded">
             <tr>
               <td class="col-sm-4"><strong>单位名称： </strong>{{job.name}}</td>
               <td><strong>单位地址： </strong>{{job.address}}</td>
@@ -65,7 +65,6 @@
           </table>
         </td>
       </tr>
-
     </table>
 
   </div>

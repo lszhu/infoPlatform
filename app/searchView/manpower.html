@@ -90,30 +90,38 @@
     </div><!-- /.modal-dialog -->
   </div><!-- /.modal -->
 
-
-  <table class="table table-striped table-bordered" id="figures">
-    <thead>
-    <tr>
-      <th>序号</th>
-      <th>姓名</th>
-      <th>性别</th>
-      <th>年龄</th>
-      <th>学历</th>
-      <th>工作经验</th>
-      <th>收入（期望）</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr ng-repeat="h in manpowerList | filter: globalFilterKey">
-      <td>{{$index + 1}}</td>
-      <td>{{h.name}}</td>
-      <td>{{getSex(h)}}</td>
-      <td>{{getAge(h)}}</td>
-      <td>{{h.education}}</td>
-      <td>{{h.experience}}</td>
-      <td>{{h.salary}}</td>
-    </tr>
-    </tbody>
-  </table>
+  <div class="panel panel-default">
+    <!-- Default panel contents -->
+    <div class="panel-heading text-center">人才求职信息列表</div>
+    <!-- Table -->
+    <table class="table table-striped table-bordered">
+      <thead></thead>
+      <tr ng-repeat="h in manpowerList | filter: globalFilterKey">
+        <td><div class="index">{{$index + 1}}</div></td>
+        <td>
+          <table class="table embedded">
+            <tr>
+              <td class="col-sm-4"><strong>姓名： </strong>{{h.name}}</td>
+              <td class="col-sm-4"><strong>性别： </strong>{{getSex(h)}}</td>
+              <td class="col-sm-4"><strong>年龄： </strong>{{getAge(h)}}</td>
+            </tr>
+            <tr>
+              <td><strong>联系电话： </strong>{{h.phone}}</td>
+              <td colspan="2"><strong>其他联系方式： </strong>{{h.contact}}</td>
+            </tr>
+            <tr>
+              <td><strong>学历： </strong>{{h.education}}</td>
+              <td class="col-sm-2"><strong>月薪要求（元）： </strong>{{h.salary}}</td>
+            </tr>
+            <tr>
+              <td colspan="3"><div><strong>工作经验： </strong></div>
+                <div class="col-sm-offset-1 col-sm-10">{{h.experience}}</div>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </div>
 
 </div>

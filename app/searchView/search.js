@@ -42,6 +42,19 @@ angular.module('myApp.search', ['ngRoute'])
                 });
         };
 
+        $scope.getContact = function(person) {
+            if(!person || !person.idNumber) {
+                return ''
+            }
+            var phone = person.phone;
+            var contact = person.contact;
+            if (phone && contact) {
+                return phone + '或 ' + contact;
+            } else {
+                return phone + contact;
+            }
+        };
+
         $scope.getSex = function(person) {
             if(!person || !person.idNumber) {
                 return ''
