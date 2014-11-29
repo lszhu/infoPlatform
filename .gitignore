@@ -1,5 +1,7 @@
 logs/*
 *.log
+*.csv
+*.xlsx
 !.gitkeep
 node_modules/
 app/bower_components/

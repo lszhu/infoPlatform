@@ -122,7 +122,8 @@ var organization = {
     economicType: String,
     jobForm: String,
     industry: String,
-    staffs: Number
+    staffs: Number,
+    modifiedDate: Date
 };
 var person = {
     // basic info

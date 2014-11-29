@@ -1,3 +1,6 @@
+var fs = require('fs');
+var path = require('path');
+
 // 指定生成数据的原始数据目录
 var base = '../../server/';
 
@@ -285,7 +288,7 @@ function createJob() {
     return msg;
 }
 
-// 增加n条招聘数据
+// 增加n条伪造招聘数据
 function addJob(n) {
     for (var i = 0; i < n; i++) {
         db.save('employer', {code: '0'}, createJob(), function(err) {
@@ -295,7 +298,104 @@ function addJob(n) {
         });
     }
 }
+
+// 从文件（csv格式）读入单位数据列表
+function parseCsv(pathname) {
+    try {
+        var file = fs.readFileSync(pathname, 'utf8');
+    } catch (e) {
+        console.log('read file error: ', e);
+        return;
+    }
+    // 移除空格
+    file = file.replace(/\ /gm, '');
+    file = file.split('\r\n');
+    var data = [];
+    for (var i = 1, len = file.length; i < len; i++) {
+        data.push(file[i].split(','));
+    }
+    return data;
+}
+
+// 校验组织机构代码，代码共9位，最后一位是校验码
+function validCode(code) {
+    if (!code || code.length !== 9) {
+        return false;
+    }
+    var alphaNum = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    var weight = [3, 7, 9, 10, 5, 8, 4, 2];
+    var sum = 0;
+    var n;
+    for (var i = 0; i < 8; i++) {
+        n = alphaNum.search(code[i]);
+        if (n == -1) {
+            return false;
+        }
+        sum += n * weight[i];
+    }
+    sum = 11 - sum % 11;
+    if (sum == 10) {
+        sum = 'X';
+    } else if (sum == 11) {
+        sum = '0';
+    }
+    return sum == code[8];
+}
+// 测试validCode函数
+//console.log('test validcode: ' + validCode('743719761'));
+
+// 调整格式化单位数据
+function formatOrgData(org) {
+    if (!org[4]) {
+        return;
+    }
+    var code = org[4].replace(/-/g, '').toUpperCase();
+    if (!validCode(code)) {
+        return;
+    }
+    var num = org[14] > 0 ? org[14] : 0;
+    return {
+        name: org[3],
+        code: code,
+        districtId: org[1],
+        legalPerson: org[5],
+        contact: org[6],
+        phone: org[7],
+        address: org[8],
+        type: org[9],
+        economicType: org[10],
+        jobForm: org[11],
+        industry: org[12],
+        staffs: num,
+        modifiedDate: new Date()
+    };
+}
+
+// 将单位信息批量写入数据库
+function addOrg() {
+    var data = parseCsv('org.csv');
+    var count = 0;
+    var org;
+    for (var i = 0, len = data.length; i < len; i++) {
+        org = formatOrgData(data[i]);
+        if (org) {
+            count++;
+            //console.log(tmp);
+            db.save('organization', {code: org.code}, org, function(err) {
+                if (err) {
+                    console.log('db write error');
+                }
+            });
+        }
+
+    }
+    console.log('共导入条目数为：' + count);
+}
+
 console.log(new Date());
-addJob(1000);
+//console.log(parseCsv('org.csv'));
+addOrg();
+// 批量创建招聘信息并写入数据库
+//addJob(1000);
 //console.log(createJob());
 console.log(new Date());
