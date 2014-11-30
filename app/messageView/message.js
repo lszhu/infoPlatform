@@ -156,8 +156,66 @@ angular.module('myApp.message', ['ngRoute'])
         }
     }])
 
-    .controller('PolicyCtrl', [function() {
+    .controller('PolicyCtrl', ['$scope', '$http', '$document',
+        function($scope, $http, $document) {
+            // 用于测试
+            $scope.policies = [
+                {
+                    content: '人力资源社会保障部关于开展2013年全国高校毕业生秋季网络招聘月活动的通知',
+                    date: '2014-11-11',
+                    id: '1234'
+                },
+                {
+                    content: '关于开展我市纯农户家庭离校未就业高校毕业生就业援助工作的通知',
+                    date: '2014-11-11',
+                    id: '2234'
+                },
+                {
+                    content: '关于选招高校毕业生到有关单位就业见习的通知',
+                    date: '2014-11-11',
+                    id: '3234'
+                },
+                {
+                    content: '人力资源社会保障部关于开展2013年全国高校毕业生秋季网络招聘月活动的通知',
+                    date: '2014-11-11',
+                    id: '4234'
+                },
+                {
+                    content: '关于开展我市纯农户家庭离校未就业高校毕业生就业援助工作的通知',
+                    date: '2014-11-11',
+                    id: '5234'
+                },
+                {
+                    content: '关于选招高校毕业生到有关单位就业见习的通知',
+                    date: '2014-11-11',
+                    id: '6234'
+                }
+            ];
 
+            $scope.content = '';
+
+            $scope.formatDate = function(d) {
+                return d;
+            };
+
+            $scope.setContent = function(policy) {
+                var curId = policy.id;
+                $scope.postDate = $scope.formatDate(policy.date);
+                console.log('curId: ' + curId);
+                var doc = $document.find('#policyMessage');
+                if (curId) {
+                    $http.get('/getPolicyMsg/' + curId).success(function(res) {
+                        if (res.status == 'ok') {
+                            doc.html(res.content);
+                        } else {
+                            doc.html('<strong>暂时无法显示</strong>');
+                        }
+                    }).error(function(err) {
+                        doc.html('<strong>暂时无法显示</strong>' +
+                        '<br>原因是：<div>' + err + '</div>');
+                    });
+                }
+            }
     }])
 
     .controller('NewsCtrl', [function() {

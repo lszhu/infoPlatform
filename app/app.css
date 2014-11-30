@@ -270,5 +270,9 @@ label.remark {
   width: inherit;
 }
 
-/* job
+/* policy
 -------------------------------------------------------*/
+#postPolicy .modal-body .container{
+    height: auto;
+    width: inherit;
+}
