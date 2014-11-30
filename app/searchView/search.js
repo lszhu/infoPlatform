@@ -8,17 +8,17 @@ angular.module('myApp.search', ['ngRoute'])
                 templateUrl: 'searchView/job.html',
                 controller: 'JobCtrl'
             })
+            .when('/search/enterprise', {
+                templateUrl: 'searchView/enterprise.html',
+                controller: 'EnterpriseCtrl'
+            })
             .when('/search/manpower', {
                 templateUrl: 'searchView/manpower.html',
                 controller: 'ManpowerCtrl'
             })
             .when('/search/worker', {
                 templateUrl: 'searchView/worker.html',
-                controller: 'SearchCtrl'
-            })
-            .when('/search/enterprise', {
-                templateUrl: 'searchView/enterprise.html',
-                controller: 'SearchCtrl'
+                controller: 'WorkerCtrl'
             });
     }])
 
@@ -26,10 +26,35 @@ angular.module('myApp.search', ['ngRoute'])
         $scope.jobs = job;
     }])
 
+    .controller('EnterpriseCtrl', ['$scope', '$http', function($scope, $http) {
+        $scope.orgList = [];
+        var limit = 1000;
+        // 总页面数
+        var page = 0;
+        // 当前页面编号
+        var curPage = 1;
+
+        $scope.searchOrganization = function () {
+            $http.post('/searchOrganization', $scope.manpower)
+                .success(function (res) {
+                    if (res.status == 'ok') {
+                        $scope.orgList = res.list;
+                        $scope.orgs = $scope.orgList.slice(0, limit);
+                        console.log('org info length: ' + $scope.orgs.length);
+                    } else {
+                        alert('未查询到任何求职信息\n' + res.message);
+                    }
+                })
+                .error(function (err) {
+                    alert('因出现异常，无法正确查询到相关信息\n' + err);
+                });
+        };
+    }])
+
     .controller('ManpowerCtrl', ['$scope', '$http', function($scope, $http) {
         $scope.manpowerList = [];
         $scope.searchManpower = function() {
-            $http.post('./searchManpower', $scope.manpower)
+            $http.post('/searchManpower', $scope.manpower)
                 .success(function(res) {
                     if (res.status == 'ok') {
                         $scope.manpowerList = res.list;
@@ -42,42 +67,30 @@ angular.module('myApp.search', ['ngRoute'])
                 });
         };
 
-        $scope.getContact = function(person) {
-            if(!person || !person.idNumber) {
-                return ''
-            }
-            var phone = person.phone;
-            var contact = person.contact;
-            if (phone && contact) {
-                return phone + '或 ' + contact;
-            } else {
-                return phone + contact;
-            }
-        };
-
-        $scope.getSex = function(person) {
-            if(!person || !person.idNumber) {
-                return ''
-            }
-            var id = person.idNumber.toString().slice(16, 17);
-            if(!id) {
-                return '';
-            }
-            return id % 2 == 0 ? '女' : '男';
-        };
-
-        $scope.getAge = function(person) {
-            if(!person || !person.idNumber) {
-                return ''
-            }
-            var birth = person.idNumber.toString().slice(6, 10);
-            if(!birth || birth.length != 4) {
-                return '';
-            }
-            return (new Date()).getFullYear() - birth;
-        }
-
     }])
-    .controller('SearchCtrl', [function() {
+
+    .controller('WorkerCtrl', ['$scope', '$http', function($scope, $http) {
+        $scope.workerList = [];
+        // 每页面显示条目数
+        var limit = 1000;
+        // 总页面数
+        var page = 0;
+
+        $scope.searchWorker = function() {
+            $http.post('/searchWorker', $scope.worker)
+                .success(function(res) {
+                    if (res.status == 'ok') {
+                        $scope.workerList = res.list;
+                        $scope.workers = $scope.workerList.slice(0, limit);
+                        page = $scope.workerList.length / limit;
+                        console.log($scope.workerList.length);
+                    } else {
+                        alert('未查询到任何求职信息\n' + res.message);
+                    }
+                })
+                .error(function(err) {
+                    alert('因出现异常，无法正确查询到相关信息\n' + err);
+                });
+        };
 
     }]);

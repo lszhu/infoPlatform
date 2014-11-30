@@ -25,13 +25,15 @@ var builtinAccount = {
 var dbServer = {
     address: 'localhost:',        // 数据库服务器地址
     port: '27017',                // 数据库服务端口
-    dbName: 'messagePostSys'      // 数据库名称
+    dbName: 'lengshuitan'         // 数据库名称
 };
 
 // 此处设定连接mongodb数据库的参数
 var dbParameters = {
     user: 'website',               // 数据库连接用户名称
     pass: 'messagePostSys',        // 数据库连接用户密码
+    //user: 'hrsys',
+    //pass: 'letmein',
     server: {
         socketOptions: {keepAlive: 1},
         auto_reconnect: false      // 请不要修改此参数

@@ -56,7 +56,8 @@ function createModels() {
         policy: mongoose.model('policy', policySchema),
         message: mongoose.model('message', messageSchema),
         organization: mongoose.model('organization', organizationSchema),
-        person: mongoose.model('person', personSchema),
+        // temporary change collection name to hrmsg
+        person: mongoose.model('hrmsg', personSchema),
         suggestion: mongoose.model('suggestion', suggestionSchema),
         log: mongoose.model('log', logSchema),
         account: mongoose.model('account', accountSchema),

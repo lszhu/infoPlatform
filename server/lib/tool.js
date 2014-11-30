@@ -4,7 +4,7 @@ var util = require('util');
 var fs = require('fs');
 
 var refPath = require('../config').path;
-
+var jobType = require('./jobType');
 
 // 解析读入并解析JSON文件
 function readJsonFile(filePath) {
@@ -163,6 +163,111 @@ function validAge(from, to, idNumber) {
     return (!from || birth <= now - from ) && (!to || now - to <= birth);
 }
 
+// 将精确职员数变为粗略范围
+function blurStaffs(n) {
+    if (n < 10) {
+        return '少于10人'
+    } else if (n < 100) {
+        return '介于10到100人';
+    } else if (n < 1000) {
+        return '介于100到1000人';
+    } else if (n >= 1000) {
+        return '1000人以上';
+    } else {
+        return '';
+    }
+}
+
+// 将精确的年龄变为粗略的范围
+function blurAge(n) {
+    if (n < 20) {
+        return '不到20岁'
+    } else if (n < 30) {
+        return '介于20到30岁';
+    } else if (n < 40) {
+        return '介于30到40岁';
+    } else if (n < 50) {
+        return '介于40到50岁';
+    }  else if (n < 60) {
+        return '介于50到60岁';
+    }  else if (n > 60) {
+        return '大于60岁';
+    } else {
+        return '';
+    }
+}
+
+
+function getAddress(person) {
+    if (!person || !person.address) {
+        return ''
+    }
+    var a = person.address;
+    return a.county + a.town + a.village;
+}
+
+function getGender(person) {
+    if(!person || !person.idNumber) {
+        return ''
+    }
+    var id = person.idNumber.toString().slice(16, 17);
+    if(!id) {
+        return '';
+    }
+    return id % 2 == 0 ? '女' : '男';
+}
+
+function getAge(person) {
+    if(!person || !person.idNumber) {
+        return ''
+    }
+    var birth = person.idNumber.toString().slice(6, 10);
+    if(!birth || birth.length != 4) {
+        return '';
+    }
+    return (new Date()).getFullYear() - birth;
+}
+
+// 由工种编号翻译为名称，如果不是有效工种则直接返回
+function jobTypeToName(job) {
+    if (!job) {
+        return '';
+    }
+    var category = job[0];
+    if (!jobType.local.hasOwnProperty(category)) {
+        return job;
+    }
+    return jobType.local[category][job];
+}
+
+// 过滤不需要的个人信息，并特别处理部分信息
+function filterWorkerMsg(worker) {
+    var o = {};
+    o.username = worker.username;
+    o.gender = getGender(worker);
+    o.age = blurAge(getAge(worker));
+    o.employment = worker.employment;
+    if (worker.employmentInfo) {
+        o.salary = worker.employmentInfo.salary;
+        o.experience =  worker.employmentInfo.jobType;
+    } else if (worker.unemploymentInfo) {
+        o.salary = worker.unemploymentInfo.preferredSalary;
+        o.experience =  worker.unemploymentInfo.preferredjobType;
+    }
+    // 将年薪改为月薪，单位由万元改为元（如果本身大于10000，则默认就是以元为单位）
+    if (!o.salary) {
+        o.salary = '';
+    } else if (o.salary <= 100) {
+        o.salary = Math.floor(o.salary * 100 / 12) * 100;
+    } else if (o.salary > 10000) {
+        o.salary = Math.floor(o.salary / 1200) * 100;
+    }
+    o.experience = jobTypeToName(o.experience);
+    o.education = worker.education;
+    o.address = worker.address.town + worker.address.village;
+    return o;
+}
+
 module.exports = {
     log: log,
     period: period,
@@ -171,5 +276,10 @@ module.exports = {
     listFiles: listFiles,
     readJsonFile: readJsonFile,
     salarySpan: salarySpan,
-    validAge: validAge
+    validAge: validAge,
+    blurStaffs: blurStaffs,
+    blurAge: blurAge,
+    filterWorkerMsg: filterWorkerMsg,
+    getAge: getAge,
+    getGender: getGender
 };

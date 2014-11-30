@@ -60,7 +60,7 @@ router.get('/district', function(req, res) {
 /* get job info posted by employer */
 router.get('/jobService', function(req, res) {
     // query items limit
-    var limit = 10000;
+    var limit = 100;
     var now = new Date();
     // half a year before
     var date = new Date(now.getFullYear(), now.getMonth() - 6, now.getDate());
@@ -160,6 +160,48 @@ router.post('/postSuggestion', function(req, res) {
         });
 });
 
+/* search for organization info */
+router.post('/searchOrganization', function(req, res) {
+    var condition = {};
+    if (req.name) {
+        condition.name = new RegExp(req.name);
+    }
+    if (req.education) {
+        condition.education = req.education;
+    }
+    if (req.experience) {
+        condition.experience = new RegExp(req.experience);
+    }
+    var salary = tool.salarySpan(req.salary);
+    if (salary) {
+        condition.salary = salary;
+    }
+
+    // query items limit
+    var limit = 5000;
+    db.query('organization', condition, function(err, docs) {
+        if (err) {
+            console.log('db access error');
+            res.send({status: 'dbReadErr', message: 单位信息读取失败});
+            return;
+        }
+        docs.sort(function(a, b) {
+            if (a.staffs < b.staffs) {
+                return 1;
+            } else if (a.staffs == b.staffs) {
+                return 0;
+            } else {
+                return -1;
+            }
+        });
+        for (var i = 0, len = docs.length; i < len; i++) {
+            docs[i].staffs = tool.blurStaffs(docs[i].staffs);
+        }
+        debug('organization list length: ' + docs.length);
+        res.send({status: 'ok', list: docs});
+    }, 'name phone address type economicType jobForm staffs', limit);
+});
+
 /* search for manpower info */
 router.post('/searchManpower', function(req, res) {
     var condition = {};
@@ -177,6 +219,8 @@ router.post('/searchManpower', function(req, res) {
         condition.salary = salary;
     }
 
+    // query items limit
+    var limit = 5000;
     db.query('employee', condition, function(err, docs) {
         if (err) {
             console.log('db access error');
@@ -186,11 +230,53 @@ router.post('/searchManpower', function(req, res) {
         var data = [];
         for (var i = 0, len = docs.length; i < len; i++) {
             if (tool.validAge(req.ageFrom, req.ageTo, docs[i].idNumber)) {
+                docs[i].age = tool.blurAge(tool.getAge(docs[i]));
+                docs[i].gender = tool.getGender(docs[i]);
+                docs[i].idNumber = '';
                 data.push(docs[i]);
             }
         }
         res.send({status: 'ok', list: data});
-    });
+    }, '', limit);
+});
+
+/* search for worker info */
+router.post('/searchWorker', function(req, res) {
+    var condition = {};
+    if (req.sex) {
+        condition.sex = req.sex;
+    }
+    if (req.education) {
+        condition.education = req.education;
+    }
+    if (req.experience) {
+        condition.experience = new RegExp(req.experience);
+    }
+    var salary = tool.salarySpan(req.salary);
+    if (salary) {
+        condition.salary = salary;
+    }
+    debug('search worker condition: ' + JSON.stringify(condition));
+
+    // query items limit
+    var limit = 5000;
+    db.query('person', condition, function(err, docs) {
+        if (err) {
+            console.log('db access error');
+            res.send({status: 'dbReadErr', message: 人力资源信息读取失败});
+            return;
+        }
+        var data = [];
+        for (var i = 0, len = docs.length; i < len; i++) {
+            if (tool.validAge(req.ageFrom, req.ageTo, docs[i].idNumber)) {
+                docs[i] = tool.filterWorkerMsg(docs[i]);
+                debug('blurred worker msg: ' + docs[i]);
+                data.push(docs[i]);
+            }
+        }
+        debug('searched worker data length: ' + docs.length);
+        res.send({status: 'ok', list: data});
+    }, '', limit);
 });
 
 /* GET clause page. */
