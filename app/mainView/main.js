@@ -8,6 +8,10 @@ angular.module('myApp.home', ['ngRoute'])
                 templateUrl: 'mainView/view1.html',
                 controller: 'View1Ctrl'
             })
+            .when('/main/login', {
+                templateUrl: 'mainView/login.html',
+                controller: 'View1Ctrl'
+            })
             .when('/main/home', {
                 templateUrl: 'mainView/home.html',
                 controller: 'View1Ctrl'

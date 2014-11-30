@@ -237,7 +237,8 @@ function jobTypeToName(job) {
     if (!jobType.local.hasOwnProperty(category)) {
         return job;
     }
-    return jobType.local[category][job];
+    var name = jobType.local[category][job];
+    return name == '其他' ? '' : name;
 }
 
 // 过滤不需要的个人信息，并特别处理部分信息

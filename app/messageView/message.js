@@ -15,6 +15,9 @@ angular.module('myApp.message', ['ngRoute'])
             .when('/message/policy', {
                 templateUrl: 'messageView/policy.html',
                 controller: 'PolicyCtrl'
+            }).when('/message/news', {
+                templateUrl: 'messageView/news.html',
+                controller: 'NewsCtrl'
             });
     }])
 
@@ -154,5 +157,9 @@ angular.module('myApp.message', ['ngRoute'])
     }])
 
     .controller('PolicyCtrl', [function() {
+
+    }])
+
+    .controller('NewsCtrl', [function() {
 
     }]);
