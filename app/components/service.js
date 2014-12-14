@@ -104,7 +104,8 @@ angular.module('myApp.service', [])
         }
 
         // dataSource为数据源，
-        // limit为每页显示条目数，navBar为页码导航中显示的页码数量
+        // itemLimit为每页显示条目数，navBarLimit为页码导航中显示的页码数量，
+        // x/y分别为设定滚动窗口所到达的坐标
         function initPage(dataSource, itemLimit, navBarLimit, x, y) {
             var source = dataSource ? dataSource : [];
             var limit = itemLimit ? itemLimit : 100;
