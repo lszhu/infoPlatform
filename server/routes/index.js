@@ -60,10 +60,14 @@ router.get('/district', function(req, res) {
 /* get job info posted by employer */
 router.get('/jobService', function(req, res) {
     // query items limit
-    var limit = 100;
+    var limit = 1000;
     var now = new Date();
     // half a year before
     var date = new Date(now.getFullYear(), now.getMonth() - 6, now.getDate());
+    if (req.name) {
+
+    }
+
     db.query('employer', {date: {$gt: date}}, function(err, docs) {
         if (err) {
             res.send({status: 'dbReadErr', message: '数据库访问错误'});

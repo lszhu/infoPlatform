@@ -170,10 +170,30 @@ function blurStaffs(n) {
         return '介于10到100人';
     } else if (n < 1000) {
         return '介于100到1000人';
-    } else if (n >= 1000) {
-        return '1000人以上';
+    } else if (n < 10000) {
+        return '介于1000到10000人';
+    } else if (n >= 10000) {
+        return '10000人以上';
     } else {
         return '';
+    }
+}
+
+// 将单位规模转换为查询条件
+function orgScale(scale) {
+    if (!scale) {
+        return;
+    }
+    if (scale == 'tiny') {
+        return {$lte: 10};
+    } else if (scale == 'small') {
+        return {$gt: 10, $lte: 100};
+    } else if (scale == 'middle') {
+        return {$gt: 100, $lte: 1000};
+    } else if (scale == 'large') {
+        return {$gt: 1000, $lte: 10000};
+    } else {
+        return {$gt: 10000};
     }
 }
 
@@ -281,5 +301,6 @@ module.exports = {
     blurAge: blurAge,
     filterWorkerMsg: filterWorkerMsg,
     getAge: getAge,
-    getGender: getGender
+    getGender: getGender,
+    orgScale: orgScale
 };

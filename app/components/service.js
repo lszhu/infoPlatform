@@ -52,6 +52,7 @@ angular.module('myApp.service', [])
                 if (window && window.scrollTo) {
                     window.scrollTo(x, y);
                 }
+                return this.baseNumber;
             }
         }
 

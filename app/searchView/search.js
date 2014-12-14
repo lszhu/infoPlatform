@@ -22,8 +22,8 @@ angular.module('myApp.search', ['ngRoute'])
             });
     }])
 
-    .controller('JobCtrl', ['$scope', '$window', 'job', 'page',
-        function($scope, $window, job, page) {
+    .controller('JobCtrl', ['$scope', '$http', '$window', 'job', 'page',
+        function($scope, $http, $window, job, page) {
             // 每页的显示数目
             var limit = 50;
             // 页码导航条显示的页码数
@@ -51,6 +51,10 @@ angular.module('myApp.search', ['ngRoute'])
                         .pageOption(nValue, limit, pageNav, x, y);
                 }
             );
+
+            $scope.queryJob = function() {
+
+            }
 
             $scope.parseSalary = function(salary) {
                 if (salary) {

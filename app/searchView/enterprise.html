@@ -3,29 +3,43 @@
 
   <form class="form-horizontal" name="queryCondition" role="form">
     <div class="form-group col-sm-12">
-      <label for="voucherId" class="col-sm-2 control-label">单位名称</label>
+      <label for="name" class="col-sm-2 control-label">单位名称</label>
       <div class="col-sm-4">
-        <input type="text" class="form-control" name="voucherId" ng-model="voucherId" id="voucherId" placeholder="输入凭证号数">
+        <input type="text" class="form-control" name="name" ng-model="job.name" id="name" placeholder="单位或企业名称">
       </div>
-      <label for="project" class="col-sm-2 control-label">单位地址</label>
+      <label for="address" class="col-sm-2 control-label">单位地址</label>
       <div class="col-sm-4">
-        <input type="text" class="form-control" name="project" ng-model="project" id="project" placeholder="输入项目名称">
+        <input type="text" class="form-control" name="address" ng-model="job.address" id="address" placeholder="单位或企业地址">
       </div>
     </div>
     <div class="form-group col-sm-12">
-      <label for="subjectName" class="col-sm-2 control-label">单位类型</label>
+      <label for="type" class="col-sm-2 control-label">单位类型</label>
       <div class="col-sm-4">
-        <input type="text" class="form-control" name="subjectName" ng-model="subjectName" id="subjectName" placeholder="输入科目名称">
+        <select class="form-control" ng-model="job.type" id="type">
+          <option value="">不限</option>
+          <option>企业</option>
+          <option>机关</option>
+          <option>事业单位</option>
+          <option>社会团体</option>
+          <option>个体工商户</option>
+        </select>
       </div>
-      <label for="description" class="col-sm-2 control-label">单位规模</label>
+      <label for="scale" class="col-sm-2 control-label">单位规模</label>
       <div class="col-sm-4">
-        <input type="text" class="form-control" name="description" ng-model="description" id="description" placeholder="输入摘要说明">
+        <select class="form-control" ng-model="job.scale" id="scale">
+          <option value="">不限</option>
+          <option value="tiny">10人以内</option>
+          <option value="small">10到100人</option>
+          <option value="middle">100到1000人</option>
+          <option value="large">1000到10000人</option>
+          <option value="huge">10000人以上</option>
+        </select>
       </div>
     </div>
 
     <div class="form-group">
-      <div class="col-sm-offset-4 col-sm-3">
-        <button ng-click="searchOrganization()" class="btn btn-primary btn-block">&nbsp;&nbsp;查&nbsp;&nbsp;询&nbsp;&nbsp;</button>
+      <div class="col-sm-offset-4 col-sm-4">
+        <button ng-click="searchOrganization()" class="btn btn-primary btn-block">查&nbsp;&nbsp;询</button>
       </div>
     </div>
   </form>
