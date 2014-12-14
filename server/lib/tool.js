@@ -164,15 +164,15 @@ function validAge(from, to, idNumber) {
 
 // 将精确职员数变为粗略范围
 function blurStaffs(n) {
-    if (n < 10) {
-        return '少于10人'
-    } else if (n < 100) {
+    if (n <= 10) {
+        return '少于或等于10人'
+    } else if (n <= 100) {
         return '介于10到100人';
-    } else if (n < 1000) {
+    } else if (n <= 1000) {
         return '介于100到1000人';
-    } else if (n < 10000) {
+    } else if (n <= 10000) {
         return '介于1000到10000人';
-    } else if (n >= 10000) {
+    } else if (n > 10000) {
         return '10000人以上';
     } else {
         return '';

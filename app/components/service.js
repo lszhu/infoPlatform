@@ -5,18 +5,15 @@ angular.module('myApp.service', [])
     .factory('job', ['$http', function($http) {
 
         var job = {};
-        $http.get('/jobService')
+        $http.post('/searchJob', {})
             .success(function(res) {
                 if (res.status == 'ok') {
                     var tmp = res.jobList;
                     tmp.sort(function(a, b) {
-                        var index = a.date - b.date;
-                        if (index < 0) {
-                            return 1
-                        } else if (index == 0) {
+                        if (a.date == b.date) {
                             return 0;
                         } else {
-                            return -1;
+                            return a.date < b.date ? 1 : -1;
                         }
                     });
                     job.list = tmp;

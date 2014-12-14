@@ -57,26 +57,6 @@ router.get('/district', function(req, res) {
     res.send({status: 'ok', district: district, districtId: districtId});
 });
 
-/* get job info posted by employer */
-router.get('/jobService', function(req, res) {
-    // query items limit
-    var limit = 1000;
-    var now = new Date();
-    // half a year before
-    var date = new Date(now.getFullYear(), now.getMonth() - 6, now.getDate());
-    if (req.name) {
-
-    }
-
-    db.query('employer', {date: {$gt: date}}, function(err, docs) {
-        if (err) {
-            res.send({status: 'dbReadErr', message: '数据库访问错误'});
-            return;
-        }
-        res.send({status: 'ok', jobList: docs});
-    }, undefined, limit);
-});
-
 /* get policy content */
 router.get('/getPolicyMsg/:id', function(req, res) {
     res.send({
@@ -183,25 +163,58 @@ router.post('/postSuggestion', function(req, res) {
         });
 });
 
-/* search for organization info */
-router.post('/searchOrganization', function(req, res) {
-    var condition = {};
-    if (req.name) {
-        condition.name = new RegExp(req.name);
+/* get job info posted by employer */
+router.post('/searchJob', function(req, res) {
+    // query items limit
+    var limit = 2000;
+    var now = new Date();
+    // half a year before
+    var date = new Date(now.getFullYear(), now.getMonth() - 6, now.getDate());
+    var condition = {date: {$gt: date}};
+    if (req.body.name) {
+        condition.name = new RegExp(req.body.name);
     }
-    if (req.education) {
-        condition.education = req.education;
+    var education = ['小学及以下', '初中', '高中',
+        '中专中技', '大专', '本科及以上'];
+    if (req.body.education && parseInt(req.body.education)) {
+        condition.education = education.slice(req.body.education);
     }
-    if (req.experience) {
-        condition.experience = new RegExp(req.experience);
+    if (req.body.position) {
+        condition.position = new RegExp(req.body.position);
     }
-    var salary = tool.salarySpan(req.salary);
+    var salary = tool.salarySpan(req.body.salary);
     if (salary) {
         condition.salary = salary;
     }
 
+    db.query('employer', condition, function(err, docs) {
+        if (err) {
+            res.send({status: 'dbReadErr', message: '数据库访问错误'});
+            return;
+        }
+        res.send({status: 'ok', jobList: docs});
+    }, undefined, limit);
+});
+
+/* search for organization info */
+router.post('/searchOrganization', function(req, res) {
     // query items limit
-    var limit = 5000;
+    var limit = 2000;
+    var condition = {};
+    if (req.body.name) {
+        condition.name = new RegExp(req.body.name);
+    }
+    if (req.body.address) {
+        condition.address = new RegExp(req.body.address);
+    }
+    if (req.body.type) {
+        condition.type = req.body.type;
+    }
+    if (req.body.scale) {
+        condition.staffs = tool.orgScale(req.body.scale);
+    }
+    debug('searchOrg condition: ' + JSON.stringify(condition));
+
     db.query('organization', condition, function(err, docs) {
         if (err) {
             console.log('db access error');
@@ -228,13 +241,13 @@ router.post('/searchOrganization', function(req, res) {
 /* search for manpower info */
 router.post('/searchManpower', function(req, res) {
     var condition = {};
-    if (req.sex) {
+    if (req.body.sex) {
         condition.sex = req.sex;
     }
-    if (req.education) {
+    if (req.body.education) {
         condition.education = req.education;
     }
-    if (req.experience) {
+    if (req.body.experience) {
         condition.experience = new RegExp(req.experience);
     }
     var salary = tool.salarySpan(req.salary);
@@ -243,7 +256,7 @@ router.post('/searchManpower', function(req, res) {
     }
 
     // query items limit
-    var limit = 5000;
+    var limit = 2000;
     db.query('employee', condition, function(err, docs) {
         if (err) {
             console.log('db access error');
@@ -282,7 +295,7 @@ router.post('/searchWorker', function(req, res) {
     debug('search worker condition: ' + JSON.stringify(condition));
 
     // query items limit
-    var limit = 5000;
+    var limit = 2000;
     db.query('person', condition, function(err, docs) {
         if (err) {
             console.log('db access error');

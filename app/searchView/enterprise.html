@@ -5,17 +5,17 @@
     <div class="form-group col-sm-12">
       <label for="name" class="col-sm-2 control-label">单位名称</label>
       <div class="col-sm-4">
-        <input type="text" class="form-control" name="name" ng-model="job.name" id="name" placeholder="单位或企业名称">
+        <input type="text" class="form-control" name="name" ng-model="org.name" id="name" placeholder="单位或企业名称">
       </div>
       <label for="address" class="col-sm-2 control-label">单位地址</label>
       <div class="col-sm-4">
-        <input type="text" class="form-control" name="address" ng-model="job.address" id="address" placeholder="单位或企业地址">
+        <input type="text" class="form-control" name="address" ng-model="org.address" id="address" placeholder="单位或企业地址">
       </div>
     </div>
     <div class="form-group col-sm-12">
       <label for="type" class="col-sm-2 control-label">单位类型</label>
       <div class="col-sm-4">
-        <select class="form-control" ng-model="job.type" id="type">
+        <select class="form-control" ng-model="org.type" id="type">
           <option value="">不限</option>
           <option>企业</option>
           <option>机关</option>
@@ -26,7 +26,7 @@
       </div>
       <label for="scale" class="col-sm-2 control-label">单位规模</label>
       <div class="col-sm-4">
-        <select class="form-control" ng-model="job.scale" id="scale">
+        <select class="form-control" ng-model="org.scale" id="scale">
           <option value="">不限</option>
           <option value="tiny">10人以内</option>
           <option value="small">10到100人</option>

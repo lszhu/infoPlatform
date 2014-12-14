@@ -7,39 +7,40 @@
       <div class="col-sm-4">
         <input type="text" class="form-control" name="name" ng-model="job.name" id="name" placeholder="单位或企业名称">
       </div>
-      <label for="address" class="col-sm-2 control-label">单位地址</label>
+      <label for="address" class="col-sm-2 control-label">职位名称</label>
       <div class="col-sm-4">
-        <input type="text" class="form-control" name="address" ng-model="job.address" id="address" placeholder="单位或企业地址">
+        <input type="text" class="form-control" name="address" ng-model="job.address" id="address" placeholder="工种或职位名称">
       </div>
     </div>
     <div class="form-group col-sm-12">
-      <label for="type" class="col-sm-2 control-label">单位类型</label>
+      <label for="type" class="col-sm-2 control-label">学历要求</label>
       <div class="col-sm-4">
         <select class="form-control" ng-model="job.type" id="type">
           <option value="">不限</option>
-          <option>企业</option>
-          <option>机关</option>
-          <option>事业单位</option>
-          <option>社会团体</option>
-          <option>个体工商户</option>
+          <option value="1">小学</option>
+          <option value="2">初中</option>
+          <option value="3">高中</option>
+          <option value="4">中专中技</option>
+          <option value="5">大专</option>
+          <option value="6">本科</option>
         </select>
       </div>
-      <label for="scale" class="col-sm-2 control-label">单位规模</label>
+      <label for="scale" class="col-sm-2 control-label">工资待遇</label>
       <div class="col-sm-4">
         <select class="form-control" ng-model="job.scale" id="scale">
           <option value="">不限</option>
-          <option value="tiny">10人以内</option>
-          <option value="small">10到100人</option>
-          <option value="middle">100到1000人</option>
-          <option value="large">1000到10000人</option>
-          <option value="huge">10000人以上</option>
+          <option value="5">月薪10000 以上</option>
+          <option value="4">月薪5000 - 10000</option>
+          <option value="3">月薪3000 - 5000</option>
+          <option value="2">月薪1500 - 3000</option>
+          <option value="1">月薪1500 以下</option>
         </select>
       </div>
     </div>
 
     <div class="form-group">
       <div class="col-sm-offset-4 col-sm-4">
-        <button ng-click="queryJob()" ng-disabled="buttonDisabled()" class="btn btn-primary btn-block">重 新 查 询</button>
+        <button ng-click="queryJob()" class="btn btn-primary btn-block">重 新 查 询</button>
       </div>
     </div>
 

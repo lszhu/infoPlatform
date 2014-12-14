@@ -53,8 +53,26 @@ angular.module('myApp.search', ['ngRoute'])
             );
 
             $scope.queryJob = function() {
-
-            }
+                console.log($scope.job);
+                $http.post('/searchJob', $scope.job)
+                    .success(function(res) {
+                        if (res.status == 'ok') {
+                            var tmp = res.jobList;
+                            tmp.sort(function(a, b) {
+                                if (a.date == b.date) {
+                                    return 0;
+                                } else {
+                                    return a.date < b.date ? 1 : -1;
+                                }
+                            });
+                            $scope.pageOption =
+                                page(tmp, limit, pageNav, x, y);
+                        }
+                    })
+                    .error(function(err) {
+                        console.log('无法获取招聘信息，错误原因：%o', err);
+                    });
+            };
 
             $scope.parseSalary = function(salary) {
                 if (salary) {
@@ -76,14 +94,15 @@ angular.module('myApp.search', ['ngRoute'])
             var x = 0;
             var y = 450;
             // 用于保存页面显示相关信息，此处还仅是为了能调用其初始化函数
-            $scope.pageOption = page;
+            $scope.pageOption = {};
 
             $scope.searchOrganization = function () {
-                $http.post('/searchOrganization', $scope.manpower)
+                console.log($scope.org);
+                $http.post('/searchOrganization', $scope.org)
                     .success(function (res) {
                         if (res.status == 'ok') {
-                            $scope.pageOption = $scope
-                                .pageOption(res.list, limit, pageNav, x, y);
+                            $scope.pageOption =
+                                page(res.list, limit, pageNav, x, y);
                             console.log('org info length: ' + res.list.length);
                         } else {
                             alert('未查询到任何求职信息\n' + res.message);
