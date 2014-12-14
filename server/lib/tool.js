@@ -1,6 +1,6 @@
 var debug = require('debug')('tool');
 var path = require('path');
-var util = require('util');
+//var util = require('util');
 var fs = require('fs');
 
 var refPath = require('../config').path;
@@ -16,7 +16,6 @@ function readJsonFile(filePath) {
         return '';
     }
 }
-
 
 // 向db指定的数据库中写入日志信息
 function log(db, doc, comment, status) {

@@ -39,8 +39,8 @@
     <!-- Table -->
     <table class="table table-striped table-bordered">
       <thead></thead>
-      <tr ng-repeat="job in jobs.list | filter: globalFilterKey">
-        <td><div class="index">{{$index + 1}}</div></td>
+      <tr ng-repeat="job in pageOption.dataToShow | filter: globalFilterKey">
+        <td><div class="index">{{$index + pageOption.baseNumber}}</div></td>
         <td>
           <table class="table embedded">
             <tr>
@@ -55,7 +55,7 @@
             <tr>
               <td><strong>职位名称： </strong>{{job.position}}</td>
               <td><strong>学历要求： </strong>{{job.education}}</td>
-              <td class="col-sm-3"><strong>月薪（元）： </strong>{{job.salary}}</td>
+              <td class="col-sm-3"><strong>月薪（元）： </strong>{{parseSalary(job.salary)}}</td>
             </tr>
             <tr>
               <td colspan="3"><div><strong>职位描述： </strong></div>
@@ -68,5 +68,20 @@
     </table>
 
   </div>
+
+  <nav class="col-sm-offset-7" ng-show="pageOption.pages > 1">
+    <ul class="pagination">
+      <li><a ng-click="pageOption.previousList()" href="">«</a></li>
+      <li ng-class="pageOption.active(p)" ng-click="pageOption.select(p)" ng-repeat="p in pageOption.pageList"><a href="">{{p}}</a></li>
+      <!--
+      <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
+      <li><a href="#">2</a></li>
+      <li><a href="#">3</a></li>
+      <li><a href="#">4</a></li>
+      <li><a href="#">5</a></li>
+      -->
+      <li><a ng-click="pageOption.nextList()" href="">»</a></li>
+    </ul>
+  </nav>
 
 </div>
