@@ -35,6 +35,8 @@ angular.module('myApp.search', ['ngRoute'])
             $scope.pageOption = page;
             // 用于获取数据
             $scope.jobs = job;
+            // 查询条件
+            $scope.job = {};
 
             // 用于初始化列表信息
             $scope.$watchCollection(
@@ -53,6 +55,8 @@ angular.module('myApp.search', ['ngRoute'])
             );
 
             $scope.queryJob = function() {
+                console.log('districtId: ' + $scope.districtId);
+                $scope.job.districtId = $scope.districtId;
                 console.log($scope.job);
                 $http.post('/searchJob', $scope.job)
                     .success(function(res) {
@@ -95,8 +99,12 @@ angular.module('myApp.search', ['ngRoute'])
             var y = 450;
             // 用于保存页面显示相关信息，此处还仅是为了能调用其初始化函数
             $scope.pageOption = {};
+            // 查询条件
+            $scope.org = {};
+
 
             $scope.searchOrganization = function () {
+                $scope.org.districtId = $scope.districtId;
                 console.log($scope.org);
                 $http.post('/searchOrganization', $scope.org)
                     .success(function (res) {
@@ -126,8 +134,12 @@ angular.module('myApp.search', ['ngRoute'])
             var y = 450;
             // 用于保存页面显示相关信息，此处还仅是为了能调用其初始化函数
             $scope.pageOption = {};
+            // 查询条件
+            $scope.manpower = {};
+
 
             $scope.searchManpower = function() {
+                $scope.manpower.districtId = $scope.districtId;
                 console.log('manpower condition: %o', $scope.manpower);
                 $http.post('/searchManpower', $scope.manpower)
                     .success(function(res) {
@@ -157,8 +169,11 @@ angular.module('myApp.search', ['ngRoute'])
             var y = 450;
             // 用于保存页面显示相关信息，此处还仅是为了能调用其初始化函数
             $scope.pageOption = {};
+            // 查询条件
+            $scope.worker = {};
 
             $scope.searchWorker = function() {
+                $scope.worker.districtId = $scope.districtId;
                 console.log('manpower condition: %o', $scope.worker);
                 $http.post('/searchWorker', $scope.worker)
                     .success(function(res) {

@@ -108,6 +108,28 @@ function address() {
     };
 }
 
+// 由行政区划代码得到地址
+function districtToAddress(districtId) {
+    var districtName = district;
+    var address = districtName['0'];
+    var countyId = districtId.slice(0, 6);
+    if (districtId.length >= 4) {
+        if (!districtName['4311'].hasOwnProperty(countyId)) {
+            return address;
+        }
+        address.county = districtName['4311'][countyId];
+        if (!districtName[countyId].hasOwnProperty(districtId.slice(0, 8))) {
+            return address;
+        }
+        address += districtName[countyId][districtId.slice(0, 8)];
+        if (!districtName[districtId.slice(0, 8)].hasOwnProperty(districtId)) {
+            return address;
+        }
+        address += districtName[districtId.slice(0, 8)][districtId];
+    }
+    return address;
+}
+
 function idNumber(birth) {
     //create district id, the reason of adding 1800 is 431127 + 1800 = 432927
     var district = +countyId + 1800;
@@ -298,9 +320,9 @@ function createJob() {
         date: modifiedDate()
         //salary: salary()
     };
-    var tmp = address();
-    tmp = tmp.county + tmp.town + tmp.village;
-    msg.address = tmp;
+    //var tmp = address();
+    //tmp = tmp.county + tmp.town + tmp.village;
+    msg.address = districtToAddress(msg.districtId);
     tmp = salary();
     if (tmp) {
         msg.salary = tmp;
@@ -472,7 +494,7 @@ console.log(new Date());
 // 批量创建伪造求职数据并写入数据库
 //addManpower(1000);
 // 批量创建伪造招聘信息并写入数据库
-//addJob(1000);
+addJob(1000);
 //console.log(createJob());
 console.log(new Date());
 

@@ -110,7 +110,7 @@ router.post('/postEmployee', function(req, res) {
         return;
     }
 
-    employer.date = new Date();
+    employee.date = new Date();
 
     db.save('employee', {idNumber: employee.idNumber}, employee, function(err) {
         if (err) {
@@ -186,6 +186,10 @@ router.post('/searchJob', function(req, res) {
     if (salary) {
         condition.salary = salary;
     }
+    if (req.body.districtId) {
+        condition.districtId = new RegExp('^' + req.body.districtId);
+    }
+    debug('searchOrg condition: ' + JSON.stringify(condition));
 
     db.query('employer', condition, function(err, docs) {
         if (err) {
@@ -213,6 +217,9 @@ router.post('/searchOrganization', function(req, res) {
     if (req.body.scale) {
         condition.staffs = tool.orgScale(req.body.scale);
     }
+    if (req.body.districtId) {
+        condition.districtId = new RegExp('^' + req.body.districtId);
+    }
     debug('searchOrg condition: ' + JSON.stringify(condition));
 
     db.query('organization', condition, function(err, docs) {
@@ -232,6 +239,9 @@ router.post('/searchOrganization', function(req, res) {
         });
         for (var i = 0, len = docs.length; i < len; i++) {
             docs[i].staffs = tool.blurStaffs(docs[i].staffs);
+            if (!docs[i].address) {
+                docs[i] = tool.getAddress(docs[i]);
+            }
         }
         debug('organization list length: ' + docs.length);
         res.send({status: 'ok', list: docs});
@@ -255,6 +265,9 @@ router.post('/searchManpower', function(req, res) {
     }
     if (req.body.experience) {
         condition.experience = new RegExp(req.body.experience);
+    }
+    if (req.body.districtId) {
+        condition.districtId = new RegExp('^' + req.body.districtId);
     }
 
     debug('search manpower condition: ' + JSON.stringify(condition));
@@ -307,6 +320,9 @@ router.post('/searchWorker', function(req, res) {
     }
     if (req.body.experience) {
         condition.experience = new RegExp(req.experience);
+    }
+    if (req.body.districtId) {
+        condition.districtId = new RegExp('^' + req.body.districtId);
     }
     //var salary = tool.salarySpan(req.salary);
     //if (salary) {

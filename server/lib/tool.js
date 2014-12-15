@@ -5,6 +5,7 @@ var fs = require('fs');
 
 var refPath = require('../config').path;
 var jobType = require('./jobType');
+var districtName = require('./districtId');
 
 // 解析读入并解析JSON文件
 function readJsonFile(filePath) {
@@ -218,11 +219,38 @@ function blurAge(n) {
 
 // 由个人信息生成地址
 function getAddress(person) {
-    if (!person || !person.address) {
-        return ''
+    if (person && person.address) {
+        if ((typeof person.address) == 'object') {
+            var a = person.address;
+            return a.county + a.town + a.village;
+        } else {
+            return person.address;
+        }
     }
-    var a = person.address;
-    return a.county + a.town + a.village;
+    if (person.districtId) {
+        return districtToAddress(person.districtId);
+    }
+}
+
+// 由行政区划代码得到地址
+function districtToAddress(districtId) {
+    var address = districtName['0'];
+    var countyId = districtId.slice(0, 6);
+    if (districtId.length >= 4) {
+        if (!districtName['4311'].hasOwnProperty(countyId)) {
+            return address;
+        }
+        address += districtName['4311'][countyId];
+        if (!districtName[countyId].hasOwnProperty(districtId.slice(0, 8))) {
+            return address;
+        }
+        address += districtName[countyId][districtId.slice(0, 8)];
+        if (!districtName[districtId.slice(0, 8)].hasOwnProperty(districtId)) {
+            return address;
+        }
+        address += districtName[districtId.slice(0, 8)][districtId];
+    }
+    return address;
 }
 
 // 由身份证获取性别
@@ -314,5 +342,7 @@ module.exports = {
     getAge: getAge,
     getGender: getGender,
     orgScale: orgScale,
-    birthSpan: birthSpan
+    birthSpan: birthSpan,
+    getAddress: getAddress,
+    districttoAddress: districtToAddress
 };

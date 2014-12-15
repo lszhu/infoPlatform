@@ -106,6 +106,14 @@ angular.module('myApp.service', [])
         // x/y分别为设定滚动窗口所到达的坐标
         function initPage(dataSource, itemLimit, navBarLimit, x, y) {
             var source = dataSource ? dataSource : [];
+            // 最近的排在最前面
+            source.sort(function(a, b) {
+                if (a.date == b.date) {
+                    return 0;
+                } else {
+                    return a.date < b.date ? 1 : -1;
+                }
+            });
             var limit = itemLimit ? itemLimit : 100;
             var navBar = navBarLimit ? navBarLimit : 5;
             var dataToShow = dataSource.slice(0, limit);
