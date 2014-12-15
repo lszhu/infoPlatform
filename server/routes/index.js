@@ -175,9 +175,9 @@ router.post('/searchJob', function(req, res) {
         condition.name = new RegExp(req.body.name);
     }
     var education = ['小学及以下', '初中', '高中',
-        '中专中技', '大专', '本科及以上'];
+        '中专中技', '大专', '本科及以上', '', null];
     if (req.body.education && parseInt(req.body.education)) {
-        condition.education = education.slice(req.body.education);
+        condition.education = {$in: education.slice(req.body.education)};
     }
     if (req.body.position) {
         condition.position = new RegExp(req.body.position);
@@ -241,22 +241,30 @@ router.post('/searchOrganization', function(req, res) {
 /* search for manpower info */
 router.post('/searchManpower', function(req, res) {
     var condition = {};
-    if (req.body.sex) {
-        condition.sex = req.sex;
-    }
-    if (req.body.education) {
-        condition.education = req.education;
-    }
-    if (req.body.experience) {
-        condition.experience = new RegExp(req.experience);
-    }
-    var salary = tool.salarySpan(req.salary);
+    //if (req.body.gender) {
+    //    condition.gender = req.body.gender;
+    //}
+    var salary = tool.salarySpan(req.body.salary);
     if (salary) {
         condition.salary = salary;
     }
+    var education = ['小学及以下', '初中', '高中',
+        '中专中技', '大专', '本科及以上', '', null];
+    if (req.body.education && parseInt(req.body.education)) {
+        condition.education = {$in: education.slice(req.body.education)};
+    }
+    if (req.body.experience) {
+        condition.experience = new RegExp(req.body.experience);
+    }
+
+    debug('search manpower condition: ' + JSON.stringify(condition));
+    debug('ageFrom: ' + req.body.ageFrom);
+    debug('ageTo: ' + req.body.ageTo);
 
     // query items limit
-    var limit = 2000;
+    var limit = 5000;
+    // response items limit
+    var resLimit = 2000;
     db.query('employee', condition, function(err, docs) {
         if (err) {
             console.log('db access error');
@@ -264,14 +272,21 @@ router.post('/searchManpower', function(req, res) {
             return;
         }
         var data = [];
+        var gender;
         for (var i = 0, len = docs.length; i < len; i++) {
-            if (tool.validAge(req.ageFrom, req.ageTo, docs[i].idNumber)) {
+            gender = tool.getGender(docs[i]);
+            if (req.body.gender && req.body.gender != gender) {
+                continue;
+            }
+            if (tool.validAge(req.body.ageFrom, req.body.ageTo,
+                    docs[i].idNumber)) {
                 docs[i].age = tool.blurAge(tool.getAge(docs[i]));
                 docs[i].gender = tool.getGender(docs[i]);
                 docs[i].idNumber = '';
                 data.push(docs[i]);
             }
         }
+        data = data.slice(0, resLimit);
         res.send({status: 'ok', list: data});
     }, '', limit);
 });
@@ -279,23 +294,33 @@ router.post('/searchManpower', function(req, res) {
 /* search for worker info */
 router.post('/searchWorker', function(req, res) {
     var condition = {};
-    if (req.sex) {
-        condition.sex = req.sex;
+    if (req.body.gender) {
+        condition.gender = req.body.gender;
     }
-    if (req.education) {
-        condition.education = req.education;
+    if (req.body.employment) {
+        condition.employment = req.body.employment;
     }
-    if (req.experience) {
+    var education = ['小学及以下', '初中', '高中', '中专中技',
+        '中专', '大专', '本科及以上', '研究生', '硕士', '博士', '', null];
+    if (req.body.education && parseInt(req.body.education)) {
+        condition.education = {$in: education.slice(req.body.education)};
+    }
+    if (req.body.experience) {
         condition.experience = new RegExp(req.experience);
     }
-    var salary = tool.salarySpan(req.salary);
-    if (salary) {
-        condition.salary = salary;
-    }
+    //var salary = tool.salarySpan(req.salary);
+    //if (salary) {
+    //    condition.salary = salary;
+    //}
     debug('search worker condition: ' + JSON.stringify(condition));
 
+    debug('ageFrom: ' + req.body.ageFrom);
+    debug('ageTo: ' + req.body.ageTo);
+
     // query items limit
-    var limit = 2000;
+    var limit = 5000;
+    // response items limit
+    var resLimit = 2000;
     db.query('person', condition, function(err, docs) {
         if (err) {
             console.log('db access error');
@@ -304,12 +329,14 @@ router.post('/searchWorker', function(req, res) {
         }
         var data = [];
         for (var i = 0, len = docs.length; i < len; i++) {
-            if (tool.validAge(req.ageFrom, req.ageTo, docs[i].idNumber)) {
+            if (tool.validAge(req.body.ageFrom, req.body.ageTo,
+                    docs[i].idNumber)) {
                 docs[i] = tool.filterWorkerMsg(docs[i]);
-                debug('blurred worker msg: ' + docs[i]);
+                //debug('blurred worker msg: ' + docs[i]);
                 data.push(docs[i]);
             }
         }
+        data = data.slice(0, resLimit);
         debug('searched worker data length: ' + docs.length);
         res.send({status: 'ok', list: data});
     }, '', limit);

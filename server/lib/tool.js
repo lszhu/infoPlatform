@@ -157,7 +157,7 @@ function validAge(from, to, idNumber) {
     if (!idNumber) {
         return false;
     }
-    var birth = idNumber.toString().slice(6, 10);
+    var birth = +idNumber.toString().slice(6, 10);
     var now = (new Date()).getFullYear();
     return (!from || birth <= now - from ) && (!to || now - to <= birth);
 }
@@ -216,7 +216,7 @@ function blurAge(n) {
     }
 }
 
-
+// 由个人信息生成地址
 function getAddress(person) {
     if (!person || !person.address) {
         return ''
@@ -225,6 +225,7 @@ function getAddress(person) {
     return a.county + a.town + a.village;
 }
 
+// 由身份证获取性别
 function getGender(person) {
     if(!person || !person.idNumber) {
         return ''
@@ -236,6 +237,7 @@ function getGender(person) {
     return id % 2 == 0 ? '女' : '男';
 }
 
+// 由身份证获取年龄
 function getAge(person) {
     if(!person || !person.idNumber) {
         return ''
@@ -245,6 +247,15 @@ function getAge(person) {
         return '';
     }
     return (new Date()).getFullYear() - birth;
+}
+
+// 由年龄区间，转换为出生日期区间
+function birthSpan(age1, age2) {
+    var year = (new Date()).getFullYear();
+    return {
+        from: year - age2,
+        to: year - age1
+    };
 }
 
 // 由工种编号翻译为名称，如果不是有效工种则直接返回
@@ -302,5 +313,6 @@ module.exports = {
     filterWorkerMsg: filterWorkerMsg,
     getAge: getAge,
     getGender: getGender,
-    orgScale: orgScale
+    orgScale: orgScale,
+    birthSpan: birthSpan
 };

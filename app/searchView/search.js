@@ -125,14 +125,15 @@ angular.module('myApp.search', ['ngRoute'])
             var x = 0;
             var y = 450;
             // 用于保存页面显示相关信息，此处还仅是为了能调用其初始化函数
-            $scope.pageOption = page;
+            $scope.pageOption = {};
 
             $scope.searchManpower = function() {
+                console.log('manpower condition: %o', $scope.manpower);
                 $http.post('/searchManpower', $scope.manpower)
                     .success(function(res) {
                         if (res.status == 'ok') {
-                            $scope.pageOption = $scope
-                                .pageOption(res.list, limit, pageNav, x, y);
+                            $scope.pageOption =
+                                page(res.list, limit, pageNav, x, y);
                         } else {
                             alert('未查询到任何求职信息\n' + res.message);
                         }
@@ -155,14 +156,15 @@ angular.module('myApp.search', ['ngRoute'])
             var x = 0;
             var y = 450;
             // 用于保存页面显示相关信息，此处还仅是为了能调用其初始化函数
-            $scope.pageOption = page;
+            $scope.pageOption = {};
 
             $scope.searchWorker = function() {
+                console.log('manpower condition: %o', $scope.worker);
                 $http.post('/searchWorker', $scope.worker)
                     .success(function(res) {
                         if (res.status == 'ok') {
-                            $scope.pageOption = $scope
-                                .pageOption(res.list, limit, pageNav, x, y);
+                            $scope.pageOption =
+                                page(res.list, limit, pageNav, x, y);
                         } else {
                             alert('未查询到任何求职信息\n' + res.message);
                         }
