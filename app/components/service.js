@@ -4,26 +4,30 @@ angular.module('myApp.service', [])
 
     .factory('job', ['$http', function($http) {
 
-        var job = {};
-        $http.post('/searchJob', {})
-            .success(function(res) {
-                if (res.status == 'ok') {
-                    var tmp = res.jobList;
-                    tmp.sort(function(a, b) {
-                        if (a.date == b.date) {
-                            return 0;
-                        } else {
-                            return a.date < b.date ? 1 : -1;
-                        }
-                    });
-                    job.list = tmp;
-                }
-            })
-            .error(function(err) {
-                console.log('无法获取招聘信息，错误原因：%o', err);
-                job.list = [];
-            });
-        return job;
+        function getJob(district) {
+            var job = {};
+            $http.post('/searchJob', {districtId: district})
+                .success(function(res) {
+                    if (res.status == 'ok') {
+                        var tmp = res.jobList;
+                        tmp.sort(function(a, b) {
+                            if (a.date == b.date) {
+                                return 0;
+                            } else {
+                                return a.date < b.date ? 1 : -1;
+                            }
+                        });
+                        job.list = tmp;
+                    }
+                })
+                .error(function(err) {
+                    console.log('无法获取招聘信息，错误原因：%o', err);
+                    job.list = [];
+                });
+            return job;
+        }
+
+        return getJob;
     }])
 
     .factory('page', ['$window', function($window) {

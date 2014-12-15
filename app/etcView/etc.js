@@ -7,6 +7,12 @@ angular.module('myApp.etc', ['ngRoute'])
             .when('/etc/introduction', {
                 templateUrl: 'etcView/introduction.html',
                 controller: 'IntroductionCtrl'
+            }).when('/etc/policy', {
+                templateUrl: 'etcView/policy.html',
+                controller: 'IntroductionCtrl'
+            }).when('/etc/news', {
+                templateUrl: 'etcView/news.html',
+                controller: 'IntroductionCtrl'
             }).when('/etc/suggestion', {
                 templateUrl: 'etcView/suggestion.html',
                 controller: 'SuggestionCtrl'

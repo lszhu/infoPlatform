@@ -34,7 +34,7 @@ angular.module('myApp.search', ['ngRoute'])
             // 用于保存页面显示相关信息，此处还仅是为了能调用其初始化函数
             $scope.pageOption = page;
             // 用于获取数据
-            $scope.jobs = job;
+            $scope.jobs = job($scope.districtId);
             // 查询条件
             $scope.job = {};
 
