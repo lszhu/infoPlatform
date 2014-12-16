@@ -111,13 +111,17 @@ angular.module('myApp.service', [])
         function initPage(dataSource, itemLimit, navBarLimit, x, y) {
             var source = dataSource ? dataSource : [];
             // 最近的排在最前面
-            source.sort(function(a, b) {
-                if (a.date == b.date) {
-                    return 0;
-                } else {
-                    return a.date < b.date ? 1 : -1;
-                }
-            });
+            if (source[0] && source[0].hasOwnProperty('date')) {
+                source.sort(function(e1, e2) {
+                    var a = (new Date(e1.date)).getTime();
+                    var b = (new Date(e2.date)).getTime();
+                    if (a < b) {
+                        return 1;
+                    } else {
+                        return a == b ? 0:  -1;
+                    }
+                });
+            }
             var limit = itemLimit ? itemLimit : 100;
             var navBar = navBarLimit ? navBarLimit : 5;
             var dataToShow = dataSource.slice(0, limit);

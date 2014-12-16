@@ -28,8 +28,8 @@
   },
   "scripts": {
     "postinstall": "bower install",
-    "prestart": "npm install && set DEBUG=route,db,tool",
-    "start": "nodemon -w ./server ./server/bin/www.js",
+    "prestart": "npm install",
+    "start": "set DEBUG=route,db,tool && nodemon -w ./server ./server/bin/www.js",
     "pretest": "npm install",
     "test": "karma start karma.conf.js",
     "test-single-run": "karma start karma.conf.js  --single-run",

@@ -21,7 +21,7 @@ var districtId = require('../config').districtId;
 function trimObject(obj) {
     var trimmed = {};
     for (var a in obj) {
-        if (!obj.hasOwnProperty(a)) {
+        if (!obj.hasOwnProperty(a) || (typeof a) != 'string') {
             continue;
         }
         trimmed[a] = obj[a].toString().trim();
@@ -189,7 +189,7 @@ router.post('/searchJob', function(req, res) {
     if (req.body.districtId) {
         condition.districtId = new RegExp('^' + req.body.districtId);
     }
-    debug('searchOrg condition: ' + JSON.stringify(condition));
+    debug('search job condition: ' + JSON.stringify(condition));
 
     db.query('employer', condition, function(err, docs) {
         if (err) {
