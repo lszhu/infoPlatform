@@ -79,6 +79,13 @@ angular.module('myApp.search', ['ngRoute'])
                     return '面议';
                 }
             };
+
+            $scope.getDate = function(date) {
+                var d = new Date(date);
+                var time = d.getFullYear() + '-';
+                time += d.getMonth() + 1;
+                return time + '-' + d.getDate();
+            };
         }
     ])
 
@@ -147,6 +154,13 @@ angular.module('myApp.search', ['ngRoute'])
                     .error(function(err) {
                         alert('因出现异常，无法正确查询到相关信息\n' + err);
                     });
+            };
+
+            $scope.getDate = function(date) {
+                var d = new Date(date);
+                var time = d.getFullYear() + '-';
+                time += d.getMonth() + 1;
+                return time + '-' + d.getDate();
             };
 
         }
