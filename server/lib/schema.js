@@ -36,14 +36,14 @@ var orgInfo = {
 };
 var policy = {
     districtId: String,
-    title: String,
+    heading: String,
     publisher: String,
     content: String,
     date: Date
 };
 var message = {
     districtId: String,
-    title: String,
+    heading: String,
     publisher: String,
     content: String,
     date: Date

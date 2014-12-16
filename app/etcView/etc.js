@@ -73,18 +73,18 @@ angular.module('myApp.etc', ['ngRoute'])
     .controller('PolicyCtrl', ['$scope', '$http', '$document',
         function($scope, $http, $document) {
             // 初始化投诉建议信息
-            $scope.suggestion = {};
+            $scope.policy = {};
 
             // 信息上传函数
             $scope.postMsg = function() {
-                $scope.suggestion.suggestion =
+                $scope.policy.suggestion =
                     $document.find('.note-editable').html();
                 console.log('districtId: %s', $scope.districtId);
-                $scope.suggestion.districtId = $scope.districtId;
-                $http.post('/postSuggestion', {suggestion: $scope.suggestion})
+                $scope.policy.districtId = $scope.districtId;
+                $http.post('/postPolicy', {policy: $scope.policy})
                     .success(function(res) {
                         if (res.status == 'ok') {
-                            alert('您成功提交了投诉建议信息！');
+                            alert('您成功转载政策法规信息！');
                         } else {
                             alert('信息提交失败，原因是：' + res.message);
                         }
