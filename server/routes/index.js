@@ -101,6 +101,9 @@ router.post('/getNewsMsg', function(req, res) {
             condition.date = date;
         }
     }
+    if (req.body.districtId) {
+        condition.districtId = req.body.districtId;
+    }
     debug('condition: ' + JSON.stringify(condition));
 
     db.querySort('message', condition, {date: -1}, function(err, docs) {
@@ -119,7 +122,7 @@ router.post('/getNewsMsg', function(req, res) {
         for (var i = 0, len = docs.length; i < len; i++) {
             data[i].news = '1';
         }
-        db.querySort('policy', condition, {date: -1}, function(err, docs) {
+        db.querySort('policy', {}, {date: -1}, function(err, docs) {
             if (err) {
                 res.send({status: 'dbErr', message: '访问数据库系统出现异常'});
                 return;

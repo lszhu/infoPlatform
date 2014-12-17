@@ -263,7 +263,8 @@ angular.module('myApp.message', ['ngRoute'])
             };
 
             $scope.queryNewsList = function() {
-                $http.post('/getNewsMsg', {list: true})
+                var factor = {list: true, districtId: $scope.districtId};
+                $http.post('/getNewsMsg', factor)
                     .success(function(res) {
                         if (res.status == 'ok') {
                             $scope.pageOption =
