@@ -1,7 +1,7 @@
 <div class="container">
   <h3 class="page-header">转载政策法规</h3>
 
-  <form class="form-horizontal" name="policy" role="form">
+  <form class="form-horizontal" name="policyFrom" role="form">
     <div class="form-group col-sm-12">
       <label for="heading" class="col-sm-2 control-label">标题</label>
       <div class="col-sm-9">
@@ -12,7 +12,7 @@
     <div class="form-group col-sm-12">
       <label for="source" class="col-sm-2 control-label">信息来源</label>
       <div class="col-sm-9">
-        <input type="text" class="form-control" name="code" ng-model="policy.source" id="source" placeholder="输入信息来源出处">
+        <input type="text" class="form-control" name="source" ng-model="policy.source" id="source" placeholder="输入信息来源出处">
       </div>
     </div>
     <!--
@@ -44,7 +44,7 @@
 
   <div class="form-group">
     <div class="col-sm-offset-4 col-sm-4">
-      <button ng-disabled="postDisabled()" class="btn btn-primary btn-block">发&nbsp;&nbsp;布</button>
+      <button ng-disabled="!policy.heading" ng-click="postMsg()" class="btn btn-primary btn-block">发&nbsp;&nbsp;布</button>
     </div>
   </div>
 

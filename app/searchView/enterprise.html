@@ -59,7 +59,7 @@
             <tr>
               <td class="col-sm-4"><strong>单位名称： </strong>{{o.name}}</td>
               <td class="col-sm-4"><strong>单位地址： </strong>{{o.address}}</td>
-              <td class="col-sm-4"><button role="button" class="btn btn-xs btn-primary">单位简介</button></td>
+              <td class="col-sm-4"><button role="button" ng-click="getMsg(o.introductionId)" onclick="$('#informationMsg').modal('show')" class="btn btn-xs btn-primary">单位简介</button></td>
             </tr>
             <tr>
               <td><strong>联系电话： </strong>{{o.phone}}</td>
@@ -77,6 +77,8 @@
     </table>
 
   </div>
+
+  <info-dialog><div ng-bind-html="information.content"></div></info-dialog>
 
   <nav class="col-sm-offset-7" ng-show="pageOption.pages > 1">
     <ul class="pagination">

@@ -9,10 +9,10 @@ angular.module('myApp.etc', ['ngRoute'])
                 controller: 'IntroductionCtrl'
             }).when('/etc/policy', {
                 templateUrl: 'etcView/policy.html',
-                controller: 'PolicyCtrl'
+                controller: 'PostPolicyCtrl'
             }).when('/etc/news', {
                 templateUrl: 'etcView/news.html',
-                controller: 'NewsCtrl'
+                controller: 'PostNewsCtrl'
             }).when('/etc/suggestion', {
                 templateUrl: 'etcView/suggestion.html',
                 controller: 'SuggestionCtrl'
@@ -70,14 +70,16 @@ angular.module('myApp.etc', ['ngRoute'])
         }
     ])
 
-    .controller('PolicyCtrl', ['$scope', '$http', '$document',
+    .controller('PostPolicyCtrl', ['$scope', '$http', '$document',
         function($scope, $http, $document) {
             // 初始化投诉建议信息
             $scope.policy = {};
 
+            console.log('in policy');
             // 信息上传函数
             $scope.postMsg = function() {
-                $scope.policy.suggestion =
+                console.log('in policy');
+                $scope.policy.content =
                     $document.find('.note-editable').html();
                 console.log('districtId: %s', $scope.districtId);
                 $scope.policy.districtId = $scope.districtId;
@@ -94,32 +96,24 @@ angular.module('myApp.etc', ['ngRoute'])
                     });
             };
 
-            $scope.postDisabled = function() {
-                var name = $scope.suggestion.name;
-                var idNumber = $scope.suggestion.idNumber;
-                var phone = $scope.suggestion.phone;
-                return !name || !name.trim() || !idNumber ||
-                    !idNumber.trim() || !phone || !phone.trim();
-            };
-
         }
     ])
 
-    .controller('NewsCtrl', ['$scope', '$http', '$document',
+    .controller('PostNewsCtrl', ['$scope', '$http', '$document',
         function($scope, $http, $document) {
             // 初始化投诉建议信息
-            $scope.suggestion = {};
+            $scope.news = {};
 
             // 信息上传函数
             $scope.postMsg = function() {
-                $scope.suggestion.suggestion =
+                $scope.news.content =
                     $document.find('.note-editable').html();
                 console.log('districtId: %s', $scope.districtId);
-                $scope.suggestion.districtId = $scope.districtId;
-                $http.post('/postSuggestion', {suggestion: $scope.suggestion})
+                $scope.news.districtId = $scope.districtId;
+                $http.post('/postNews', {news: $scope.news})
                     .success(function(res) {
                         if (res.status == 'ok') {
-                            alert('您成功提交了投诉建议信息！');
+                            alert('您成功发布了就业动态新闻！');
                         } else {
                             alert('信息提交失败，原因是：' + res.message);
                         }
@@ -127,14 +121,6 @@ angular.module('myApp.etc', ['ngRoute'])
                     .error(function(err) {
                         alert('信息提交失败，原因是：' + err);
                     });
-            };
-
-            $scope.postDisabled = function() {
-                var name = $scope.suggestion.name;
-                var idNumber = $scope.suggestion.idNumber;
-                var phone = $scope.suggestion.phone;
-                return !name || !name.trim() || !idNumber ||
-                    !idNumber.trim() || !phone || !phone.trim();
             };
 
         }

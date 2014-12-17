@@ -25,7 +25,7 @@ var builtinAccount = {
 var dbServer = {
     address: 'localhost:',        // 数据库服务器地址
     port: '27017',                // 数据库服务端口
-    dbName: 'lengshuitan'         // 数据库名称
+    dbName: 'messagepost'         // 数据库名称
 };
 
 // 此处设定连接mongodb数据库的参数

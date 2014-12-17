@@ -198,6 +198,14 @@ a {
   }
 }
 
+/* for popup model dialog to show message or organization info
+-------------------------------------------------- */
+#informationMsg .modal-body .container {
+    overflow: auto;
+    width: inherit;
+    height: 600px;
+}
+
 /* style used in each sub page
 =========================================================================*/
 

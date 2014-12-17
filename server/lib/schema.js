@@ -26,18 +26,21 @@ var employee = {
 };
 var orgInfo = {
     name: String,
+    code: String,
     districtId: String,
     address: String,
     phone: String,
     contact: String,
     picture: String,
     overview: String,
-    introduction: String
+    introduction: String,
+    date: Date
 };
 var policy = {
     districtId: String,
     heading: String,
     publisher: String,
+    source: String,
     content: String,
     date: Date
 };
@@ -45,6 +48,7 @@ var message = {
     districtId: String,
     heading: String,
     publisher: String,
+    source: String,
     content: String,
     date: Date
 };
@@ -123,6 +127,7 @@ var organization = {
     jobForm: String,
     industry: String,
     staffs: Number,
+    introductionId: String,
     modifiedDate: Date
 };
 var person = {

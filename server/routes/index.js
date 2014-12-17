@@ -76,6 +76,25 @@ router.get('/getPolicyMsg/:id', function(req, res) {
     });
 });
 
+/* get policy content */
+router.get('/searchInformation/:id', function(req, res) {
+    var infoId = parseInt(req.params.id);
+    debug('infoId: ' + infoId);
+
+    db.query('orgInfo', {date: new Date(infoId)}, function(err, docs) {
+        if (err) {
+            res.send({status: 'dbErr', message: '访问数据库系统出现异常'});
+            return;
+        }
+        if (docs[0]) {
+            res.send({status: 'ok', info: docs[0]});
+        } else {
+            res.send({status: 'notFound', message: '未找到相关信息'});
+        }
+    }, '-code -districtId');
+
+});
+
 /* save message posted by employer */
 router.post('/postEmployer', function(req, res) {
     var employer = trimObject(req.body.employer);
@@ -124,22 +143,73 @@ router.post('/postEmployee', function(req, res) {
 /* save organization introduction posted by organization */
 router.post('/postOrgInfo', function(req, res) {
     var employer = trimObject(req.body.employer);
-    debug('organization info: ' + JSON.stringify(employer));
+    //debug('organization info: ' + JSON.stringify(employer));
     if (!employer.name || !employer.code || !employer.address ||
         !employer.phone || !employer.overview) {
-        res.send({status: 'paramErr', message: '提供的招聘信息不够完整'});
+        res.send({status: 'paramErr', message: '提供的介绍信息不够完整'});
         return;
     }
 
     employer.date = new Date();
+    debug('organization info: ' + JSON.stringify(employer));
 
     db.save('orgInfo', {code: employer.code}, employer, function(err) {
         if (err) {
-            res.send({status: 'dbWriteErr', message: '招聘信息保存失败'});
+            res.send({status: 'dbWriteErr', message: '介绍信息保存失败'});
             return;
         }
-        res.send({status: 'ok', message: '招聘信息保存成功'});
+        db.save('organization', {code: employer.code},
+            {introductionId: employer.date.getTime()}, function(err) {
+                if (err) {
+                    res.send({status: 'dbWriteErr',
+                        message: '单位介绍信息保存失败'});
+                    return;
+                }
+                res.send({status: 'ok', message: '招聘信息保存成功'});
+            });
     });
+});
+
+/* save policy submitted by staff */
+router.post('/postPolicy', function(req, res) {
+    var policy = trimObject(req.body.policy);
+    debug('Policy: ' + JSON.stringify(policy));
+    if (!policy.heading || !policy.content) {
+        res.send({status: 'paramErr', message: '提供的信息不够完整'});
+        return;
+    }
+
+    policy.date = new Date();
+
+    db.save('policy', {heading: policy.heading}, policy,
+        function(err) {
+            if (err) {
+                res.send({status: 'dbWriteErr', message: '建议信息保存失败'});
+                return;
+            }
+            res.send({status: 'ok', message: '投诉建议信息保存成功'});
+        });
+});
+
+/* save news submitted by staff */
+router.post('/postNews', function(req, res) {
+    var news = trimObject(req.body.news);
+    debug('news: ' + JSON.stringify(news));
+    if (!news.heading || !news.content) {
+        res.send({status: 'paramErr', message: '提供的信息不够完整'});
+        return;
+    }
+
+    news.date = new Date();
+
+    db.save('message', {heading: news.heading}, news,
+        function(err) {
+            if (err) {
+                res.send({status: 'dbWriteErr', message: '信息保存失败'});
+                return;
+            }
+            res.send({status: 'ok', message: '就业动态新闻保存成功'});
+        });
 });
 
 /* save suggestion submitted by adviser */
@@ -222,6 +292,8 @@ router.post('/searchOrganization', function(req, res) {
     }
     debug('searchOrg condition: ' + JSON.stringify(condition));
 
+    var queryFields = 'name phone address type economicType' +
+        ' jobForm staffs introductionId';
     db.query('organization', condition, function(err, docs) {
         if (err) {
             console.log('db access error');
@@ -245,7 +317,7 @@ router.post('/searchOrganization', function(req, res) {
         }
         debug('organization list length: ' + docs.length);
         res.send({status: 'ok', list: docs});
-    }, 'name phone address type economicType jobForm staffs', limit);
+    }, queryFields, limit);
 });
 
 /* search for manpower info */
