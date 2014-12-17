@@ -1,6 +1,7 @@
 var employer = {
     name: String,
     code: String,
+    introductionId: String,
     districtId: String,
     phone: String,
     contact: String,
@@ -57,7 +58,8 @@ var suggestion = {
     name: String,
     idNumber: String,
     phone: String,
-    suggestion: String
+    suggestion: String,
+    date: Date
 };
 var log = {
     time: Date,

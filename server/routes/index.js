@@ -105,15 +105,26 @@ router.post('/postEmployer', function(req, res) {
     }
 
     employer.date = new Date();
-
-    // be sure no organization code will be 0
-    db.save('employer', {code: '0'}, employer, function(err) {
+    // fetch organization introductionId and save with it
+    db.query('orgInfo', {code: employer.code}, function(err, docs) {
         if (err) {
             res.send({status: 'dbWriteErr', message: '招聘信息保存失败'});
             return;
         }
-        res.send({status: 'ok', message: '招聘信息保存成功'});
+        if (docs && docs[0]) {
+            // set organization introductionId
+            employer.introductionId = docs[0]['date'].getTime().toString();
+        }
+        // be sure no organization code will be 0
+        db.save('employer', {code: '0'}, employer, function(err) {
+            if (err) {
+                res.send({status: 'dbWriteErr', message: '招聘信息保存失败'});
+                return;
+            }
+            res.send({status: 'ok', message: '招聘信息保存成功'});
+        });
     });
+
 });
 
 /* save message posted by job hunter */
@@ -158,14 +169,24 @@ router.post('/postOrgInfo', function(req, res) {
             res.send({status: 'dbWriteErr', message: '介绍信息保存失败'});
             return;
         }
+        // update organization and employer collection with introductionId
         db.save('organization', {code: employer.code},
             {introductionId: employer.date.getTime()}, function(err) {
                 if (err) {
                     res.send({status: 'dbWriteErr',
-                        message: '单位介绍信息保存失败'});
+                        message: '单位信息更新失败'});
                     return;
                 }
-                res.send({status: 'ok', message: '招聘信息保存成功'});
+                db.save('employer', {code: employer.code},
+                    {introductionId: employer.date.getTime()}, function(err) {
+                        if (err) {
+                            res.send({status: 'dbWriteErr',
+                                message: '招聘信息更新失败'});
+                            return;
+                        }
+                        res.send({status: 'ok', message: '介绍信息保存成功'});
+                    });
+
             });
     });
 });

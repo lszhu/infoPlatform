@@ -61,7 +61,7 @@
             <tr>
               <td class="col-sm-4"><strong>单位名称： </strong>{{job.name}}</td>
               <td><strong>单位地址： </strong>{{job.address}}</td>
-              <td><button role="button" class="btn btn-xs btn-primary">单位简介</button></td>
+              <td><button role="button" ng-disabled="!job.introductionId" ng-click="getMsg(job.introductionId)" onclick="$('#informationMsg').modal('show')" class="btn btn-xs btn-primary">单位简介</button></td>
             </tr>
             <tr>
               <td><strong>联系电话： </strong>{{job.phone}}</td>
@@ -84,6 +84,9 @@
     </table>
 
   </div>
+
+  <!-- 显示企事业单位介绍信息对话框 -->
+  <info-dialog><div ng-bind-html="information.content"></div></info-dialog>
 
   <nav class="col-sm-offset-7" ng-show="pageOption.pages > 1">
     <ul class="pagination">

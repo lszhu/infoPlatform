@@ -22,8 +22,8 @@ angular.module('myApp.search', ['ngRoute'])
             });
     }])
 
-    .controller('JobCtrl', ['$scope', '$http', '$window', 'job', 'page',
-        function($scope, $http, $window, job, page) {
+    .controller('JobCtrl', ['$scope', '$http', '$sce', 'job', 'page',
+        'formatInfo', function($scope, $http, $sce, job, page, formatInfo) {
             // 每页的显示数目
             var limit = 50;
             // 页码导航条显示的页码数
@@ -57,13 +57,14 @@ angular.module('myApp.search', ['ngRoute'])
             $scope.queryJob = function() {
                 console.log('districtId: ' + $scope.districtId);
                 $scope.job.districtId = $scope.districtId;
-                console.log($scope.job);
+                //console.log($scope.job);
                 $http.post('/searchJob', $scope.job)
                     .success(function(res) {
                         if (res.status == 'ok') {
                             $scope.pageOption =
                                 page(res.jobList, limit, pageNav, x, y);
                         }
+                        console.log(res.jobList);
                     })
                     .error(function(err) {
                         console.log('无法获取招聘信息，错误原因：%o', err);
@@ -71,6 +72,24 @@ angular.module('myApp.search', ['ngRoute'])
             };
             // 用于初始化列表信息
             $scope.queryJob();
+
+            // 获取单位介绍信息
+            $scope.getMsg = function(infoId) {
+                //console.log('informationId: ' + infoId);
+                $http.get('/searchInformation/' + infoId)
+                    .success(function(res) {
+                        if (res.status == 'ok') {
+                            $scope.information = formatInfo(res.info);
+                            $scope.information.content =
+                                $sce.trustAsHtml($scope.information.content);
+                        } else {
+                            console.log('没有相关单位的信息\n' + res.message);
+                        }
+                    })
+                    .error(function(err) {
+                        console.log('因出现异常，无法查询到相关信息\n' + err);
+                    });
+            };
 
             $scope.parseSalary = function(salary) {
                 if (salary) {
