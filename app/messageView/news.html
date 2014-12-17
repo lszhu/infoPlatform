@@ -3,13 +3,13 @@
     <div class="panel panel-primary">
       <!-- Default panel contents -->
       <div class="panel-heading text-center">
-        <strong>人力资源最新动态</strong>
+        <strong>人力资源新闻动态</strong>
       </div>
       <!-- Table -->
       <table class="table table-striped">
         <tbody>
         <tr ng-repeat="n in pageOption.dataToShow">
-          <td><a href="" ng-click="getMsg(n.date)" onclick="$('#informationMsg').modal('show')">{{n.heading}}</a></td>
+          <td><a href="" ng-click="getMsg(n.date, n.news)" onclick="$('#informationMsg').modal('show')">{{n.heading}}</a></td>
           <td>{{formatDate(n.date)}}</td>
         </tr>
         </tbody>

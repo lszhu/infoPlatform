@@ -75,7 +75,7 @@ router.post('/getPolicyMsg', function(req, res) {
     }
     debug('condition: ' + JSON.stringify(condition));
 
-    db.query('policy', condition, function(err, docs) {
+    db.querySort('policy', condition, {date: -1}, function(err, docs) {
         if (err) {
             res.send({status: 'dbErr', message: '访问数据库系统出现异常'});
             return;
@@ -103,13 +103,40 @@ router.post('/getNewsMsg', function(req, res) {
     }
     debug('condition: ' + JSON.stringify(condition));
 
-    db.query('policy', condition, function(err, docs) {
+    db.querySort('message', condition, {date: -1}, function(err, docs) {
         if (err) {
             res.send({status: 'dbErr', message: '访问数据库系统出现异常'});
             return;
         }
-        debug('docs length: ' + docs.length);
-        res.send({status: 'ok', policyList: docs});
+        if (condition.date) {
+            debug('news docs length: ' + docs.length);
+            res.send({status: 'ok', newsList: docs});
+            return;
+        }
+        // for querying news list, we have to query policy list too
+        var data = docs;
+        // add a lable to be different from plicy item
+        for (var i = 0, len = docs.length; i < len; i++) {
+            data[i].news = '1';
+        }
+        db.querySort('policy', condition, {date: -1}, function(err, docs) {
+            if (err) {
+                res.send({status: 'dbErr', message: '访问数据库系统出现异常'});
+                return;
+            }
+            debug('policy docs length: ' + docs.length);
+            // concatenate message and policy docs
+            data = data.concat(docs);
+            data.sort(function(a, b) {
+                if (a.date < b.date) {
+                    return 1;
+                } else {
+                    return a.date == b.date ? 0 : -1
+                }
+            });
+            data.slice(0, limit);
+            res.send({status: 'ok', newsList: data});
+        }, fields, limit);
     }, fields, limit);
 });
 
@@ -407,8 +434,8 @@ router.post('/searchManpower', function(req, res) {
     // query items limit
     var limit = 5000;
     // response items limit
-    var resLimit = 2000;
-    db.query('employee', condition, function(err, docs) {
+    //var resLimit = 2000;
+    db.querySort('employee', condition, {date: -1}, function(err, docs) {
         if (err) {
             console.log('db access error');
             res.send({status: 'dbReadErr', message: 求职信息读取失败});
@@ -429,7 +456,7 @@ router.post('/searchManpower', function(req, res) {
                 data.push(docs[i]);
             }
         }
-        data = data.slice(0, resLimit);
+        //data = data.slice(0, resLimit);
         res.send({status: 'ok', list: data});
     }, '', limit);
 });

@@ -279,17 +279,19 @@ angular.module('myApp.message', ['ngRoute'])
             // 用于初始化列表信息
             $scope.queryNewsList();
 
-            // 获取政策信息具体内容（以时间戳为标准）
-            $scope.getMsg = function(date) {
+            // 获取新闻或政策信息具体内容（以时间戳为标准）
+            // 通过参数news为'1'决定是新闻，否则是政策
+            $scope.getMsg = function(date, news) {
                 var infoId = new Date(date);
                 console.log('NewsId: ' + date);
-                $http.post('/getNewsMsg', {infoId: infoId})
+                var url = news ? '/getNewsMsg' : '/getPolicyMsg';
+                $http.post(url, {infoId: infoId})
                     .success(function(res) {
                         if (res.status == 'ok') {
-                            $scope.information = formatInfo(res.newsList[0]);
+                            var list = news ? 'newsList' : 'policyList';
+                            $scope.information = formatInfo(res[list][0]);
                             $scope.information.content =
                                 $sce.trustAsHtml($scope.information.content);
-                            console.log('information %o:', $scope.information.newsList);
                         } else {
                             console.log('没有相关单位的信息\n' + res.message);
                         }

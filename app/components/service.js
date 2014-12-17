@@ -5,6 +5,9 @@ angular.module('myApp.service', [])
     .factory('formatInfo', [function() {
 
         function makeReference(info) {
+            if (!info) {
+                return '';
+            }
             var ref = '';
             if (info.hasOwnProperty('date')) {
                 var d = new Date(info.date);
@@ -14,12 +17,15 @@ angular.module('myApp.service', [])
                 ref += '-' + d.getDate();
             }
             if (info.hasOwnProperty('source')) {
-                ref += info.source;
+                ref += '； 消息来源：' + info.source;
             }
             return ref ? ref + ' ）' : '';
         }
 
         function formatInfo(info) {
+            if (!info) {
+                return {};
+            }
             var msg = {};
             msg.heading = info.heading ? info.heading : info.name;
             msg.content = info.content ? info.content : info.introduction;
