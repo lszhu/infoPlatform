@@ -117,7 +117,7 @@ angular.module('myApp.search', ['ngRoute'])
             // 设置翻页时自动滚屏到x/y坐标
             var x = 0;
             var y = 450;
-            // 用于保存页面显示相关信息，此处还仅是为了能调用其初始化函数
+            // 用于保存页面显示相关信息
             $scope.pageOption = {};
             // 查询条件
             $scope.org = {};

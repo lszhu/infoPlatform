@@ -57,26 +57,35 @@ router.get('/district', function(req, res) {
     res.send({status: 'ok', district: district, districtId: districtId});
 });
 
-/* get policy content */
-router.get('/getPolicyMsg/:id', function(req, res) {
-    res.send({
-        status: 'ok',
-        content: '<p>AngularJS 是 Google 开源出来的一套 js 工具。' +
-        '下面简称其为 ng 。这里只说它是“工具”，没说它是完整的“框架”，' +
-        '是因为它并不是定位于去完成一套框架要做的事。更重要的，' +
-        '下面简称其为 ng 。这里只说它是“工具”，没说它是完整的“框架”，' +
-        '是因为它并不是定位于去完成一套框架要做的事。更重要的，' +
-        '下面简称其为 ng 。这里只说它是“工具”，没说它是完整的“框架”，' +
-        '是因为它并不是定位于去完成一套框架要做的事。更重要的，' +
-        '下面简称其为 ng 。这里只说它是“工具”，没说它是完整的“框架”，' +
-        '是因为它并不是定位于去完成一套框架要做的事。更重要的，' +
-        '下面简称其为 ng 。这里只说它是“工具”，没说它是完整的“框架”，' +
-        '是因为它并不是定位于去完成一套框架要做的事。更重要的，' +
-        '是它给我们揭示了一种新的应用组织与开发方式。</p>' + req.params.id
-    });
+/* get policy heading or content */
+router.post('/getPolicyMsg', function(req, res) {
+    // 最大查询条目
+    var limit = 5000;
+    var condition = {};
+    var fields = '';
+
+    if (req.body.list == true) {
+        fields = 'heading date';
+    } else if (req.body.infoId) {
+        var date = new Date(req.body.infoId);
+        debug('date: ' + date.toString());
+        if (date != 'Invalid Date') {
+            condition.date = date;
+        }
+    }
+    debug('condition: ' + JSON.stringify(condition));
+
+    db.query('policy', condition, function(err, docs) {
+        if (err) {
+            res.send({status: 'dbErr', message: '访问数据库系统出现异常'});
+            return;
+        }
+        debug('docs length: ' + docs.length);
+        res.send({status: 'ok', policyList: docs});
+    }, fields, limit);
 });
 
-/* get policy content */
+/* get organization introduction */
 router.get('/searchInformation/:id', function(req, res) {
     var infoId = parseInt(req.params.id);
     debug('infoId: ' + infoId);

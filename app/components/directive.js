@@ -30,16 +30,14 @@ angular.module('myApp.directive', [])
             '<div class="modal-body">' +
             '<div class="container">' +
 
-            '<div class="text-center">（ {{information.reference}} ）</div>' +
+            '<div class="text-center">{{information.reference}}</div>' +
 
             '<div ng-transclude></div>' +
 
             '</div></div>' +
             '<div class="modal-footer"></div>' +
-            '</div><!-- /.modal-content -->' +
-            '</div><!-- /.modal-dialog -->' +
-            '</div><!-- /.modal -->'
-        }
+            '</div></div></div>'
+        };
     })
     .directive('fileread', [function () {
         return {

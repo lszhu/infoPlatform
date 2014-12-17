@@ -8,7 +8,7 @@ angular.module('myApp.service', [])
             var ref = '';
             if (info.hasOwnProperty('date')) {
                 var d = new Date(info.date);
-                ref += '发布日期：';
+                ref += '（ 发布日期：';
                 ref += d.getFullYear() + '-';
                 ref += d.getMonth() + 1;
                 ref += '-' + d.getDate();
@@ -16,7 +16,7 @@ angular.module('myApp.service', [])
             if (info.hasOwnProperty('source')) {
                 ref += info.source;
             }
-            return ref;
+            return ref ? ref + ' ）' : '';
         }
 
         function formatInfo(info) {
@@ -152,8 +152,8 @@ angular.module('myApp.service', [])
             }
             var limit = itemLimit ? itemLimit : 100;
             var navBar = navBarLimit ? navBarLimit : 5;
-            var dataToShow = dataSource.slice(0, limit);
-            var pages = Math.ceil(dataSource.length / limit);
+            var dataToShow = source.slice(0, limit);
+            var pages = Math.ceil(source.length / limit);
             var pageList = [];
             for (var i = 1; i <= pages && i <= navBar; i++) {
                 pageList[i - 1] = i;

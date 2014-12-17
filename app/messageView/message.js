@@ -156,66 +156,86 @@ angular.module('myApp.message', ['ngRoute'])
         }
     }])
 
-    .controller('PolicyCtrl', ['$scope', '$http', '$document',
-        function($scope, $http, $document) {
-            // 用于测试
-            $scope.policies = [
-                {
-                    content: '人力资源社会保障部关于开展2013年全国高校毕业生秋季网络招聘月活动的通知',
-                    date: '2014-11-11',
-                    id: '1234'
-                },
-                {
-                    content: '关于开展我市纯农户家庭离校未就业高校毕业生就业援助工作的通知',
-                    date: '2014-11-11',
-                    id: '2234'
-                },
-                {
-                    content: '关于选招高校毕业生到有关单位就业见习的通知',
-                    date: '2014-11-11',
-                    id: '3234'
-                },
-                {
-                    content: '人力资源社会保障部关于开展2013年全国高校毕业生秋季网络招聘月活动的通知',
-                    date: '2014-11-11',
-                    id: '4234'
-                },
-                {
-                    content: '关于开展我市纯农户家庭离校未就业高校毕业生就业援助工作的通知',
-                    date: '2014-11-11',
-                    id: '5234'
-                },
-                {
-                    content: '关于选招高校毕业生到有关单位就业见习的通知',
-                    date: '2014-11-11',
-                    id: '6234'
+    .controller('PolicyCtrl', ['$scope', '$http', '$sce', 'formatInfo',
+        'page', function($scope, $http, $sce, formatInfo, page) {
+            // 每页的显示数目
+            var limit = 20;
+            // 页码导航条显示的页码数
+            var pageNav = 5;
+            // 设置翻页时自动滚屏到x/y坐标
+            var x = 0;
+            var y = 400;
+            // 用于保存页面显示相关信息
+            $scope.pageOption = {};
+
+            $scope.formatDate = function(date) {
+                var d = new Date(date);
+                if (d == 'Invalid Date') {
+                    return '';
                 }
-            ];
-
-            $scope.content = '';
-
-            $scope.formatDate = function(d) {
-                return d;
+                var ref = '';
+                ref += d.getFullYear() + '-';
+                ref += d.getMonth() + 1;
+                ref += '-' + d.getDate();
+                return ref;
             };
 
-            $scope.setContent = function(policy) {
-                var curId = policy.id;
-                $scope.postDate = $scope.formatDate(policy.date);
-                console.log('curId: ' + curId);
-                var doc = $document.find('#policyMessage');
-                if (curId) {
-                    $http.get('/getPolicyMsg/' + curId).success(function(res) {
+            $scope.queryPolicyList = function() {
+                $http.post('/getPolicyMsg', {list: true})
+                    .success(function(res) {
                         if (res.status == 'ok') {
-                            doc.html(res.content);
-                        } else {
-                            doc.html('<strong>暂时无法显示</strong>');
+                            $scope.pageOption =
+                                page(res.policyList, limit, pageNav, x, y);
                         }
-                    }).error(function(err) {
-                        doc.html('<strong>暂时无法显示</strong>' +
-                        '<br>原因是：<div>' + err + '</div>');
+                        console.log(res.policyList);
+                    })
+                    .error(function(err) {
+                        console.log('无法获取人力资源与就业服务政策信息，' +
+                        '错误原因：%o', err);
                     });
-                }
-            }
+            };
+            // 用于初始化列表信息
+            $scope.queryPolicyList();
+
+            // 获取政策信息具体内容（以时间戳为标准）
+            $scope.getMsg = function(date) {
+                var infoId = new Date(date);
+                console.log('policyId: ' + date);
+                $http.post('/getPolicyMsg', {infoId: infoId})
+                    .success(function(res) {
+                        if (res.status == 'ok') {
+                            $scope.information = formatInfo(res.policyList[0]);
+                            $scope.information.content =
+                                $sce.trustAsHtml($scope.information.content);
+                            console.log('information %o:', $scope.information.policyList);
+                        } else {
+                            console.log('没有相关单位的信息\n' + res.message);
+                        }
+                    })
+                    .error(function(err) {
+                        console.log('无法获取人力资源与就业服务政策信息，' +
+                        '错误原因：%o', err);
+                    });
+            };
+
+            //$scope.setContent = function(policy) {
+            //    var curId = policy.id;
+            //    $scope.postDate = $scope.formatDate(policy.date);
+            //    console.log('curId: ' + curId);
+            //    var doc = $document.find('#policyMessage');
+            //    if (curId) {
+            //        $http.get('/getPolicyMsg/' + curId).success(function(res) {
+            //            if (res.status == 'ok') {
+            //                doc.html(res.content);
+            //            } else {
+            //                doc.html('<strong>暂时无法显示</strong>');
+            //            }
+            //        }).error(function(err) {
+            //            doc.html('<strong>暂时无法显示</strong>' +
+            //            '<br>原因是：<div>' + err + '</div>');
+            //        });
+            //    }
+            //}
     }])
 
     .controller('NewsCtrl', [function() {
