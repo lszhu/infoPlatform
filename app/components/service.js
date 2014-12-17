@@ -2,6 +2,34 @@
 
 angular.module('myApp.service', [])
 
+    .factory('formatInfo', [function() {
+
+        function makeReference(info) {
+            var ref = '';
+            if (info.hasOwnProperty('date')) {
+                var d = new Date(info.date);
+                ref += '发布日期：';
+                ref += d.getFullYear() + '-';
+                ref += d.getMonth() + 1;
+                ref += '-' + d.getDate();
+            }
+            if (info.hasOwnProperty('source')) {
+                ref += info.source;
+            }
+            return ref;
+        }
+
+        function formatInfo(info) {
+            var msg = {};
+            msg.heading = info.heading ? info.heading : info.name;
+            msg.content = info.content ? info.content : info.introduction;
+            msg.reference = makeReference(info);
+            return msg;
+        }
+
+        return formatInfo;
+    }])
+
     .factory('job', ['$http', function($http) {
 
         function getJob(district) {

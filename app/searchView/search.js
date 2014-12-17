@@ -90,7 +90,7 @@ angular.module('myApp.search', ['ngRoute'])
     ])
 
     .controller('EnterpriseCtrl', ['$scope', '$http', '$sce', 'page',
-        function($scope, $http, $sce, page) {
+        'formatInfo', function($scope, $http, $sce, page, formatInfo) {
             // 每页的显示数目
             var limit = 50;
             // 页码导航条显示的页码数
@@ -126,36 +126,37 @@ angular.module('myApp.search', ['ngRoute'])
                 $http.get('/searchInformation/' + infoId)
                     .success(function(res) {
                         if (res.status == 'ok') {
-                            $scope.information = res.info;
+                            $scope.information = formatInfo(res.info);
+                            //$scope.information = res.info;
                             $scope.information.content =
-                                $sce.trustAsHtml(res.info.introduction);
-                            $scope.information.heading = res.info.name;
-                            $scope.information.reference =
-                                makeReference(res.info);
+                                $sce.trustAsHtml($scope.information.content);
+                            //$scope.information.heading = res.info.name;
+                            //$scope.information.reference =
+                            //    makeReference(res.info);
                             //console.log('heading: %o', res.info.name);
                         } else {
-                            alert('没有相关单位的信息\n' + res.message);
+                            console.log('没有相关单位的信息\n' + res.message);
                         }
                     })
                     .error(function(err) {
-                        alert('因出现异常，无法正确查询到相关信息\n' + err);
+                        console.log('因出现异常，无法查询到相关信息\n' + err);
                     });
             };
 
-            function makeReference(info) {
-                var ref = '';
-                if (info.hasOwnProperty('date')) {
-                    var d = new Date(info.date);
-                    ref += '发布日期：';
-                    ref += d.getFullYear() + '-';
-                    ref += d.getMonth() + 1;
-                    ref += '-' + d.getDate();
-                }
-                if (info.hasOwnProperty('source')) {
-                    ref += info.source;
-                }
-                return ref;
-            }
+            //function makeReference(info) {
+            //    var ref = '';
+            //    if (info.hasOwnProperty('date')) {
+            //        var d = new Date(info.date);
+            //        ref += '发布日期：';
+            //        ref += d.getFullYear() + '-';
+            //        ref += d.getMonth() + 1;
+            //        ref += '-' + d.getDate();
+            //    }
+            //    if (info.hasOwnProperty('source')) {
+            //        ref += info.source;
+            //    }
+            //    return ref;
+            //}
         }
     ])
 
