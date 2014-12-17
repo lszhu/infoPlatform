@@ -35,7 +35,7 @@ angular.module('myApp.directive', [])
             '<div ng-transclude></div>' +
 
             '</div></div>' +
-            '<div class="modal-footer"></div>' +
+            //'<div class="modal-footer"></div>' +
             '</div></div></div>'
         };
     })

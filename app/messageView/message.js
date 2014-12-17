@@ -238,6 +238,65 @@ angular.module('myApp.message', ['ngRoute'])
             //}
     }])
 
-    .controller('NewsCtrl', [function() {
+    .controller('NewsCtrl', ['$scope', '$http', '$sce', 'formatInfo',
+        'page', function($scope, $http, $sce, formatInfo, page) {
+            // 每页的显示数目
+            var limit = 20;
+            // 页码导航条显示的页码数
+            var pageNav = 5;
+            // 设置翻页时自动滚屏到x/y坐标
+            var x = 0;
+            var y = 400;
+            // 用于保存页面显示相关信息
+            $scope.pageOption = {};
 
+            $scope.formatDate = function(date) {
+                var d = new Date(date);
+                if (d == 'Invalid Date') {
+                    return '';
+                }
+                var ref = '';
+                ref += d.getFullYear() + '-';
+                ref += d.getMonth() + 1;
+                ref += '-' + d.getDate();
+                return ref;
+            };
+
+            $scope.queryNewsList = function() {
+                $http.post('/getNewsMsg', {list: true})
+                    .success(function(res) {
+                        if (res.status == 'ok') {
+                            $scope.pageOption =
+                                page(res.newsList, limit, pageNav, x, y);
+                        }
+                        console.log(res.newsList);
+                    })
+                    .error(function(err) {
+                        console.log('无法获取人力资源与就业服务政策信息，' +
+                        '错误原因：%o', err);
+                    });
+            };
+            // 用于初始化列表信息
+            $scope.queryNewsList();
+
+            // 获取政策信息具体内容（以时间戳为标准）
+            $scope.getMsg = function(date) {
+                var infoId = new Date(date);
+                console.log('NewsId: ' + date);
+                $http.post('/getNewsMsg', {infoId: infoId})
+                    .success(function(res) {
+                        if (res.status == 'ok') {
+                            $scope.information = formatInfo(res.newsList[0]);
+                            $scope.information.content =
+                                $sce.trustAsHtml($scope.information.content);
+                            console.log('information %o:', $scope.information.newsList);
+                        } else {
+                            console.log('没有相关单位的信息\n' + res.message);
+                        }
+                    })
+                    .error(function(err) {
+                        console.log('无法获取人力资源与就业服务政策信息，' +
+                        '错误原因：%o', err);
+                    });
+            };
     }]);

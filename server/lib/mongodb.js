@@ -76,8 +76,20 @@ function query(model, condition, callback, fields, limit) {
     limitation = limit ? limit : maxReturnedDoc;
     models[model]
         .find(condition, fields)
-        .lean()                     // make return value changeable
         .limit(limitation)          // limit returned documents
+        .lean()                     // return plain javascript objects
+        .exec(callback);            // callback(err, docs)
+}
+
+// like query but add sort function, sorter indicate sort parameter
+// sorter is like {field1: 1, field2: -1}, 1 for ascending, -1 for descending
+function querySort(model, condition, sorter, callback, fields, limit) {
+    limitation = limit ? limit : maxReturnedDoc;
+    models[model]
+        .find(condition, fields)
+        .limit(limitation)          // limit returned documents
+        .sort(sorter)               // returned sorted documents
+        .lean()                     // return plain javascript objects
         .exec(callback);            // callback(err, docs)
 }
 
@@ -109,6 +121,7 @@ function getAccount(username, callback) {
 
 module.exports = {
     query: query,
+    querySort: querySort,
     queryOne: queryOne,
     save: save,
     remove: remove,

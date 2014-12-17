@@ -85,6 +85,34 @@ router.post('/getPolicyMsg', function(req, res) {
     }, fields, limit);
 });
 
+/* get policy heading or content */
+router.post('/getNewsMsg', function(req, res) {
+    // 最大查询条目
+    var limit = 5000;
+    var condition = {};
+    var fields = '';
+
+    if (req.body.list == true) {
+        fields = 'heading date';
+    } else if (req.body.infoId) {
+        var date = new Date(req.body.infoId);
+        debug('date: ' + date.toString());
+        if (date != 'Invalid Date') {
+            condition.date = date;
+        }
+    }
+    debug('condition: ' + JSON.stringify(condition));
+
+    db.query('policy', condition, function(err, docs) {
+        if (err) {
+            res.send({status: 'dbErr', message: '访问数据库系统出现异常'});
+            return;
+        }
+        debug('docs length: ' + docs.length);
+        res.send({status: 'ok', policyList: docs});
+    }, fields, limit);
+});
+
 /* get organization introduction */
 router.get('/searchInformation/:id', function(req, res) {
     var infoId = parseInt(req.params.id);
@@ -291,7 +319,7 @@ router.post('/searchJob', function(req, res) {
     }
     debug('search job condition: ' + JSON.stringify(condition));
 
-    db.query('employer', condition, function(err, docs) {
+    db.querySort('employer', condition, {date: -1}, function(err, docs) {
         if (err) {
             res.send({status: 'dbReadErr', message: '数据库访问错误'});
             return;
