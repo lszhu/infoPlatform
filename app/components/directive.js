@@ -16,10 +16,10 @@ angular.module('myApp.directive', [])
             scope: true,
             transclude: true,
             template: '<!--  信息显示框  -->' +
-            '<div class="modal fade" id="informationMsg" role="dialog">' +
-            '<div class="modal-dialog modal-lg">' +
-            '<div class="modal-content">' +
-            '<div class="modal-header">' +
+            '<div class="modal fade" id="informationMsg" role="dialog"' +
+            ' tabindex="-1" aria-labelledby="myModalLabel"' +
+            ' aria-hidden="true"><div class="modal-dialog modal-lg">' +
+            '<div class="modal-content"><div class="modal-header">' +
             '<button type="button" class="close" data-dismiss="modal">' +
             '<span aria-hidden="true">&times;</span>' +
             '<span class="sr-only">Close</span></button>' +
@@ -27,10 +27,11 @@ angular.module('myApp.directive', [])
 
             '<strong>{{information.heading}}</strong></h2></div>' +
 
-            '<div class="modal-body">' +
-            '<div class="container">' +
+            '<div class="modal-body"><div class="container">' +
 
             '<div class="text-center">{{information.reference}}</div>' +
+
+            '<div><br></div>' +
 
             '<div ng-transclude></div>' +
 

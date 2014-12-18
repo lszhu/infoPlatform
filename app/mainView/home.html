@@ -138,13 +138,13 @@
 
   <div class="row featurette">
     <div class="col-md-7">
-      <h2 class="featurette-heading">辖区内某企业</h2>
-      <p class="lead">企业介绍企业介绍企业介绍企业介绍企业介绍企业介绍企业介绍企业介绍企业介绍企业介绍企业介绍企业介绍企业介绍企业介绍企业介绍企业介绍企业介绍企业介绍企业介绍企业介绍企业介绍企业介绍企业介绍企业介绍企业介绍企业介绍企业介绍企业介绍企业介绍企业介绍企业介绍企业介绍企业介绍企业介绍企业介绍企业介绍</p>
-      <p class="lead">地址：某某镇某某路某某号</p>
-      <p class="lead">电话：0000-12345678</p>
+      <h2 class="featurette-heading"><span ng-bind="orgInfo[0].name">aaa</span></h2>
+      <p class="lead"><span ng-bind="orgInfo[0].overview"></span></p>
+      <p class="lead">地址：<span ng-bind="orgInfo[0].address"></span></p>
+      <p class="lead">电话：<span ng-bind="orgInfo[0].phone"></span></p>
     </div>
     <div class="col-md-5">
-      <img class="img-thumbnail featurette-image img-responsive" src="images/11.jpg" alt="Generic placeholder image">
+      <img class="img-thumbnail featurette-image img-responsive" ng-src="{{orgInfo[0].picture}}" alt="Generic placeholder image">
     </div>
   </div>
 
@@ -152,12 +152,13 @@
 
   <div class="row featurette">
     <div class="col-md-5">
-      <img class="img-thumbnail featurette-image img-responsive" src="images/12.jpg" alt="Generic placeholder image">
+      <img class="img-thumbnail featurette-image img-responsive" ng-src="{{orgInfo[1].picture}}" alt="Generic placeholder image">
     </div>
     <div class="col-md-7">
-      <h2 class="featurette-heading">辖区内某社区服务中心</h2>
-      <p class="lead">社区服务中心社区服务中心社区服务中心社区服务中心社区服务中心社区服务中心</p>
-      <p class="lead">电话：0000-12345678</p>
+      <h2 class="featurette-heading"><span ng-bind="orgInfo[1].name"></span></h2>
+      <p class="lead"><span ng-bind="orgInfo[1].overview"></span></p>
+      <p class="lead">地址：<span ng-bind="orgInfo[1].address"></span></p>
+      <p class="lead">电话：<span ng-bind="orgInfo[1].phone"></span></p>
     </div>
   </div>
 
@@ -165,12 +166,13 @@
 
   <div class="row featurette">
     <div class="col-md-7">
-      <h2 class="featurette-heading">辖区内某社区服务中心</h2>
-      <p class="lead">企业介绍企业介绍企业介绍企业介绍企业介绍企业介绍企业介绍企业介绍</p>
-      <p class="lead">电话：0000-12345678</p>
+      <h2 class="featurette-heading"><span ng-bind="orgInfo[2].name">aaa</span></h2>
+      <p class="lead"><span ng-bind="orgInfo[2].overview"></span></p>
+      <p class="lead">地址：<span ng-bind="orgInfo[2].address"></span></p>
+      <p class="lead">电话：<span ng-bind="orgInfo[2].phone"></span></p>
     </div>
     <div class="col-md-5">
-      <img class="img-thumbnail featurette-image img-responsive" src="images/13.jpg" alt="Generic placeholder image">
+      <img class="img-thumbnail featurette-image img-responsive" ng-src="{{orgInfo[1].picture}}" alt="Generic placeholder image">
     </div>
   </div>
 

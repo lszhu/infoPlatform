@@ -161,6 +161,44 @@ router.get('/searchInformation/:id', function(req, res) {
     }, '-code -districtId');
 
 });
+/* get organization introduction */
+router.post('/searchInformation', function(req, res) {
+    //var infoId = parseInt(req.params.id);
+    //debug('infoId: ' + infoId);
+    var condition = {};
+    var fields = '-code -districtId -introduction';
+    var queryLimit = 2000;
+    var responseLimit = 2000;
+    if (req.body.id && parseInt(req.body.id)) {
+        condition.date = new Date(infoId);
+        fields = '-code -districtId';
+    }
+    if (req.body.districtId) {
+        condition.districtId = req.body.districtId;
+    }
+    if (req.body.queryLimit && parseInt(req.body.queryLimit)) {
+        queryLimit = parseInt(req.body.queryLimit);
+    }
+    if (req.body.responseLimit && parseInt(req.body.responseLimit)) {
+        responseLimit = parseInt(req.body.responseLimit);
+    }
+
+
+    db.querySort('orgInfo', condition, {date: -1}, function(err, docs) {
+        if (err) {
+            res.send({status: 'dbErr', message: '访问数据库系统出现异常'});
+            return;
+        }
+        if (responseLimit) {
+            res.send({status: 'ok', info: docs.slice(0, responseLimit)});
+        } else if (docs[0]) {
+            res.send({status: 'ok', info: docs[0]});
+        } else {
+            res.send({status: 'notFound', message: '未找到相关信息'});
+        }
+    }, fields, queryLimit);
+
+});
 
 /* save message posted by employer */
 router.post('/postEmployer', function(req, res) {
@@ -324,7 +362,12 @@ router.post('/postSuggestion', function(req, res) {
 /* get job info posted by employer */
 router.post('/searchJob', function(req, res) {
     // query items limit
-    var limit = 2000;
+    var limit = req.body.limit;
+    if (limit && parseInt(limit)) {
+        limit = parseInt(limit);
+    } else {
+        limit = 2000;
+    }
     var now = new Date();
     // half a year before
     var date = new Date(now.getFullYear(), now.getMonth() - 6, now.getDate());

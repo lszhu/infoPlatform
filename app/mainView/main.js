@@ -20,6 +20,8 @@ angular.module('myApp.home', ['ngRoute'])
 
     .controller('HomeCtrl', ['$scope', '$http', '$sce', 'formatInfo',
         'page', function($scope, $http, $sce, formatInfo, page) {
+            // 广告位个数
+            var adPosition = 3;
             // 每页的显示数目
             var limit = 20;
             // 页码导航条显示的页码数
@@ -40,8 +42,11 @@ angular.module('myApp.home', ['ngRoute'])
                 return ref;
             };
 
-            function queryNewsList() {
+            function queryNewsList(n) {
                 var factor = {list: true, districtId: $scope.districtId};
+                if (n && parseInt(n)) {
+                    factor.limit = n;
+                }
                 $http.post('/getNewsMsg', factor)
                     .success(function(res) {
                         if (res.status == 'ok') {
@@ -57,7 +62,7 @@ angular.module('myApp.home', ['ngRoute'])
                     });
             }
             // 用于初始化列表信息
-            queryNewsList();
+            queryNewsList(limit);
 
             // 获取新闻或政策信息具体内容（以时间戳为标准）
             // 通过参数news为'1'决定是新闻，否则是政策
@@ -82,9 +87,12 @@ angular.module('myApp.home', ['ngRoute'])
                     });
             };
 
-            function queryJob() {
-
-                $http.post('/searchJob', {districtId: $scope.districtId})
+            function queryJob(n) {
+                var factor =  {districtId: $scope.districtId};
+                if (n && parseInt(n)) {
+                    factor.limit = n;
+                }
+                $http.post('/searchJob', factor)
                     .success(function(res) {
                         if (res.status == 'ok') {
                             var market = res.jobList ? res.jobList : [];
@@ -96,7 +104,57 @@ angular.module('myApp.home', ['ngRoute'])
                         console.log('无法获取招聘信息，错误原因：%o', err);
                     });
             }
-            queryJob();
+            queryJob(limit);
+
+            function queryOrgInfo(queryLimit, responseLimit) {
+                var factor =  {};//{districtId: $scope.districtId};
+                if (queryLimit && parseInt(queryLimit)) {
+                    factor.queryLimit = queryLimit;
+                }
+                if (responseLimit && parseInt(responseLimit)) {
+                    factor.responseLimit = responseLimit;
+                }
+                $http.post('/searchInformation', factor)
+                    .success(function(res) {
+                        if (res.status == 'ok') {
+                            //console.log('res.info: %o', res.info);
+                            var orgInfo = res.info ? res.info : [];
+                            $scope.orgInfo = addPlaceholder(orgInfo);
+                            //console.log('orgInfo %o', $scope.orgInfo);
+                        }
+                        //console.log($scope.market);
+                    })
+                    .error(function(err) {
+                        console.log('无法获取招聘信息，错误原因：%o', err);
+                    });
+            }
+            // 0表示queryLimit不受限制
+            queryOrgInfo(0, adPosition);
+
+            function addPlaceholder(info) {
+                var infoList = info;
+                if (info && info.length >= 3) {
+                    return info;
+                } else if (!info || !info.length) {
+                    infoList = [];
+                }
+                var ad = {
+                    name: '提供一个展示你自己的机会',
+                    overview: '随着网络的发展，越来越多的企业通过互联网进行' +
+                    '招聘工作。同时企业也发现，网络招聘要发挥最大的作用，' +
+                    '仍需经历较长的历程。基于互联网的真正服务于企业招聘管理，' +
+                    '以众多优质互联网资源为依托，发布圈内招聘信息，为求职者' +
+                    '提供人性化、个性化、专业化的信息服务，以让优质人才和优' +
+                    '秀企业及时相遇为己任。',
+                    address: '中国湖南省永州市',
+                    phone: '8888888',
+                    picture: 'images/12.jpg'
+                };
+                for (var i = infoList.length; i < adPosition; i++) {
+                    infoList[i] = new Object(ad);
+                }
+                return infoList;
+            }
         }])
 
     .controller('View1Ctrl', [function() {
