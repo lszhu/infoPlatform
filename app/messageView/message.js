@@ -251,15 +251,16 @@ angular.module('myApp.message', ['ngRoute'])
             $scope.pageOption = {};
 
             $scope.formatDate = function(date) {
-                var d = new Date(date);
-                if (d == 'Invalid Date') {
-                    return '';
-                }
-                var ref = '';
-                ref += d.getFullYear() + '-';
-                ref += d.getMonth() + 1;
-                ref += '-' + d.getDate();
-                return ref;
+                //var d = new Date(date);
+                //if (d == 'Invalid Date') {
+                //    return '';
+                //}
+                //var ref = '';
+                //ref += d.getFullYear() + '-';
+                //ref += d.getMonth() + 1;
+                //ref += '-' + d.getDate();
+                //return ref;
+                return !date ? '未知' : date.toString().split('T')[0];
             };
 
             $scope.queryNewsList = function() {

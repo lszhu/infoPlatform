@@ -100,10 +100,16 @@ angular.module('myApp.search', ['ngRoute'])
             };
 
             $scope.getDate = function(date) {
-                var d = new Date(date);
-                var time = d.getFullYear() + '-';
-                time += d.getMonth() + 1;
-                return time + '-' + d.getDate();
+                //var d = new Date(date);
+                //if (d == 'Invalid Date') {
+                //    return '';
+                //}
+                //var ref = '';
+                //ref += d.getFullYear() + '-';
+                //ref += d.getMonth() + 1;
+                //ref += '-' + d.getDate();
+                //return ref;
+                return !date ? '未知' : date.toString().split('T')[0];
             };
         }
     ])
@@ -212,10 +218,16 @@ angular.module('myApp.search', ['ngRoute'])
             };
 
             $scope.getDate = function(date) {
-                var d = new Date(date);
-                var time = d.getFullYear() + '-';
-                time += d.getMonth() + 1;
-                return time + '-' + d.getDate();
+                //var d = new Date(date);
+                //if (d == 'Invalid Date') {
+                //    return '';
+                //}
+                //var ref = '';
+                //ref += d.getFullYear() + '-';
+                //ref += d.getMonth() + 1;
+                //ref += '-' + d.getDate();
+                //return ref;
+                return !date ? '未知' : date.toString().split('T')[0];
             };
 
         }

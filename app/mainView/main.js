@@ -31,15 +31,16 @@ angular.module('myApp.home', ['ngRoute'])
             var y = 400;
 
             $scope.formatDate = function(date) {
-                var d = new Date(date);
-                if (d == 'Invalid Date') {
-                    return '';
-                }
-                var ref = '';
-                ref += d.getFullYear() + '-';
-                ref += d.getMonth() + 1;
-                ref += '-' + d.getDate();
-                return ref;
+                //var d = new Date(date);
+                //if (d == 'Invalid Date') {
+                //    return '';
+                //}
+                //var ref = '';
+                //ref += d.getFullYear() + '-';
+                //ref += d.getMonth() + 1;
+                //ref += '-' + d.getDate();
+                //return ref;
+                return !date ? '未知' : date.toString().split('T')[0];
             };
 
             function queryNewsList(n) {
