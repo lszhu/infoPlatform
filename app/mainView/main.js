@@ -22,8 +22,8 @@ angular.module('myApp.home', ['ngRoute'])
         'page', function($scope, $http, $sce, formatInfo, page) {
             // 广告位个数
             var adPosition = 3;
-            // 每页的显示数目
-            var limit = 20;
+            // 页面显示的条目数
+            var limit = 10;
             // 页码导航条显示的页码数
             var pageNav = 5;
             // 设置翻页时自动滚屏到x/y坐标
@@ -52,9 +52,9 @@ angular.module('myApp.home', ['ngRoute'])
                         if (res.status == 'ok') {
                             var news =
                                 page(res.newsList, limit, pageNav, x, y);
-                            $scope.news = news.dataToShow.slice(0, 10);
+                            $scope.news = news.dataToShow;
                         }
-                        //console.log($scope.news);
+                        console.log($scope.news);
                     })
                     .error(function(err) {
                         console.log('无法获取人力资源与就业服务政策信息，' +
@@ -95,10 +95,10 @@ angular.module('myApp.home', ['ngRoute'])
                 $http.post('/searchJob', factor)
                     .success(function(res) {
                         if (res.status == 'ok') {
-                            var market = res.jobList ? res.jobList : [];
-                            $scope.market = market.slice(0, 10);
+                            $scope.market = res.jobList || [];
+                            //$scope.market = market.slice(0, limit);
                         }
-                        //console.log($scope.market);
+                        console.log($scope.market);
                     })
                     .error(function(err) {
                         console.log('无法获取招聘信息，错误原因：%o', err);
@@ -118,7 +118,7 @@ angular.module('myApp.home', ['ngRoute'])
                     .success(function(res) {
                         if (res.status == 'ok') {
                             //console.log('res.info: %o', res.info);
-                            var orgInfo = res.info ? res.info : [];
+                            var orgInfo = res.info || [];
                             $scope.orgInfo = addPlaceholder(orgInfo);
                             //console.log('orgInfo %o', $scope.orgInfo);
                         }

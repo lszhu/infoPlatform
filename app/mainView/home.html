@@ -69,7 +69,7 @@
           <tbody>
           <tr ng-repeat="n in news">
             <td><a href="" ng-click="getMsg(n.date, n.news)" onclick="$('#informationMsg').modal('show')">{{n.heading}}</a></td>
-            <td class="text-right">{{formatDate(n.date)}}</td>
+            <td class="text-right date">{{formatDate(n.date)}}</td>
           </tr>
           </tbody>
         </table>
@@ -77,7 +77,7 @@
     </div>
 
     <!-- 显示人力资源与就业服务政策信息对话框 -->
-    <info-dialog><div ng-bind-html="information.content"></div></info-dialog>
+    <div info-dialog><div ng-bind-html="information.content"></div></div>
 
     <div class="col-md-12 col-lg-5">
       <div class="panel panel-primary">
@@ -90,7 +90,7 @@
           <tr ng-repeat="m in market">
             <td><a href="#/search/job">{{m.name}}</a></td>
             <td>招聘</td>
-            <td class="text-right">{{formatDate(m.date)}}</td>
+            <td class="text-right date">{{formatDate(m.date)}}</td>
           </tr>
           </tbody>
         </table>

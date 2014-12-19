@@ -224,6 +224,10 @@ table.embedded {
     text-align: left;
 }
 
+td.date {
+    min-width: 90px;
+}
+
 /* mainView
 -------------------------------------------------------*/
 .veryBig {

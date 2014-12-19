@@ -86,12 +86,12 @@
   </div>
 
   <!-- 显示企事业单位介绍信息对话框 -->
-  <info-dialog><div ng-bind-html="information.content"></div></info-dialog>
+  <div info-dialog><div ng-bind-html="information.content"></div></div>
 
   <nav class="col-sm-offset-7" ng-show="pageOption.pages > 1">
     <ul class="pagination">
       <li><a ng-click="pageOption.previousList()" href="">«</a></li>
-      <li ng-class="pageOption.active(p)" ng-click="pageOption.select(p)" ng-repeat="p in pageOption.pageList"><a href="">{{p}}</a></li>
+      <li ng-class="pageOption.active(p)" ng-click="pageOption.select(p)" ng-repeat="p in pageOption.pageList"><a href="" ng-bind="p"></a></li>
       <!--
       <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
       <li><a href="#">2</a></li>
