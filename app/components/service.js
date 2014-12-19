@@ -10,16 +10,17 @@ angular.module('myApp.service', [])
             }
             var ref = '';
             if (info.hasOwnProperty('date')) {
-                var d = new Date(info.date);
-                ref += '（ 发布日期：';
-                ref += d.getFullYear() + '-';
-                ref += d.getMonth() + 1;
-                ref += '-' + d.getDate();
+                //var d = new Date(info.date);
+                //ref += '（ 发布日期：';
+                //ref += d.getFullYear() + '-';
+                //ref += d.getMonth() + 1;
+                //ref += '-' + d.getDate();
+                ref = '发布日期：' + info.date.toString().split('T')[0];
             }
             if (info.hasOwnProperty('source')) {
                 ref += '； 消息来源：' + info.source;
             }
-            return ref ? ref + ' ）' : '';
+            return ref ? '（' + ref + ' ）' : '';
         }
 
         function formatInfo(info) {
