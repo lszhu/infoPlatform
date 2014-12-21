@@ -2,6 +2,7 @@ var debug = require('debug')('tool');
 var path = require('path');
 //var util = require('util');
 var fs = require('fs');
+var _ = require('lodash-node');
 
 var refPath = require('../config').path;
 var jobType = require('./jobType');
@@ -327,6 +328,42 @@ function filterWorkerMsg(worker) {
     return o;
 }
 
+// 从docs中随机选取responseLimit个元素并将每个元素的时间参数转换为相应数字
+function randomOrgInfo(docs, responseLimit) {
+    if (!docs || !docs.length) {
+        return [];
+    }
+
+    var limit = responseLimit || 3;
+    var data = _.sample(docs, limit);
+    for (var i = 0, len = data.length; i < len; i++) {
+        data[i].date = data[i].date.getTime().toString();
+    }
+    debug('random data length: ' + data.length);
+    return data;
+}
+
+function base64ImgData(picture) {
+    if (!picture) {
+        return '';
+    }
+    var data = picture.split(',')[1];
+    if (!data) {
+        return '';
+    }
+    return new Buffer(data, 'base64');
+}
+function base64ImgType(picture) {
+    if (!picture) {
+        return 'png';
+    }
+    var head = picture.split(';')[0];
+    if (!head) {
+        return 'png';
+    }
+    return head.slice(5);
+}
+
 module.exports = {
     log: log,
     period: period,
@@ -344,5 +381,8 @@ module.exports = {
     orgScale: orgScale,
     birthSpan: birthSpan,
     getAddress: getAddress,
-    districttoAddress: districtToAddress
+    districtoAddress: districtToAddress,
+    randomOrgInfo: randomOrgInfo,
+    base64ImgData: base64ImgData,
+    base64ImgType: base64ImgType
 };

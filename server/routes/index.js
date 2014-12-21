@@ -57,6 +57,34 @@ router.get('/district', function(req, res) {
     res.send({status: 'ok', district: district, districtId: districtId});
 });
 
+/* get organization picture */
+router.get('/picture/:id', function(req, res) {
+    var date = new Date(+req.params.id);
+    debug('pictureId: ' + req.params.id);
+    if (date == 'Invalid Date') {
+        res.send('');
+        return;
+    }
+    debug('date: ' + JSON.stringify(date));
+
+    db.query('orgInfo', {date: date}, function(err, docs) {
+        if (err) {
+            res.send({status: 'dbErr', message: '访问数据库系统出现异常'});
+            return;
+        }
+        if (!docs.length) {
+            res.send({status: 'noData', message: '图片不存在'});
+            return;
+        }
+        var imgData = tool.base64ImgData(docs[0].picture);
+        var imgType = tool.base64ImgType(docs[0].picture);
+        debug('image type: ' + imgType);
+        debug('image data: ' + imgData);
+        res.type(imgType);
+        res.send(imgData);
+    });
+});
+
 /* get policy heading or content */
 router.post('/getPolicyMsg', function(req, res) {
     // 最大查询条目
@@ -166,12 +194,12 @@ router.post('/searchInformation', function(req, res) {
     //var infoId = parseInt(req.params.id);
     //debug('infoId: ' + infoId);
     var condition = {};
-    var fields = '-code -districtId -introduction';
+    var fields = '-code -districtId -introduction -picture';
     var queryLimit = 2000;
     var responseLimit = 2000;
     if (req.body.id && parseInt(req.body.id)) {
         condition.date = new Date(infoId);
-        fields = '-code -districtId';
+        fields = '-code -districtId -picture';
     }
     if (req.body.districtId) {
         condition.districtId = req.body.districtId;
@@ -182,7 +210,7 @@ router.post('/searchInformation', function(req, res) {
     if (req.body.responseLimit && parseInt(req.body.responseLimit)) {
         responseLimit = parseInt(req.body.responseLimit);
     }
-
+    debug('responseLimit: ' + responseLimit);
 
     db.querySort('orgInfo', condition, {date: -1}, function(err, docs) {
         if (err) {
@@ -190,7 +218,11 @@ router.post('/searchInformation', function(req, res) {
             return;
         }
         if (responseLimit) {
-            res.send({status: 'ok', info: docs.slice(0, responseLimit)});
+            debug('docs.length: ' + docs.length);
+            var responseInfo = tool.randomOrgInfo(docs, responseLimit);
+            //debug('responseInfo data: ' + JSON.stringify(responseInfo));
+            res.send({status: 'ok', info: responseInfo});
+                //res.send({status: 'ok', info: docs.slice(0, responseLimit)});
         } else if (docs[0]) {
             res.send({status: 'ok', info: docs[0]});
         } else {
