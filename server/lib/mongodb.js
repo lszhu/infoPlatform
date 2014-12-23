@@ -40,6 +40,7 @@ function createModels() {
     var employerSchema = new mongoose.Schema(schema.employer);
     var employeeSchema = new mongoose.Schema(schema.employee);
     var orgInfoSchema = new mongoose.Schema(schema.orgInfo);
+    var communityInfoSchema = new mongoose.Schema(schema.communityInfo);
     var policySchema = new mongoose.Schema(schema.policy);
     var messageSchema = new mongoose.Schema(schema.message);
     var organizationSchema = new mongoose.Schema(schema.organization);
@@ -53,6 +54,7 @@ function createModels() {
         employer: mongoose.model('employer', employerSchema),
         employee: mongoose.model('employee', employeeSchema),
         orgInfo: mongoose.model('orgInfo', orgInfoSchema),
+        communityInfo: mongoose.model('communityInfo', communityInfoSchema),
         policy: mongoose.model('policy', policySchema),
         message: mongoose.model('message', messageSchema),
         organization: mongoose.model('organization', organizationSchema),

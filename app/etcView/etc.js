@@ -40,7 +40,7 @@ angular.module('myApp.etc', ['ngRoute'])
             $scope.postMsg = function() {
                 $scope.employer.introduction =
                     $document.find('.note-editable').html();
-                //console.log('employer: %o', $scope.employer);
+                console.log('employer: %o', $scope.employer.picture);
                 $scope.employer.districtId = $scope.districtId;
                 $http.post('/postOrgInfo', {employer: $scope.employer})
                     .success(function(res) {
@@ -53,20 +53,38 @@ angular.module('myApp.etc', ['ngRoute'])
                     .error(function(err) {
                         alert('信息发布失败，原因是：' + err);
                     });
+                postPicture();
             };
 
             $scope.postDisabled = function() {
+                //return false;
                 var name = $scope.employer.name;
                 var code = $scope.employer.code;
                 var phone = $scope.employer.phone;
                 //var picture = $scope.employer.picture;
                 var address = $scope.employer.address;
                 var overview = $scope.employer.overview;
-                return !name || !name.trim() || !code || !code.trim() ||
-                    !phone || !phone.trim() || !address || !address.trim() ||
-                    !overview || !overview.trim();
+                return !name || !code || !phone || !address || !overview;
             };
 
+            $scope.test = postPicture;
+            function postPicture() {
+                var frame = $document.find('iframe')[0];
+                //var frame = angular.element('#fileUpload').contents();
+                if (!frame) {
+                    console.log('找不到要提交的文档');
+                    return;
+                }
+                frame = frame.contentDocument || frame.contentWindow.document;
+                console.log(frame);
+                var code = frame.getElementById('code');
+                console.log(code);
+                var format = frame.getElementById('format');
+                var picture = frame.getElementById('picture');
+                format.value = picture.value.split('.').slice(-1)[0];
+                code.value = $scope.employer.code;
+                frame.getElementById('submit').click();
+            }
         }
     ])
 
@@ -154,8 +172,7 @@ angular.module('myApp.etc', ['ngRoute'])
                 var name = $scope.suggestion.name;
                 var idNumber = $scope.suggestion.idNumber;
                 var phone = $scope.suggestion.phone;
-                return !name || !name.trim() || !idNumber ||
-                    !idNumber.trim() || !phone || !phone.trim();
+                return !name || !idNumber || !phone;
             };
 
         }

@@ -149,7 +149,8 @@ angular.module('myApp.home', ['ngRoute'])
                     '秀企业及时相遇为己任。',
                     address: '中国湖南省永州市',
                     phone: '8888888',
-                    picture: 'images/12.jpg'
+                    // use timestamp to get picture
+                    date: 'placeholder'
                 };
                 for (var i = infoList.length; i < adPosition; i++) {
                     infoList[i] = new Object(ad);

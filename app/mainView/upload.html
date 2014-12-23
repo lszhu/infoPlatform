@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+<html lang="zh-cn">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+
+  <style>
+    body {
+      margin:  0;
+      padding: 5px 3px 3px;
+      border: 0;
+      background-image: url(images/background.jpg);
+    }
+    #code, #format, #submit {
+      display: none;
+    }
+
+  </style>
+
+</head>
+
+<body>
+<form method="post" action="/uploadFile"  enctype="multipart/form-data" class="form-horizontal" name="uploadFileForm" role="form">
+  <input type="text" id="code" name="code">
+  <input type="text" id="format" name="format">
+  <input type="file" id="picture" name="picture">
+  <input type="submit" id="submit">
+</form>
+</body>
+</html>

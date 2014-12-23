@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var path = require('path');
+// used to parse upload file (multipart/form-data)
+var multiparty = require('multiparty');
 
 // for debug
 var debug = require('debug')('route');
@@ -62,7 +64,8 @@ router.get('/picture/:id', function(req, res) {
     var date = new Date(+req.params.id);
     debug('pictureId: ' + req.params.id);
     if (date == 'Invalid Date') {
-        res.send('');
+        var pic = path.join(__dirname, '../../app/images/default.jpg');
+        res.sendFile(pic);
         return;
     }
     debug('date: ' + JSON.stringify(date));
@@ -78,8 +81,7 @@ router.get('/picture/:id', function(req, res) {
         }
         var imgData = tool.base64ImgData(docs[0].picture);
         var imgType = tool.base64ImgType(docs[0].picture);
-        debug('image type: ' + imgType);
-        debug('image data: ' + imgData);
+        //debug('image type: ' + imgType);
         res.type(imgType);
         res.send(imgData);
     });
@@ -324,6 +326,101 @@ router.post('/postOrgInfo', function(req, res) {
                         res.send({status: 'ok', message: '介绍信息保存成功'});
                     });
 
+            });
+    });
+});
+
+/* save organization introduction posted by organization */
+router.post('/editOrgInfo', function(req, res) {
+    //var employer = trimObject(req.body.employer);
+    //debug('organization info: ' + JSON.stringify(employer));
+    //if (!employer.name || !employer.code || !employer.address ||
+    //    !employer.phone || !employer.overview) {
+    //    res.send({status: 'paramErr', message: '提供的介绍信息不够完整'});
+    //    return;
+    //}
+    var form = new multiparty.Form({
+        encoding: 'base64',
+        maxFieldsSize: 10485760,
+        autoFiles: false
+    });
+    form.parse(req, function(err, fields, files) {
+        if (err) {
+            res.redirect('/#/manage/error');
+            return;
+        }
+        res.write('received fields:\n\n '+ JSON.stringify(fields));
+        res.write('\n\n');
+        res.end('received files:\n\n '+ JSON.stringify(files));
+    });
+
+    var employer = req.body;
+    //employer.date = new Date();
+    debug('organization info: ' + JSON.stringify(employer));
+    debug('files: ' + JSON.stringify(req.pictures));
+
+    //res.redirect('/#/manage/edit');
+});
+
+/* used to upload a picture in iframe */
+router.get('/uploadFile', function(req, res) {
+    res.sendfile(path.join(__dirname, '../../app/mainView/upload.html'));
+});
+/* save organization introduction picture */
+router.post('/uploadFile', function(req, res) {
+    // file format, the attribute name is base64 encoded file extension
+    // jpg->anBn, png->cG5n, gif->Z2lm
+    var format = {
+        anBn: 'data:image/jpg;base64,',
+        cG5n: 'data:image/png;base64,',
+        Z2lm: 'data:image/gif;base64,'
+    };
+    var form = new multiparty.Form({
+        encoding: 'base64',
+        maxFieldsSize: 10485760,
+        autoFiles: false
+    });
+    form.parse(req, function(err, fields) {
+        if (err) {
+            res.send(err);
+            return;
+        }
+        var data = fields[Object.keys(fields)[0]];
+        // no file data
+        if (!data[2]) {
+            res.redirect('/uploadFile');
+        }
+        var picture = format[data[1]] + data[2];
+        // data[0] is base64 encoded organization code or district id
+        var plain = tool.base64ToUtf8(data[0]);
+        debug('plain: ' + plain);
+        var model = 'orgInfo';
+        var condition = {};
+        if (plain.length == 9) {
+            // organization code
+            //model = 'orgInfo';
+            condition.code = plain;
+        } else if (plain.length % 2 == 0) {
+            // district id
+            model = 'communityInfo';
+            condition.districtId = plain;
+        } else {
+            res.send({status: 'typeErr', message: '错误的上传信息'});
+            return;
+        }
+        debug('condition: ' + JSON.stringify(condition));
+        debug('model ' + model);
+        debug('picture length: ' + picture.length);
+
+        db.save(model, condition, {picture: picture},
+            function(err) {
+                if (err) {
+                    res.send({status: 'dbSaveErr',
+                        message: '图片文件上传失败'});
+                    return;
+                }
+                //res.send({status: 'ok', message: '图片文件上传成功'});
+                res.redirect('/uploadFile');
             });
     });
 });

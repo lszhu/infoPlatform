@@ -343,6 +343,7 @@ function randomOrgInfo(docs, responseLimit) {
     return data;
 }
 
+// 获取图片（base64数据）中的数据部分
 function base64ImgData(picture) {
     if (!picture) {
         return '';
@@ -353,15 +354,23 @@ function base64ImgData(picture) {
     }
     return new Buffer(data, 'base64');
 }
+
+// 获取图片（base64数据）中的文件格式（扩展名）部分
 function base64ImgType(picture) {
     if (!picture) {
-        return 'png';
+        return 'jpg';
     }
     var head = picture.split(';')[0];
     if (!head) {
-        return 'png';
+        return 'jpg';
     }
     return head.slice(5);
+}
+
+// 将base64格式的数据转换为默认的utf8格式
+function base64ToUtf8(d) {
+    var data = new Buffer(d, 'base64');
+    return data.toString('utf8');
 }
 
 module.exports = {
@@ -384,5 +393,6 @@ module.exports = {
     districtoAddress: districtToAddress,
     randomOrgInfo: randomOrgInfo,
     base64ImgData: base64ImgData,
-    base64ImgType: base64ImgType
+    base64ImgType: base64ImgType,
+    base64ToUtf8: base64ToUtf8
 };

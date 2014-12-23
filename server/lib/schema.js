@@ -37,6 +37,16 @@ var orgInfo = {
     introduction: String,
     date: Date
 };
+var communityInfo = {
+    name: String,
+    districtId: String,
+    address: String,
+    phone: String,
+    contact: String,
+    picture: String,
+    overview: String,
+    date: Date
+};
 var policy = {
     districtId: String,
     heading: String,
@@ -201,6 +211,7 @@ module.exports = {
     employer: employer,
     employee: employee,
     orgInfo: orgInfo,
+    communityInfo: communityInfo,
     policy: policy,
     message: message,
     suggestion: suggestion,
