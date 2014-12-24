@@ -330,38 +330,6 @@ router.post('/postOrgInfo', function(req, res) {
     });
 });
 
-/* save organization introduction posted by organization */
-router.post('/editOrgInfo', function(req, res) {
-    //var employer = trimObject(req.body.employer);
-    //debug('organization info: ' + JSON.stringify(employer));
-    //if (!employer.name || !employer.code || !employer.address ||
-    //    !employer.phone || !employer.overview) {
-    //    res.send({status: 'paramErr', message: '提供的介绍信息不够完整'});
-    //    return;
-    //}
-    var form = new multiparty.Form({
-        encoding: 'base64',
-        maxFieldsSize: 10485760,
-        autoFiles: false
-    });
-    form.parse(req, function(err, fields, files) {
-        if (err) {
-            res.redirect('/#/manage/error');
-            return;
-        }
-        res.write('received fields:\n\n '+ JSON.stringify(fields));
-        res.write('\n\n');
-        res.end('received files:\n\n '+ JSON.stringify(files));
-    });
-
-    var employer = req.body;
-    //employer.date = new Date();
-    debug('organization info: ' + JSON.stringify(employer));
-    debug('files: ' + JSON.stringify(req.pictures));
-
-    //res.redirect('/#/manage/edit');
-});
-
 /* used to upload a picture in iframe */
 router.get('/uploadFile', function(req, res) {
     res.sendfile(path.join(__dirname, '../../app/mainView/upload.html'));

@@ -17,8 +17,8 @@ angular.module('myApp', [
     }]);
 
 angular.module('myApp')
-    .controller('MainCtrl', ['$scope', '$http',
-        function($scope, $http) {
+    .controller('MainCtrl', ['$scope', '$http', '$location',
+        function($scope, $http, $location) {
             $scope.districts = '';
             getDistrict();
 
@@ -65,5 +65,10 @@ angular.module('myApp')
                 var tmpId = districtId.slice(0, -2);
                 $scope.districtName = $scope.districts[tmpId][districtId];
             };
+
+            // 登录管理后台
+            $scope.login = function() {
+                $location.url('/main/login');
+            }
         }
     ]);

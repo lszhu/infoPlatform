@@ -26,6 +26,11 @@ iframe {
 /* CUSTOMIZE THE NAVBAR
 -------------------------------------------------- */
 
+.fa-leaf {
+    padding: 12px;
+    color: green;
+}
+
 .navbar {
   background: #cde;
   border-bottom: grey solid 1px;
