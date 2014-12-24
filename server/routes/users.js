@@ -1,9 +1,13 @@
 var express = require('express');
 var router = express.Router();
 
+// for debug
+var debug = require('debug')('user');
+
 /* GET users listing. */
-router.get('/', function(req, res) {
-  res.send('respond with a resource');
+router.post('/', function(req, res) {
+    debug('req.body: ' + JSON.stringify(req.body));
+    res.send({status: 'ok'});
 });
 
 module.exports = router;

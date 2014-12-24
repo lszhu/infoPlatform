@@ -8,9 +8,9 @@ angular.module('myApp.manage', ['ngRoute'])
                 templateUrl: 'manageView/user.html',
                 controller: 'ManageCtrl'
             })
-            .when('/manage/post', {
-                templateUrl: 'manageView/post.html',
-                controller: 'ManageCtrl'
+            .when('/manage/panel', {
+                templateUrl: 'manageView/panel.html',
+                controller: 'PanelCtrl'
             })
             .when('/manage/edit', {
                 templateUrl: 'manageView/edit.html',
@@ -56,6 +56,10 @@ angular.module('myApp.manage', ['ngRoute'])
 
         }
     ])
+
+    .controller('PanelCtrl', [function() {
+
+    }])
 
     .controller('ManageCtrl', [function() {
 

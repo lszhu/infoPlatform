@@ -32,7 +32,7 @@
   "scripts": {
     "postinstall": "bower install",
     "prestart": "npm install",
-    "start": "set DEBUG=route,db,tool && nodemon -w ./server ./server/bin/www.js",
+    "start": "set DEBUG=route,user,db,tool && nodemon -w ./server ./server/bin/www.js",
     "pretest": "npm install",
     "test": "karma start karma.conf.js",
     "test-single-run": "karma start karma.conf.js  --single-run",

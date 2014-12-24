@@ -10,13 +10,56 @@ angular.module('myApp.home', ['ngRoute'])
             })
             .when('/main/login', {
                 templateUrl: 'mainView/login.html',
-                controller: 'View1Ctrl'
+                controller: 'LoginCtrl'
             })
             .when('/main/home', {
                 templateUrl: 'mainView/home.html',
                 controller: 'HomeCtrl'
             });
     }])
+
+    .controller('LoginCtrl', ['$scope', '$http', '$location',
+        function($scope, $http, $location) {
+            $scope.login = function() {
+                var t = Date.now();
+                $scope.acc.t = t;
+                var acc = {
+                    u: encrypt($scope.acc.u),
+                    p: encrypt($scope.acc.p, t),
+                    t: encrypt(t)
+                };
+                console.log(acc);
+                $http.post('/users', acc)
+                    .success(function(res) {
+                        if (res.status == 'ok') {
+                            console.log('登录成功');
+                            $location.url('/manage/panel');
+                        } else {
+                            alert('系统暂时无法登录');
+                        }
+                    })
+                    .error(function(err) {
+                        console.log('login error: %o', err);
+                        alert('未知因素导致登录失败');
+                    });
+            };
+
+            // 加密函数，data为原始数据，time为hash参考时间
+            function encrypt(data, time) {
+                var d = data || '';
+                // 第一次hash
+                var hash = CryptoJS.SHA1(d.toString()).toString();
+                // 如果时间未指定，则返回
+                if (!time) {
+                    return hash;
+                }
+                var t = CryptoJS.SHA1(time.toString());
+                // 第二次hash
+                hash = CryptoJS.SHA1(hash + t);
+
+                return hash.toString();
+            }
+        }])
 
     .controller('HomeCtrl', ['$scope', '$http', '$sce', 'formatInfo',
         'page', function($scope, $http, $sce, formatInfo, page) {
