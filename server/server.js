@@ -4,11 +4,17 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var session = require('express-session');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
+
+// get running environment selection from configuration file
+var runningEnv = require('./config').runningEnv;
+// set running environment
+app.set('env', runningEnv);
 
 // view engine setup
 app.set('views', path.join(__dirname, '../app'));
@@ -21,6 +27,14 @@ app.use(bodyParser.json({limit: '10mb'}));
 app.use(bodyParser.urlencoded({limit: '10mb', extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../app')));
+
+// support sessions used for authentication
+app.use(session({
+    name: 'messagePostSys.sid',
+    secret: 'DoNotTouchMe',
+    resave: true,
+    saveUninitialized: true
+}));
 
 app.use('/', routes);
 app.use('/users', users);

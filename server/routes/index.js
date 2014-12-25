@@ -7,8 +7,6 @@ var multiparty = require('multiparty');
 // for debug
 var debug = require('debug')('route');
 
-// account authentication
-var auth = require('../lib/auth');
 // access database
 var db = require('../lib/mongodb');
 // miscellaneous tools

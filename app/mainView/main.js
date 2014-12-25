@@ -20,42 +20,57 @@ angular.module('myApp.home', ['ngRoute'])
 
     .controller('LoginCtrl', ['$scope', '$http', '$location',
         function($scope, $http, $location) {
+            $scope.acc = {};
             $scope.login = function() {
-                var t = Date.now();
-                $scope.acc.t = t;
+                var id = encrypt($scope.acc.u);
+                //console.log('user id: ' + id);
+                $http.post('/users/token', {id: id})
+                    .success(function(res) {
+                        if (res.status == 'ok') {
+                            //console.log('token: ' + res.token);
+                            tryLogin(res.token);
+                        } else {
+                            alert(res.message);
+                        }
+                    })
+                    .error(function(err) {
+                        console.log('login error: %o', err);
+                        alert('未知因素导致登录失败');
+                    })
+            };
+
+            function tryLogin(token) {
                 var acc = {
                     u: encrypt($scope.acc.u),
-                    p: encrypt($scope.acc.p, t),
-                    t: encrypt(t)
+                    p: encrypt($scope.acc.p, token)
                 };
-                console.log(acc);
-                $http.post('/users', acc)
+                $http.post('/users/login', acc)
                     .success(function(res) {
                         if (res.status == 'ok') {
                             console.log('登录成功');
                             $location.url('/manage/panel');
                         } else {
-                            alert('系统暂时无法登录');
+                            console.log('res: %o', res);
+                            alert('用户名或密码错误');
                         }
                     })
                     .error(function(err) {
                         console.log('login error: %o', err);
                         alert('未知因素导致登录失败');
                     });
-            };
+            }
 
-            // 加密函数，data为原始数据，time为hash参考时间
-            function encrypt(data, time) {
+            // 加密函数，data为原始数据，token为hash操作的附件信息
+            function encrypt(data, token) {
                 var d = data || '';
                 // 第一次hash
                 var hash = CryptoJS.SHA1(d.toString()).toString();
-                // 如果时间未指定，则返回
-                if (!time) {
+                // 如果token未指定，则返回
+                if (!token) {
                     return hash;
                 }
-                var t = CryptoJS.SHA1(time.toString());
-                // 第二次hash
-                hash = CryptoJS.SHA1(hash + t);
+                // 第二次hash，加入token信息
+                hash = CryptoJS.SHA1(hash + token);
 
                 return hash.toString();
             }

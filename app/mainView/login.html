@@ -9,7 +9,11 @@
           <div class="form-group">
             <label for="exampleInputEmail1" class="col-sm-4 control-label">登录账号</label>
             <div class="col-sm-7">
-              <input type="text" ng-model="acc.u" class="form-control" id="exampleInputEmail1" placeholder="输入账号">
+              <input type="text" ng-model="acc.u" class="form-control" id="exampleInputEmail1" placeholder="输入账号" autofocus>
+              <!-- 需要已经加载JQuery -->
+              <script>
+                $(function() {$('[autofocus]').focus()});
+              </script>
             </div>
           </div>
           <div>&nbsp;</div>
