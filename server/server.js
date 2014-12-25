@@ -9,6 +9,8 @@ var session = require('express-session');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
+var debug = require('debug')('app');
+
 var app = express();
 
 // get running environment selection from configuration file
@@ -26,7 +28,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json({limit: '10mb'}));
 app.use(bodyParser.urlencoded({limit: '10mb', extended: false}));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, '../app')));
+
 
 // support sessions used for authentication
 app.use(session({
@@ -36,8 +38,22 @@ app.use(session({
     saveUninitialized: true
 }));
 
+// unauthenticated user query with a "management" search part will be
+// redirected to url without any search part
+app.use('/', function(req, res, next) {
+    //debug('req.session: ' + JSON.stringify(req.session));
+    if (!req.session.user && req.query.hasOwnProperty('management')) {
+        debug('req.query: ' + JSON.stringify(req.query));
+        req.session.error = 'NoLogin';
+        return res.redirect(req.path);
+    }
+    next();
+});
+
 app.use('/', routes);
 app.use('/users', users);
+
+app.use(express.static(path.join(__dirname, '../app')));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

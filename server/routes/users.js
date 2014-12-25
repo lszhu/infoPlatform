@@ -24,7 +24,8 @@ router.post('/token', function(req, res) {
             return;
         }
         var token = '';
-        if (!docs[0]) {
+        // 账号不存在，或可用状态为禁用
+        if (!docs[0] || !docs[0].enabled) {
             // 存在相应内置账号
             if (auth.isInternalUser(username)) {
                 // 通过用户名（hash字符串）引用内置账号生成token
