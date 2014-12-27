@@ -33,7 +33,7 @@ function copyAccount(acc) {
     return newAcc;
 }
 
-// 创建验证用的token
+// 创建验证用的token，并将待验证信息放入特定列表
 function createToken(account) {
     var t = Date.now().toString();
     var r = Math.random() * 1E16;
@@ -88,10 +88,6 @@ function validAccount(account, accountStore) {
 //console.log('admin acc: ' + JSON.stringify(admin));
 //console.log('validAccount:' + validAccount(admin));
 
-// 获取账户信息
-function accountInfo(username) {
-    return accountToken
-}
 // 对两个参数代表的账号进行比对，如果一致，则返回真值
 function auth(acc, stdAcc) {
     // 与系统中的账号进行比对
@@ -127,6 +123,5 @@ module.exports = {
     hash: hash,
     isInternalUser: isInternalUser,
     createToken: createToken,
-    validAccount: validAccount,
-    accountInfo: accountInfo
+    validAccount: validAccount
 };

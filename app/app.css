@@ -330,3 +330,12 @@ label.remark {
     height: auto;
     width: inherit;
 }
+
+/* management
+-------------------------------------------------------*/
+.management div {
+    color: black;
+}
+.management .fa {
+    color: #31b0d5;
+}
