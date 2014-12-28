@@ -62,4 +62,23 @@ router.post('/login', function(req, res) {
     }
 });
 
+/* user logout */
+router.all('/logout', function(req, res) {
+    req.session.user = null;
+    res.send({status: 'ok', message: '成功退出管理面板'});
+    //var url = req.body.url || '/main/homepage';
+    //res.redirect(url);
+});
+
+/* management panel */
+router.get('/panel', function(req, res) {
+    debug('user: ' + JSON.stringify(req.session.user));
+    if (!req.session.user) {
+        res.redirect('/users/login');
+    } else {
+        res.render('manageView/panel',
+            {rights: req.session.user.rights});
+    }
+});
+
 module.exports = router;

@@ -8,8 +8,8 @@ angular.module('myApp.manage', ['ngRoute'])
                 templateUrl: 'manageView/user.html',
                 controller: 'ManageCtrl'
             })
-            .when('/manage/panel', {
-                templateUrl: 'manageView/panel.html',
+            .when('/users/panel', {
+                templateUrl: 'users/panel',
                 controller: 'PanelCtrl'
             })
             .when('/manage/edit', {
@@ -57,9 +57,25 @@ angular.module('myApp.manage', ['ngRoute'])
         }
     ])
 
-    .controller('PanelCtrl', [function() {
+    .controller('PanelCtrl', ['$scope', '$http', '$location',
+        function($scope, $http, $location) {
 
-    }])
+            $scope.logout = function() {
+                $http.get('/users/logout')
+                    .success(function(res) {
+                        console.log(res.message);
+                        $location.path('/main/homepage');
+                        location.reload();
+                    })
+                    .error(function(err) {
+                        alert('系统出现异常');
+                    });
+                //$location.path('/users/logout');
+                //location.hash = '#/users/logout';
+                //location.reload();
+            };
+
+        }])
 
     .controller('ManageCtrl', [function() {
 

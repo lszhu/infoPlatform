@@ -48,7 +48,7 @@ angular.module('myApp.home', ['ngRoute'])
                     .success(function(res) {
                         if (res.status == 'ok') {
                             console.log('登录成功');
-                            $location.url('/manage/panel');
+                            $location.url('/users/panel');
                         } else {
                             console.log('res: %o', res);
                             alert('用户名或密码错误');

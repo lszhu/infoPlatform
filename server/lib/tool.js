@@ -390,7 +390,7 @@ module.exports = {
     orgScale: orgScale,
     birthSpan: birthSpan,
     getAddress: getAddress,
-    districtoAddress: districtToAddress,
+    districtToAddress: districtToAddress,
     randomOrgInfo: randomOrgInfo,
     base64ImgData: base64ImgData,
     base64ImgType: base64ImgType,

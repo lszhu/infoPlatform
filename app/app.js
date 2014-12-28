@@ -17,8 +17,8 @@ angular.module('myApp', [
     }]);
 
 angular.module('myApp')
-    .controller('MainCtrl', ['$scope', '$http', '$location',
-        function($scope, $http, $location) {
+    .controller('MainCtrl', ['$scope', '$http', '$location', '$timeout',
+        function($scope, $http, $location, $timeout) {
             $scope.districts = '';
             getDistrict();
 
@@ -66,9 +66,20 @@ angular.module('myApp')
                 $scope.districtName = $scope.districts[tmpId][districtId];
             };
 
+            // 网页加载后200ms之后设置登录控制参数，2秒后再恢复禁用
+            $timeout(function() {
+                $scope.initLogin = true;
+            }, 200);
+            $timeout(function() {
+                $scope.initLogin = false;
+            }, 2000);
             // 登录管理后台
             $scope.login = function() {
-                $location.url('/main/login');
+                if ($scope.initLogin) {
+                    $location.url('/main/login');
+                    return;
+                }
+                location.reload();
             }
         }
     ]);
