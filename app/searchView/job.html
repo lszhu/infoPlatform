@@ -1,5 +1,12 @@
 <div class="container">
-  <h3 class="page-header">企事业单位招聘信息查询</h3>
+  <div class="col-sm-8 col-lg-9">
+    <h3 class="page-header">企事业单位招聘信息查询<span class="alarm" ng-show="manage"><strong>（管理模式）</strong></span></h3>
+  </div>
+  <div class="col-md-4 col-lg-3 management" ng-show="manage">
+    <a ng-click="gotoPanel()" class="btn btn-default"><i class="fa fa-th fa-2x"></i><br>管理面板</a>&nbsp;
+    <a ng-click="logout()" class="btn btn-default"><i class="fa fa-sign-out fa-2x"></i><br>退出管理</a><br>&nbsp;
+  </div>
+
 
   <form class="form-horizontal" name="queryCondition" role="form">
     <div class="form-group col-sm-12">
@@ -54,8 +61,33 @@
     <!-- Table -->
     <table class="table table-striped table-bordered">
       <thead></thead>
-      <tr ng-repeat="job in pageOption.dataToShow | filter: globalFilterKey">
-        <td><div class="index">{{$index + pageOption.baseNumber}}</div></td>
+      <tr ng-show="manage">
+        <td class="index-col">
+          <div id="select-all">
+            <i ng-show="selectAll" ng-click="selectAll()" class="fa fa-check-square-o"></i>
+            <i ng-hide="selectAll" ng-click="deselectAll()" class="fa fa-square-o"></i>
+          </div>
+        </td>
+        <td>
+          <div class="col-sm-2" ng-show="manage">
+            <a ng-click="removeSelected()" class="btn btn-danger"><i class="fa fa-times"></i> 删除选中</a>
+          </div>
+          <div class="input-group col-sm-6 col-sm-offset-2">
+            <div class="input-group-addon">快速过滤</div>
+            <input class="form-control" ng-model="quickFilter" type="text" placeholder="输入包含的关键词">
+          </div>
+      </td>
+      </tr>
+      <tr ng-repeat="job in pageOption.dataToShow | filter: quickFilter">
+        <td class="index-col">
+          <div ng-show="manage">
+            <div><i ng-show="removalList[$index]" ng-click="reverse(removalList[$index])" class="fa fa-check-square-o"></i></div>
+            <div><i ng-hide="removalList[$index]" ng-click="reverse(removalList[$index])" class="fa fa-square-o"></i></div>
+            <div><i ng-click="removeItem($index)" class="fa fa-times-circle-o red"></i></div>
+          </div>
+          <div ng-hide="manage">&nbsp;<br>&nbsp;<br></div>
+          <div class="index">{{$index + pageOption.baseNumber}}</div>
+        </td>
         <td>
           <table class="table embedded">
             <tr>

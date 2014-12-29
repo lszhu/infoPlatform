@@ -226,9 +226,25 @@ iframe {
 =========================================================================*/
 
 td div.index {
-    margin-top: 60px;
+    margin-top: 20px;
     color: darkblue;
+    font-weight: bold;
     text-align: center;
+}
+
+.fa.red {
+    color: red;
+}
+
+td.index-col {
+    width: 18px;
+
+}
+
+td.index-col .fa {
+    font-size: 1.5em;
+    padding: 0;
+    margin: 0;
 }
 
 table.embedded {
@@ -238,6 +254,15 @@ table.embedded {
 
 td.date {
     min-width: 90px;
+}
+
+span.alarm {
+    color: red;
+    margin: 0;
+}
+
+#select-all {
+    margin-top: 5px;
 }
 
 /* mainView

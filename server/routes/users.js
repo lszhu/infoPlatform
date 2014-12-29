@@ -81,4 +81,10 @@ router.get('/panel', function(req, res) {
     }
 });
 
+/* client type */
+router.get('/clientType', function(req, res) {
+    var type = req.session.user ? 'register' : 'anonymous';
+    res.send({status: 'ok', type: type});
+});
+
 module.exports = router;

@@ -154,6 +154,29 @@ function salarySpan(index) {
     return span[index];
 }
 
+// valid ID number
+function validIdNumber(idNumber) {
+    if (idNumber.length != 18 || 12 < idNumber.slice(10, 12) ||
+        idNumber.slice(6, 8) < 19 || 20 < idNumber.slice(6, 8)) {
+        return false;
+    }
+    var weights = [
+        '7', '9', '10', '5', '8', '4', '2', '1', '6',
+        '3', '7', '9', '10', '5', '8', '4', '2', '1'
+    ];
+    var sum = 0;
+    for (var i = 0; i < 17; i++) {
+        var digit = idNumber.charAt(i);
+        if (isNaN(Number(digit))) {
+            return false;
+        }
+        sum += digit * weights[i];
+    }
+    sum = (12 - sum % 11) % 11;
+    return sum == 10 && idNumber.charAt(17).toLowerCase() == 'x' ||
+        sum < 10 && sum == idNumber.charAt(17);
+}
+
 // 从身份证号验证年龄是否满足条件，只是粗略验证，不考虑月份和日期
 function validAge(from, to, idNumber) {
     if (!idNumber) {
@@ -373,6 +396,23 @@ function base64ToUtf8(d) {
     return data.toString('utf8');
 }
 
+/* shallow copy of the object and trim the leading&trailing spaces */
+function trimObject(obj) {
+    var trimmed = {};
+    var tmp;
+    for (var a in obj) {
+        if (!obj.hasOwnProperty(a)) {
+            continue;
+        } else if ((typeof obj[a]) != 'string') {
+            tmp = obj[a];
+        } else {
+            tmp = obj[a].toString().trim();
+        }
+        trimmed[a] = tmp;
+    }
+    return trimmed;
+}
+
 module.exports = {
     log: log,
     period: period,
@@ -382,6 +422,7 @@ module.exports = {
     readJsonFile: readJsonFile,
     salarySpan: salarySpan,
     validAge: validAge,
+    validIdNumber: validIdNumber,
     blurStaffs: blurStaffs,
     blurAge: blurAge,
     filterWorkerMsg: filterWorkerMsg,
@@ -394,5 +435,6 @@ module.exports = {
     randomOrgInfo: randomOrgInfo,
     base64ImgData: base64ImgData,
     base64ImgType: base64ImgType,
-    base64ToUtf8: base64ToUtf8
+    base64ToUtf8: base64ToUtf8,
+    trimObject: trimObject
 };

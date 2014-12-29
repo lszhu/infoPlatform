@@ -17,41 +17,6 @@ var district = require('../lib/districtId');
 //var districtId = '431103';
 var districtId = require('../config').districtId;
 
-/* shallow copy of the object and trim the leading&trailing spaces */
-function trimObject(obj) {
-    var trimmed = {};
-    for (var a in obj) {
-        if (!obj.hasOwnProperty(a) || (typeof a) != 'string') {
-            continue;
-        }
-        trimmed[a] = obj[a].toString().trim();
-    }
-    return trimmed;
-}
-
-// valid ID number
-function validIdNumber(idNumber) {
-    if (idNumber.length != 18 || 12 < idNumber.slice(10, 12) ||
-        idNumber.slice(6, 8) < 19 || 20 < idNumber.slice(6, 8)) {
-        return false;
-    }
-    var weights = [
-        '7', '9', '10', '5', '8', '4', '2', '1', '6',
-        '3', '7', '9', '10', '5', '8', '4', '2', '1'
-    ];
-    var sum = 0;
-    for (var i = 0; i < 17; i++) {
-        var digit = idNumber.charAt(i);
-        if (isNaN(Number(digit))) {
-            return false;
-        }
-        sum += digit * weights[i];
-    }
-    sum = (12 - sum % 11) % 11;
-    return sum == 10 && idNumber.charAt(17).toLowerCase() == 'x' ||
-        sum < 10 && sum == idNumber.charAt(17);
-}
-
 /* get district info */
 router.get('/district', function(req, res) {
     res.send({status: 'ok', district: district, districtId: districtId});
@@ -234,7 +199,7 @@ router.post('/searchInformation', function(req, res) {
 
 /* save message posted by employer */
 router.post('/postEmployer', function(req, res) {
-    var employer = trimObject(req.body.employer);
+    var employer = tool.trimObject(req.body.employer);
     debug('employer: ' + JSON.stringify(employer));
     if (!employer.name || !employer.code || !employer.phone) {
         res.send({status: 'paramErr', message: '提供的招聘信息不够完整'});
@@ -266,13 +231,13 @@ router.post('/postEmployer', function(req, res) {
 
 /* save message posted by job hunter */
 router.post('/postEmployee', function(req, res) {
-    var employee = trimObject(req.body.employee);
+    var employee = tool.trimObject(req.body.employee);
     debug('employee: ' + JSON.stringify(employee));
     if (!employee.name || !employee.idNumber || !employee.phone) {
         res.send({status: 'paramErr', message: '提供的求职信息不够完整'});
         return;
     }
-    if (!validIdNumber(employee.idNumber)) {
+    if (!tool.validIdNumber(employee.idNumber)) {
         res.send({status: 'paramErr', message: '提供的身份证号有误'});
         return;
     }
@@ -290,7 +255,7 @@ router.post('/postEmployee', function(req, res) {
 
 /* save organization introduction posted by organization */
 router.post('/postOrgInfo', function(req, res) {
-    var employer = trimObject(req.body.employer);
+    var employer = tool.trimObject(req.body.employer);
     //debug('organization info: ' + JSON.stringify(employer));
     if (!employer.name || !employer.code || !employer.address ||
         !employer.phone || !employer.overview) {
@@ -393,7 +358,7 @@ router.post('/uploadFile', function(req, res) {
 
 /* save policy submitted by staff */
 router.post('/postPolicy', function(req, res) {
-    var policy = trimObject(req.body.policy);
+    var policy = tool.trimObject(req.body.policy);
     debug('Policy: ' + JSON.stringify(policy));
     if (!policy.heading || !policy.content) {
         res.send({status: 'paramErr', message: '提供的信息不够完整'});
@@ -414,7 +379,7 @@ router.post('/postPolicy', function(req, res) {
 
 /* save news submitted by staff */
 router.post('/postNews', function(req, res) {
-    var news = trimObject(req.body.news);
+    var news = tool.trimObject(req.body.news);
     debug('news: ' + JSON.stringify(news));
     if (!news.heading || !news.content) {
         res.send({status: 'paramErr', message: '提供的信息不够完整'});
@@ -435,7 +400,7 @@ router.post('/postNews', function(req, res) {
 
 /* save suggestion submitted by adviser */
 router.post('/postSuggestion', function(req, res) {
-    var suggestion = trimObject(req.body.suggestion);
+    var suggestion = tool.trimObject(req.body.suggestion);
     debug('suggestion: ' + JSON.stringify(suggestion));
     if (!suggestion.name || !suggestion.idNumber || !suggestion.phone) {
         res.send({status: 'paramErr', message: '提供的个人信息不够完整'});

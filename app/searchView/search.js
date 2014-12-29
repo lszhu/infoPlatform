@@ -22,8 +22,9 @@ angular.module('myApp.search', ['ngRoute'])
             });
     }])
 
-    .controller('JobCtrl', ['$scope', '$http', '$sce', 'job', 'page',
-        'formatInfo', function($scope, $http, $sce, job, page, formatInfo) {
+    .controller('JobCtrl', ['$scope', '$http', '$sce', '$location', 'job',
+        'page', 'formatInfo',
+        function($scope, $http, $sce, $location, job, page, formatInfo) {
             // 每页的显示数目
             var limit = 50;
             // 页码导航条显示的页码数
@@ -110,6 +111,42 @@ angular.module('myApp.search', ['ngRoute'])
                 //ref += '-' + d.getDate();
                 //return ref;
                 return !date ? '未知' : date.toString().split('T')[0];
+            };
+
+            // 管理模式设置
+            function management() {
+                var manage = $location.search().hasOwnProperty('management');
+                //console.log('$scope.manage:' + JSON.stringify(manage));
+                if (manage) {
+                    $http.get('/users/clientType')
+                        .success(function(res) {
+                            console.log(res.type);
+                            if (res.type == 'register') {
+                                $scope.manage = true;
+                            } else {
+                                $location.search('management', undefined);
+                                $scope.manage = false;
+                            }
+                        });
+                }
+            }
+            management();
+
+            $scope.gotoPanel = function() {
+                $location.path('/users/panel');
+            };
+
+            $scope.logout = function() {
+                $http.get('/users/logout')
+                    .success(function(res) {
+                        console.log(res.message);
+                        $location.search('management', undefined);
+                        //$location.path('/search/job');
+                        location.reload();
+                    })
+                    .error(function(err) {
+                        alert('系统出现异常：\n' + err);
+                    });
             };
         }
     ])

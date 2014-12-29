@@ -69,7 +69,7 @@ angular.module('myApp')
             // 网页加载后200ms之后设置登录控制参数，2秒后再恢复禁用
             $timeout(function() {
                 $scope.initLogin = true;
-            }, 200);
+            }, 500);
             $timeout(function() {
                 $scope.initLogin = false;
             }, 2000);
