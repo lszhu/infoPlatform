@@ -39,9 +39,9 @@ angular.module('myApp.service', [])
 
     .factory('job', ['$http', function($http) {
 
-        function getJob(district) {
+        function getJob(district, shift) {
             var job = {};
-            $http.post('/searchJob', {districtId: district})
+            $http.post('/searchJob', {districtId: district, shift: shift})
                 .success(function(res) {
                     if (res.status == 'ok') {
                         var tmp = res.jobList;

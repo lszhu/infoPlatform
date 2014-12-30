@@ -74,10 +74,11 @@ var models = createModels();
 
 // the parameter fields should be a string like 'a b -c d -e -f'
 // or an object like {a: 1, b: 1, c: 0, d: 1, e: 0, f: 0}
-function query(model, condition, callback, fields, limit) {
-    limitation = limit ? limit : maxReturnedDoc;
+function query(model, condition, callback, fields, limit, skip) {
+    var limitation = limit ? limit : maxReturnedDoc;
     models[model]
         .find(condition, fields)
+        .skip(skip)                 // skip some docs at first
         .limit(limitation)          // limit returned documents
         .lean()                     // return plain javascript objects
         .exec(callback);            // callback(err, docs)
@@ -85,10 +86,11 @@ function query(model, condition, callback, fields, limit) {
 
 // like query but add sort function, sorter indicate sort parameter
 // sorter is like {field1: 1, field2: -1}, 1 for ascending, -1 for descending
-function querySort(model, condition, sorter, callback, fields, limit) {
-    limitation = limit ? limit : maxReturnedDoc;
+function querySort(model, condition, sorter, callback, fields, limit, skip) {
+    var limitation = limit ? limit : maxReturnedDoc;
     models[model]
         .find(condition, fields)
+        .skip(skip)                 // skip some docs at first
         .limit(limitation)          // limit returned documents
         .sort(sorter)               // returned sorted documents
         .lean()                     // return plain javascript objects

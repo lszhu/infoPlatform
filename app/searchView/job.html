@@ -63,9 +63,9 @@
       <thead></thead>
       <tr ng-show="manage">
         <td class="index-col">
-          <div id="select-all">
-            <i ng-show="selectAll" ng-click="selectAll()" class="fa fa-check-square-o"></i>
-            <i ng-hide="selectAll" ng-click="deselectAll()" class="fa fa-square-o"></i>
+          <div id="select-all" ng-click="selectAll(selectedAll)">
+            <i ng-show="selectedAll" class="fa fa-check-square-o"></i>
+            <i ng-hide="selectedAll" class="fa fa-square-o"></i>
           </div>
         </td>
         <td>
@@ -81,8 +81,8 @@
       <tr ng-repeat="job in pageOption.dataToShow | filter: quickFilter">
         <td class="index-col">
           <div ng-show="manage">
-            <div><i ng-show="removalList[$index]" ng-click="reverse(removalList[$index])" class="fa fa-check-square-o"></i></div>
-            <div><i ng-hide="removalList[$index]" ng-click="reverse(removalList[$index])" class="fa fa-square-o"></i></div>
+            <div><i ng-show="removalList[$index]" ng-click="reverse($index)" class="fa fa-check-square-o"></i></div>
+            <div><i ng-hide="removalList[$index]" ng-click="reverse($index)" class="fa fa-square-o"></i></div>
             <div><i ng-click="removeItem($index)" class="fa fa-times-circle-o red"></i></div>
           </div>
           <div ng-hide="manage">&nbsp;<br>&nbsp;<br></div>

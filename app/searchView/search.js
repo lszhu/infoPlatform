@@ -148,6 +148,66 @@ angular.module('myApp.search', ['ngRoute'])
                         alert('系统出现异常：\n' + err);
                     });
             };
+
+            // 待处理项目表
+            $scope.removalList = [];
+
+            $scope.reverse = function(index) {
+                $scope.removalList[index] = !$scope.removalList[index];
+                console.log('reversed index: ' + index);
+            };
+
+            $scope.selectAll = function(selected) {
+                var base = $scope.pageOption.baseNumber;
+                $scope.selectedAll = !selected;
+                console.log('limit: ' + base);
+                for (var i = 0; i < limit; i++) {
+                    $scope.removalList[i + base - 1] = !selected;
+                }
+                //console.log($scope.removelList);
+            };
+
+            // 将选中条目的时间参数抽出，作为删除的条件
+            function getRemovals(selList) {
+                var base = $scope.pageOption.baseNumber;
+                var items = $scope.pageOption.dataToShow;
+                var sel = selList(base, base + limit);
+                var dates = [];
+                for (var i = 0, len = sel.length; i < limit && i < len; i) {
+                    dates.push(items[i].date);
+                }
+                return dates;
+            }
+
+            // 根据条件删除条目
+            function removeItemList(dates) {
+                $http.post('/users/removeJob', {date: dates})
+                    .success(function(res) {
+                        if (res.status == 'ok') {
+                            console.log('remove ok');
+                        }
+                    })
+                    .error(function(err) {
+                        console.log('error: %o', err);
+                    });
+            }
+
+            // 删除所有选中条目
+            $scope.removeSelected = function() {
+                var dates = getRemovals($scope.removalList);
+                if (dates.length && !confirm('确实要删除这些信息吗')) {
+                    return;
+                }
+                removeItemList(dates);
+            };
+
+            $scope.removeItem = function(index) {
+                var date = $scope.removalList[index].date;
+                if (dates.length && !confirm('确实要删除这些信息吗')) {
+                    return;
+                }
+                removeItemList([date]);
+            }
         }
     ])
 
