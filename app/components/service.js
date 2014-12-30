@@ -39,9 +39,9 @@ angular.module('myApp.service', [])
 
     .factory('job', ['$http', function($http) {
 
-        function getJob(district, shift) {
+        function getJob(condition) {
             var job = {};
-            $http.post('/searchJob', {districtId: district, shift: shift})
+            $http.post('/searchJob', {condition: condition})
                 .success(function(res) {
                     if (res.status == 'ok') {
                         var tmp = res.jobList;
@@ -64,6 +64,76 @@ angular.module('myApp.service', [])
 
         return getJob;
     }])
+
+    .factory('pagination', function() {
+        function pageList(totalPage, curPage, pageNav) {
+            var first, last;
+            if (curPage <= Math.ceil(pageNav / 2)) {
+                first = 1;
+                last = totalPage < pageNav ? totalPage : pageNav;
+            } else if ((totalPage - curPage) < Math.ceil(pageNav / 2)) {
+                last = totalPage;
+                first = last - pageNav + 1;
+            } else {
+                first = curPage - Math.floor(pageNav / 2);
+                last = first + pageNav - 1;
+            }
+            var pages = [];
+            for (var i = first; i <= last; i++) {
+                pages.push(i);
+            }
+            return pages;
+        }
+
+        function nextNavBar(totalPage, curPageList, pageNav) {
+            if (curPageList.length < pageNav) {
+                return curPageList;
+            }
+            console.log(totalPage, curPageList, pageNav);
+            var total = [];
+            for (var i = 1; i <= totalPage; i++) {
+                total.push(i);
+            }
+            var last = curPageList[pageNav - 1];
+            console.log('last: ' + last);
+            if (last <= totalPage - pageNav) {
+                return total.slice(last, last + pageNav);
+            } else {
+                return total.slice(totalPage - pageNav)
+            }
+        }
+
+        function previousNavBar(totalPage, curPageList, pageNav) {
+            if (curPageList.length < pageNav) {
+                return curPageList;
+            }
+
+            var total = [];
+            for (var i = 1; i <= totalPage; i++) {
+                total.push(i);
+            }
+            var first = curPageList[0];
+            if (first > pageNav) {
+                return total.slice(first - pageNav -1, first - 1);
+            } else {
+                return total.slice(0, pageNav);
+            }
+        }
+
+        function active(p1, p2) {
+            if (p1 == p2) {
+                return 'active';
+            }
+            return '';
+        }
+
+        return {
+            pageList: pageList,
+            nextNavBar: nextNavBar,
+            previousNavBar: previousNavBar,
+            active: active
+        }
+    })
 
     .factory('page', ['$window', function($window) {
 

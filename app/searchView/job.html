@@ -78,7 +78,8 @@
           </div>
       </td>
       </tr>
-      <tr ng-repeat="job in pageOption.dataToShow | filter: quickFilter">
+      <!-- 开始显示表格主题内容 -->
+      <tr ng-repeat="job in itemList">
         <td class="index-col">
           <div ng-show="manage">
             <div><i ng-show="removalList[$index]" ng-click="reverse($index)" class="fa fa-check-square-o"></i></div>
@@ -86,7 +87,7 @@
             <div><i ng-click="removeItem($index)" class="fa fa-times-circle-o red"></i></div>
           </div>
           <div ng-hide="manage">&nbsp;<br>&nbsp;<br></div>
-          <div class="index">{{$index + pageOption.baseNumber}}</div>
+          <div class="index">{{$index + baseNumber}}</div>
         </td>
         <td>
           <table class="table embedded">
@@ -120,18 +121,11 @@
   <!-- 显示企事业单位介绍信息对话框 -->
   <div info-dialog><div ng-bind-html="information.content"></div></div>
 
-  <nav class="col-sm-offset-7" ng-show="pageOption.pages > 1">
+  <nav class="col-sm-offset-7" ng-show="pageList.length > 1">
     <ul class="pagination">
-      <li><a ng-click="pageOption.previousList()" href="">«</a></li>
-      <li ng-class="pageOption.active(p)" ng-click="pageOption.select(p)" ng-repeat="p in pageOption.pageList"><a href="" ng-bind="p"></a></li>
-      <!--
-      <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
-      <li><a href="#">2</a></li>
-      <li><a href="#">3</a></li>
-      <li><a href="#">4</a></li>
-      <li><a href="#">5</a></li>
-      -->
-      <li><a ng-click="pageOption.nextList()" href="">»</a></li>
+      <li><a ng-click="previousList()" href="">«</a></li>
+      <li ng-class="active(p, curPage)" ng-click="queryJob(p)" ng-repeat="p in pageList"><a href="" ng-bind="p"></a></li>
+      <li><a ng-click="nextList()" href="">»</a></li>
     </ul>
   </nav>
 

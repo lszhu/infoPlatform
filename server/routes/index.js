@@ -428,6 +428,9 @@ router.post('/searchJob', function(req, res) {
     } else {
         limit = 2000;
     }
+    var skip = parseInt(req.body.skip);
+    skip = skip > 0 ? skip : 0;
+
     var now = new Date();
     // half a year before
     var date = new Date(now.getFullYear(), now.getMonth() - 6, now.getDate());
@@ -452,13 +455,36 @@ router.post('/searchJob', function(req, res) {
     }
     debug('search job condition: ' + JSON.stringify(condition));
 
-    db.querySort('employer', condition, {date: -1}, function(err, docs) {
-        if (err) {
+    // 保存正常的响应数据
+    var response = {status: 'ok'};
+    // 用于并发访问的计数器
+    var counter = {count: 2, error: false};
+
+    db.count('employer', condition, function(err, count) {
+        counter.count--;
+        if (err && !counter.error) {
+            counter.error = true;
             res.send({status: 'dbReadErr', message: '数据库访问错误'});
             return;
         }
-        res.send({status: 'ok', jobList: docs});
-    }, undefined, limit);
+        response.count = count;
+        if (counter.count == 0) {
+            res.send(response);
+        }
+    });
+
+    db.querySort('employer', condition, {date: -1}, function(err, docs) {
+        counter.count--;
+        if (err && !counter.error) {
+            counter.error = true;
+            res.send({status: 'dbReadErr', message: '数据库访问错误'});
+            return;
+        }
+        response.jobList = docs;
+        if (counter.count == 0) {
+            res.send(response);
+        }
+    }, undefined, limit, skip);
 });
 
 /* search for organization info */

@@ -87,4 +87,20 @@ router.get('/clientType', function(req, res) {
     res.send({status: 'ok', type: type});
 });
 
+/* remove jobs */
+router.post('/removeJob', function(req, res) {
+    if (!req.session.user) {
+        res.send({status: 'authErr', message: '非法操作'});
+        return;
+    }
+    debug('dates: ' + req.body.date);
+    db.remove('employer', {date: {$in: req.body.date}}, function(err) {
+        if (err) {
+            res.send({status: 'dbErr', message: '数据库读写错误'});
+        } else {
+            res.send({status: 'ok', message: '信息删除成功'});
+        }
+    });
+});
+
 module.exports = router;
