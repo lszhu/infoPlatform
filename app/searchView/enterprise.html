@@ -39,7 +39,7 @@
 
     <div class="form-group">
       <div class="col-sm-offset-4 col-sm-4">
-        <button ng-click="searchOrganization()" class="btn btn-primary btn-block">查&nbsp;&nbsp;询</button>
+        <button ng-click="page.queryItems()" class="btn btn-primary btn-block">查&nbsp;&nbsp;询</button>
       </div>
     </div>
   </form>
@@ -52,8 +52,8 @@
     <!-- Table -->
     <table class="table table-striped table-bordered">
       <thead></thead>
-      <tr ng-repeat="o in pageOption.dataToShow | filter: globalFilterKey">
-        <td><div class="index">{{$index + pageOption.baseNumber}}</div></td>
+      <tr ng-repeat="o in page.params.itemList">
+        <td><div class="index">{{$index + page.params.baseNumber}}</div></td>
         <td>
           <table class="table embedded">
             <tr>
@@ -81,18 +81,11 @@
   <!-- 显示企事业单位介绍信息对话框 -->
   <div info-dialog><div ng-bind-html="information.content"></div></div>
 
-  <nav class="col-sm-offset-7" ng-show="pageOption.pages > 1">
+  <nav class="col-sm-offset-7" ng-show="page.params.pageList.length > 1">
     <ul class="pagination">
-      <li><a ng-click="pageOption.previousList()" href="">«</a></li>
-      <li ng-class="pageOption.active(p)" ng-click="pageOption.select(p)" ng-repeat="p in pageOption.pageList"><a href="">{{p}}</a></li>
-      <!--
-      <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
-      <li><a href="#">2</a></li>
-      <li><a href="#">3</a></li>
-      <li><a href="#">4</a></li>
-      <li><a href="#">5</a></li>
-      -->
-      <li><a ng-click="pageOption.nextList()" href="">»</a></li>
+      <li><a ng-click="page.previousNavBar()" href="">«</a></li>
+      <li ng-class="page.active(p, page.params.curPage)" ng-click="page.queryItems(p)" ng-repeat="p in page.params.pageList"><a href="" ng-bind="p"></a></li>
+      <li><a ng-click="page.nextNavBar()" href="">»</a></li>
     </ul>
   </nav>
 

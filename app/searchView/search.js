@@ -249,37 +249,23 @@ angular.module('myApp.search', ['ngRoute'])
         }
     ])
 
-    .controller('EnterpriseCtrl', ['$scope', '$http', '$sce', 'page',
-        'formatInfo', function($scope, $http, $sce, page, formatInfo) {
-            // 每页的显示数目
-            var limit = 50;
-            // 页码导航条显示的页码数
-            var pageNav = 5;
-            // 设置翻页时自动滚屏到x/y坐标
-            var x = 0;
-            var y = 450;
-            // 用于保存页面显示相关信息
-            $scope.pageOption = {};
-            // 查询条件
-            $scope.org = {};
+    .controller('EnterpriseCtrl', ['$scope', '$http', '$sce', '$window',
+        'pagination', 'formatInfo',
+        function($scope, $http, $sce, $window, pagination, formatInfo) {
+            // 初始化页面参数
+            $scope.page = pagination({target: '/searchOrganization'});
+            // 关联查询条件
+            $scope.org = $scope.page.params.condition;
+            // 初始化查询参数中的区域选择参数districtId
+            $scope.org.districtId = $scope.districtId;
 
-            $scope.searchOrganization = function () {
-                $scope.org.districtId = $scope.districtId;
-                console.log($scope.org);
-                $http.post('/searchOrganization', $scope.org)
-                    .success(function (res) {
-                        if (res.status == 'ok') {
-                            $scope.pageOption =
-                                page(res.list, limit, pageNav, x, y);
-                            console.log('org info length: ' + res.list.length);
-                        } else {
-                            alert('未查询到任何求职信息\n' + res.message);
-                        }
-                    })
-                    .error(function (err) {
-                        alert('因出现异常，无法正确查询到相关信息\n' + err);
-                    });
-            };
+            // 跟踪区域选择参数districtId
+            $scope.$watch('districtId', function(newValue, oldValue) {
+                if (newValue == oldValue) {
+                    return;
+                }
+                $scope.org.districtId = newValue;
+            });
 
             $scope.getMsg = function(infoId) {
                 //console.log('informationId: ' + infoId);
@@ -290,10 +276,6 @@ angular.module('myApp.search', ['ngRoute'])
                             //$scope.information = res.info;
                             $scope.information.content =
                                 $sce.trustAsHtml($scope.information.content);
-                            //$scope.information.heading = res.info.name;
-                            //$scope.information.reference =
-                            //    makeReference(res.info);
-                            //console.log('heading: %o', res.info.name);
                         } else {
                             console.log('没有相关单位的信息\n' + res.message);
                         }
@@ -314,9 +296,6 @@ angular.module('myApp.search', ['ngRoute'])
             // 设置翻页时自动滚屏到x/y坐标
             var x = 0;
             var y = 450;
-
-            // 查询条件
-            $scope.manpower = {};
 
             // 总页面数
             var totalPage = 0;
@@ -349,10 +328,6 @@ angular.module('myApp.search', ['ngRoute'])
                 //console.log(totalPage, $scope.pageList, pageNav);
                 $scope.pageList = pagination
                     .nextNavBar(totalPage, $scope.pageList, pageNav);
-            };
-
-            $scope.getDate = function(date) {
-                return !date ? '未知' : date.toString().split('T')[0];
             };
 
             // 获取符合约束条件的总求职信息条目数量，以及分页后指定页面具体信息

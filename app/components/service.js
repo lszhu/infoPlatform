@@ -65,8 +65,31 @@ angular.module('myApp.service', [])
         return getJob;
     }])
 
-    .factory('pagination', function() {
-        function pageList(totalPage, curPage, pageNav) {
+    .factory('pagination', ['$window', '$http', function($window, $http) {
+
+        // 分页相关参数
+        var params = {
+            target: '/searchJob',   // 查询的目标路径
+            limit: 50,              // 每页显示的条目数目
+            pageNav: 5,             // 页码导航条显示的页码数
+            x: 0,                   // 自动滚屏到横坐标
+            y: 450,                 // 自动滚屏到纵坐标
+            condition: {},          // 查询条件
+            curPage: 0,             // 当前页码（为1时不会自动加载第一页）
+            totalPage: 0,           // 符合条件的条目分页后的页面数
+            pageList: [],           // 导航条的页面列表
+            itemList: [],           // 列表使用的经过快速过滤的条目
+            itemListRaw: []         // 未经快速过滤的条目
+        };
+
+        function active(p1, p2) {
+            return p1 == p2 ? 'active' : '';
+        }
+
+        function pageList() {
+            var totalPage = params.totalPage;
+            var curPage = params.curPage;
+            var pageNav = params.pageNav;
             var first, last;
             if (curPage <= Math.ceil(pageNav / 2)) {
                 first = 1;
@@ -82,10 +105,15 @@ angular.module('myApp.service', [])
             for (var i = first; i <= last; i++) {
                 pages.push(i);
             }
+            params.pageList = pages;
             return pages;
         }
 
-        function nextNavBar(totalPage, curPageList, pageNav) {
+        function nextNavBar() {
+            var totalPage = params.totalPage;
+            var curPageList = params.pageList;
+            var pageNav = params.pageNav;
+
             if (curPageList.length < pageNav) {
                 return curPageList;
             }
@@ -95,15 +123,20 @@ angular.module('myApp.service', [])
                 total.push(i);
             }
             var last = curPageList[pageNav - 1];
-            //console.log('last: ' + last);
-            if (last <= totalPage - pageNav) {
+            if (last + pageNav <= totalPage) {
+                params.pageList = total.slice(last, last + pageNav);
                 return total.slice(last, last + pageNav);
             } else {
-                return total.slice(totalPage - pageNav)
+                params.pageList = total.slice(totalPage - pageNav);
+                return total.slice(totalPage - pageNav);
             }
         }
 
-        function previousNavBar(totalPage, curPageList, pageNav) {
+        function previousNavBar() {
+            var totalPage = params.totalPage;
+            var curPageList = params.pageList;
+            var pageNav = params.pageNav;
+
             if (curPageList.length < pageNav) {
                 return curPageList;
             }
@@ -114,26 +147,81 @@ angular.module('myApp.service', [])
             }
             var first = curPageList[0];
             if (first > pageNav) {
+                params.pageList =
+                    total.slice(first - pageNav -1, first - 1);
                 return total.slice(first - pageNav -1, first - 1);
             } else {
+                params.pageList = total.slice(0, pageNav);
                 return total.slice(0, pageNav);
             }
         }
 
-        function active(p1, p2) {
-            if (p1 == p2) {
-                return 'active';
+        // 获取符合约束条件的总求职信息条目数量，以及分页后指定页面具体信息
+        function queryItems(page) {
+            // 如果为真的改变当前活动页面则直接返回
+            if (page == params.curPage) {
+                return;
             }
-            return '';
+            if (!page) {
+                page = 1;
+            }
+
+            // 设置当前页面
+            params.curPage = page;
+            // 清空选中列表
+            params.removalList = [];
+            params.selectedAll = false;
+
+            // 设置查询条件
+            var cond = params.condition;
+            cond.limit = params.limit;
+            cond.skip = (page - 1) * params.limit;
+            if (params.districtId) {
+                cond.districtId = params.districtId;
+            }
+
+            console.log('condition: %o', cond);
+            // 查询数据
+            $http.post(params.target, cond)
+                .success(function(res) {
+                    if (res.status != 'ok') {
+                        console.log(res.message);
+                        return;
+                    }
+                    params.itemListRaw = res.list;
+                    params.itemList = res.list;
+                    console.log('itemList: %o', params.itemList);
+                    var limit = params.limit;
+                    params.totalPage = Math.ceil(res.count / limit);
+                    params.pageList = pageList();
+                    params.baseNumber = (page - 1) * limit + 1;
+                    $window.scrollTo(params.x, params.y);
+
+                })
+                .error(function(err) {
+                    console.log('无法查询到相关信息，错误原因：\n%o', err);
+                });
         }
 
-        return {
-            pageList: pageList,
-            nextNavBar: nextNavBar,
-            previousNavBar: previousNavBar,
-            active: active
-        }
-    })
+        return function(init) {
+            if (init) {
+                for (var i in init) {
+                    if (init.hasOwnProperty(i)) {
+                        params[i] = init[i];
+                    }
+                }
+            }
+
+            return {
+                params: params,
+                pageList: pageList,
+                nextNavBar: nextNavBar,
+                previousNavBar: previousNavBar,
+                queryItems: queryItems,
+                active: active
+            };
+        };
+    }])
 
     .factory('page', ['$window', function($window) {
 

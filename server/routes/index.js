@@ -459,9 +459,13 @@ router.post('/searchJob', function(req, res) {
 
     db.count('employer', condition, function(err, count) {
         counter.count--;
-        if (err && !counter.error) {
+        if (err) {
+            if (counter.error) {
+                console.log('db access error');
+                return;
+            }
             counter.error = true;
-            res.send({status: 'dbReadErr', message: '数据库访问错误'});
+            res.send({status: 'dbReadErr', message: 数据库访问错误});
             return;
         }
         response.count = count;
@@ -472,9 +476,13 @@ router.post('/searchJob', function(req, res) {
 
     db.querySort('employer', condition, {date: -1}, function(err, docs) {
         counter.count--;
-        if (err && !counter.error) {
+        if (err) {
+            if (counter.error) {
+                console.log('db access error');
+                return;
+            }
             counter.error = true;
-            res.send({status: 'dbReadErr', message: '数据库访问错误'});
+            res.send({status: 'dbReadErr', message: 数据库访问错误});
             return;
         }
         response.jobList = docs;
@@ -487,7 +495,12 @@ router.post('/searchJob', function(req, res) {
 /* search for organization info */
 router.post('/searchOrganization', function(req, res) {
     // query items limit
-    var limit = 2000;
+    var limit = parseInt(req.body.limit);
+    limit = limit > 0 ? limit : 2000;
+
+    var skip = parseInt(req.body.skip);
+    skip = skip > 0 ? skip : 0;
+
     var condition = {};
     if (req.body.name) {
         condition.name = new RegExp(req.body.name);
@@ -508,21 +521,49 @@ router.post('/searchOrganization', function(req, res) {
 
     var queryFields = 'name phone address type economicType' +
         ' jobForm staffs introductionId';
-    db.query('organization', condition, function(err, docs) {
+
+    // 保存正常的响应数据
+    var response = {status: 'ok'};
+    // 用于并发访问的计数器
+    var counter = {count: 2, error: false};
+
+    db.count('organization', condition, function(err, count) {
+        counter.count--;
         if (err) {
-            console.log('db access error');
+            if (counter.error) {
+                console.log('db access error');
+                return;
+            }
+            counter.error = true;
+            res.send({status: 'dbReadErr', message: 数据库访问错误});
+            return;
+        }
+        response.count = count;
+        if (counter.count == 0) {
+            res.send(response);
+        }
+    });
+
+    db.querySort('organization', condition, {staffs: -1}, function(err, docs) {
+        counter.count--;
+        if (err) {
+            if (counter.error) {
+                console.log('db access error');
+                return;
+            }
+            counter.error = true;
             res.send({status: 'dbReadErr', message: 单位信息读取失败});
             return;
         }
-        docs.sort(function(a, b) {
-            if (a.staffs < b.staffs) {
-                return 1;
-            } else if (a.staffs == b.staffs) {
-                return 0;
-            } else {
-                return -1;
-            }
-        });
+        //docs.sort(function(a, b) {
+        //    if (a.staffs < b.staffs) {
+        //        return 1;
+        //    } else if (a.staffs == b.staffs) {
+        //        return 0;
+        //    } else {
+        //        return -1;
+        //    }
+        //});
         for (var i = 0, len = docs.length; i < len; i++) {
             docs[i].staffs = tool.blurStaffs(docs[i].staffs);
             if (!docs[i].address) {
@@ -530,8 +571,9 @@ router.post('/searchOrganization', function(req, res) {
             }
         }
         debug('organization list length: ' + docs.length);
-        res.send({status: 'ok', list: docs});
-    }, queryFields, limit);
+        response.list = docs;
+        res.send(response);
+    }, queryFields, limit, skip);
 });
 
 /* search for manpower info */
@@ -577,9 +619,13 @@ router.post('/searchManpower', function(req, res) {
 
     db.count('employee', condition, function(err, count) {
         counter.count--;
-        if (err && !counter.error) {
+        if (err) {
+            if (counter.error) {
+                console.log('db access error');
+                return;
+            }
             counter.error = true;
-            res.send({status: 'dbReadErr', message: '数据库访问错误'});
+            res.send({status: 'dbReadErr', message: 数据库访问错误});
             return;
         }
         debug('count: ' + count);
@@ -591,11 +637,13 @@ router.post('/searchManpower', function(req, res) {
 
     db.querySort('employee', condition, {date: -1}, function(err, docs) {
         counter.count--;
-        if (err && !counter.error) {
+        if (err) {
+            if (counter.error) {
+                console.log('db access error');
+                return;
+            }
             counter.error = true;
-            console.log('db access error');
-            res.send({status: 'dbReadErr', message: '求职信息读取失败'});
-            debug('error:' + JSON.stringify(err));
+            res.send({status: 'dbReadErr', message: 数据库访问错误});
             return;
         }
         for (var i = 0, len = docs.length; i < len; i++) {

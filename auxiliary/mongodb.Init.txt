@@ -35,6 +35,12 @@ db.figures.ensureIndex({date: 1});
 db.figures.ensureIndex({subjectId: 1});
 db.figures.ensureIndex({project: 1, subjectId: 1});
 
+db.organizations.ensureIndex({staffs: -1});
+db.policies.ensureIndex({date: -1});
+db.employees.ensureIndex({date: -1});
+db.employers.ensureIndex({date: -1});
+db.orginfos.ensureIndex({date: -1});
+db.communityinfos.ensureIndex({districtId: -1}, {unique: true});
 
 //////////////////////////////////////////////////////////////
 
