@@ -203,19 +203,20 @@ angular.module('myApp.search', ['ngRoute'])
                 var dates = [];
                 for (var i = 0, len = selList.length; i < len; i++) {
                     if (selList[i]) {
-                        dates.push(items[i].date);
+                        console.log('item: %o', items[i]);
+                        dates.push(items[i]._id);
                     }
                 }
                 return dates;
             }
 
             // 根据条件删除条目
-            function removeItemList(dates) {
-                if (!dates || !dates.length) {
+            function removeItemList(idList) {
+                if (!idList || !idList.length) {
                     return;
                 }
                 console.log('removing');
-                $http.post('/users/removeJob', {date: dates})
+                $http.post('/users/removeJob', {objectId: idList})
                     .success(function(res) {
                         if (res.status == 'ok') {
                             console.log('remove ok');
@@ -230,20 +231,20 @@ angular.module('myApp.search', ['ngRoute'])
 
             // 删除所有选中条目
             $scope.removeSelected = function() {
-                var dates = getRemovals($scope.removalList);
-                if (dates.length && !confirm('确实要删除这些信息吗')) {
+                var ids = getRemovals($scope.removalList);
+                if (ids.length && !confirm('确实要删除这些信息吗')) {
                     return;
                 }
-                removeItemList(dates);
+                removeItemList(ids);
             };
 
             $scope.removeItem = function(index) {
-                var date = $scope.itemList[index].date;
+                var objectId = $scope.itemList[index]._id;
                 if (!confirm('确实要删除这些信息吗')) {
                     return;
                 }
-                console.log('date: %o', $scope.itemList[index].date);
-                removeItemList([date]);
+                console.log('objectId: %o', $scope.itemList[index]._id);
+                removeItemList([objectId]);
             }
         }
     ])
@@ -469,22 +470,22 @@ angular.module('myApp.search', ['ngRoute'])
             // 将选中条目的时间参数抽出，作为删除的条件
             function getRemovals(selList) {
                 var items = $scope.itemList;
-                var dates = [];
+                var ids = [];
                 for (var i = 0, len = selList.length; i < len; i++) {
                     if (selList[i]) {
-                        dates.push(items[i].date);
+                        ids.push(items[i]._id);
                     }
                 }
-                return dates;
+                return ids;
             }
 
             // 根据条件删除条目
-            function removeItemList(dates) {
-                if (!dates || !dates.length) {
+            function removeItemList(ids) {
+                if (!ids || !ids.length) {
                     return;
                 }
                 console.log('removing');
-                $http.post('/users/removeManpower', {date: dates})
+                $http.post('/users/removeManpower', {objectId: ids})
                     .success(function(res) {
                         if (res.status == 'ok') {
                             console.log('remove ok');
@@ -499,20 +500,20 @@ angular.module('myApp.search', ['ngRoute'])
 
             // 删除所有选中条目
             $scope.removeSelected = function() {
-                var dates = getRemovals($scope.removalList);
-                if (dates.length && !confirm('确实要删除这些信息吗')) {
+                var ids = getRemovals($scope.removalList);
+                if (ids.length && !confirm('确实要删除这些信息吗')) {
                     return;
                 }
-                removeItemList(dates);
+                removeItemList(ids);
             };
 
             $scope.removeItem = function(index) {
-                var date = $scope.itemList[index].date;
+                var objectId = $scope.itemList[index]._id;
                 if (!confirm('确实要删除这些信息吗')) {
                     return;
                 }
-                console.log('date: %o', $scope.itemList[index].date);
-                removeItemList([date]);
+                console.log('objectId: %o', $scope.itemList[index]._id);
+                removeItemList([objectId]);
             }
         }
     ])

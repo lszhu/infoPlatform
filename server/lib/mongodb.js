@@ -124,6 +124,7 @@ function getAccount(username, callback) {
 }
 
 module.exports = {
+    ObjectId: mongoose.Types.ObjectId,
     query: query,
     querySort: querySort,
     queryOne: queryOne,

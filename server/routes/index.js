@@ -569,10 +569,6 @@ router.post('/searchManpower', function(req, res) {
     }
 
     debug('search manpower condition: ' + JSON.stringify(condition));
-    debug('ageFrom: ' + req.body.ageFrom);
-    debug('ageTo: ' + req.body.ageTo);
-    debug('gender:' + req.body.gender);
-    debug('limit, skip: ' + limit + ' ' + skip);
 
     // 保存正常的响应数据
     var response = {status: 'ok'};

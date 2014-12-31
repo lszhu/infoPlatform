@@ -96,8 +96,7 @@ router.post(/\/remove(\w+)/, function(req, res) {
 
     var target = req.params[0];
     debug('target:' + target);
-    debug('date: ' + req.body.date);
-
+    debug('objectId: ' + req.body.objectId);
     var models = {
         Job: 'employer',
         Manpower: 'employee',
@@ -105,13 +104,18 @@ router.post(/\/remove(\w+)/, function(req, res) {
         Message: 'message',
         Suggestion: 'suggestion'
     };
-
     if (!models.hasOwnProperty(target)) {
         res.send({status: 'targetErr', message: '非法操作对象'});
         return;
     }
 
-    db.remove(models[target], {date: {$in: req.body.date}}, function(err) {
+    // 生成mongodb的数据条码id
+    var objectIds = req.body.objectId || [];
+    for (var i = 0, len = objectIds.length; i < len; i++) {
+        objectIds[i] = new db.ObjectId(objectIds[i]);
+    }
+
+    db.remove(models[target], {_id: {$in: objectIds}}, function(err) {
         if (err) {
             res.send({status: 'dbErr', message: '数据库读写错误'});
         } else {
