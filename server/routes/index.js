@@ -572,7 +572,9 @@ router.post('/searchOrganization', function(req, res) {
         }
         debug('organization list length: ' + docs.length);
         response.list = docs;
-        res.send(response);
+        if (counter.count == 0) {
+            res.send(response);
+        }
     }, queryFields, limit, skip);
 });
 
@@ -652,16 +654,18 @@ router.post('/searchManpower', function(req, res) {
         }
         response.list = docs;
         debug('docs.length: ' + docs.length);
-        res.send(response);
+        if (counter.count == 0) {
+            res.send(response);
+        }
     }, '', limit, skip);
 });
 
 /* search for worker info */
 router.post('/searchWorker', function(req, res) {
     var condition = {};
-    if (req.body.gender) {
-        condition.gender = req.body.gender;
-    }
+    //if (req.body.gender) {
+    //    condition.gender = req.body.gender;
+    //}
     if (req.body.employment) {
         condition.employment = req.body.employment;
     }
@@ -676,38 +680,68 @@ router.post('/searchWorker', function(req, res) {
     if (req.body.districtId) {
         condition.districtId = new RegExp('^' + req.body.districtId);
     }
-    //var salary = tool.salarySpan(req.salary);
-    //if (salary) {
-    //    condition.salary = salary;
-    //}
-    debug('search worker condition: ' + JSON.stringify(condition));
 
-    debug('ageFrom: ' + req.body.ageFrom);
-    debug('ageTo: ' + req.body.ageTo);
+    // 加入性别和年龄的查询条件
+    var where = tool.manpowerWhere(req.body.gender,
+        req.body.ageFrom, req.body.ageTo);
+    if (where) {
+        condition.$where = where;
+        debug('where: ' + condition.$where.toString());
+    }
+
+    debug('search manpower condition: ' + JSON.stringify(condition));
 
     // query items limit
-    var limit = 5000;
-    // response items limit
-    var resLimit = 2000;
-    db.query('person', condition, function(err, docs) {
+    var limit = parseInt(req.body.limit);
+    limit = limit > 0 ? limit : 5000;
+
+    var skip = parseInt(req.body.skip);
+    skip = skip > 0 ? skip : 0;
+
+    // 保存正常的响应数据
+    var response = {status: 'ok'};
+    // 用于并发访问的计数器
+    var counter = {count: 2, error: false};
+
+    db.count('person', condition, function(err, count) {
+        counter.count--;
         if (err) {
-            console.log('db access error');
-            res.send({status: 'dbReadErr', message: 人力资源信息读取失败});
+            if (counter.error) {
+                console.log('db access error');
+                return;
+            }
+            counter.error = true;
+            res.send({status: 'dbReadErr', message: 数据库访问错误});
+            return;
+        }
+        debug('count: ' + count);
+        response.count = count;
+        if (counter.count == 0) {
+            res.send(response);
+        }
+    });
+
+    db.query('person', condition, function(err, docs) {
+        counter.count--;
+        if (err) {
+            if (counter.error) {
+                console.log('db access error');
+                return;
+            }
+            counter.error = true;
+            res.send({status: 'dbReadErr', message: 数据库访问错误});
             return;
         }
         var data = [];
         for (var i = 0, len = docs.length; i < len; i++) {
-            if (tool.validAge(req.body.ageFrom, req.body.ageTo,
-                    docs[i].idNumber)) {
-                docs[i] = tool.filterWorkerMsg(docs[i]);
-                //debug('blurred worker msg: ' + docs[i]);
-                data.push(docs[i]);
-            }
+            docs[i] = tool.filterWorkerMsg(docs[i]);
         }
-        data = data.slice(0, resLimit);
+        response.list = docs;
         debug('searched worker data length: ' + docs.length);
-        res.send({status: 'ok', list: data});
-    }, '', limit);
+        if (counter.count == 0) {
+            res.send(response);
+        }
+    }, '', limit, skip);
 });
 
 /* GET clause page. */

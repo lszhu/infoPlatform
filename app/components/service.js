@@ -180,7 +180,7 @@ angular.module('myApp.service', [])
                 cond.districtId = params.districtId;
             }
 
-            console.log('condition: %o', cond);
+            //console.log('condition: %o', cond);
             // 查询数据
             $http.post(params.target, cond)
                 .success(function(res) {
@@ -190,7 +190,7 @@ angular.module('myApp.service', [])
                     }
                     params.itemListRaw = res.list;
                     params.itemList = res.list;
-                    console.log('itemList: %o', params.itemList);
+                    console.log('itemList.length: %o', params.itemList.length);
                     var limit = params.limit;
                     params.totalPage = Math.ceil(res.count / limit);
                     params.pageList = pageList();

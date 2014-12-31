@@ -493,35 +493,21 @@ angular.module('myApp.search', ['ngRoute'])
         }
     ])
 
-    .controller('WorkerCtrl', ['$scope', '$http', 'page',
-        function($scope, $http, page) {
-            // 每页的显示数目
-            var limit = 50;
-            // 页码导航条显示的页码数
-            var pageNav = 5;
-            // 设置翻页时自动滚屏到x/y坐标
-            var x = 0;
-            var y = 450;
-            // 用于保存页面显示相关信息，此处还仅是为了能调用其初始化函数
-            $scope.pageOption = {};
-            // 查询条件
-            $scope.worker = {};
+    .controller('WorkerCtrl', ['$scope', '$http', 'pagination',
+        function($scope, $http, pagination) {
+            // 初始化页面参数
+            $scope.page = pagination({target: '/searchWorker'});
+            // 关联查询条件
+            $scope.worker = $scope.page.params.condition;
+            // 初始化查询参数中的区域选择参数districtId
+            $scope.worker.districtId = $scope.districtId;
 
-            $scope.searchWorker = function() {
-                $scope.worker.districtId = $scope.districtId;
-                console.log('manpower condition: %o', $scope.worker);
-                $http.post('/searchWorker', $scope.worker)
-                    .success(function(res) {
-                        if (res.status == 'ok') {
-                            $scope.pageOption =
-                                page(res.list, limit, pageNav, x, y);
-                        } else {
-                            alert('未查询到任何求职信息\n' + res.message);
-                        }
-                    })
-                    .error(function(err) {
-                        alert('因出现异常，无法正确查询到相关信息\n' + err);
-                    });
-            };
+            // 跟踪区域选择参数districtId
+            $scope.$watch('districtId', function(newValue, oldValue) {
+                if (newValue == oldValue) {
+                    return;
+                }
+                $scope.worker.districtId = newValue;
+            });
         }
     ]);
