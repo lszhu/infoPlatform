@@ -87,14 +87,31 @@ router.get('/clientType', function(req, res) {
     res.send({status: 'ok', type: type});
 });
 
-/* remove jobs */
-router.post('/removeJob', function(req, res) {
+/* remove doc in mongodb collection */
+router.post(/\/remove(\w+)/, function(req, res) {
     if (!req.session.user) {
         res.send({status: 'authErr', message: '非法操作'});
         return;
     }
-    debug('dates: ' + req.body.date);
-    db.remove('employer', {date: {$in: req.body.date}}, function(err) {
+
+    var target = req.params[0];
+    debug('target:' + target);
+    debug('date: ' + req.body.date);
+
+    var models = {
+        Job: 'employer',
+        Manpower: 'employee',
+        Policy: 'policy',
+        Message: 'message',
+        Suggestion: 'suggestion'
+    };
+
+    if (!models.hasOwnProperty(target)) {
+        res.send({status: 'targetErr', message: '非法操作对象'});
+        return;
+    }
+
+    db.remove(models[target], {date: {$in: req.body.date}}, function(err) {
         if (err) {
             res.send({status: 'dbErr', message: '数据库读写错误'});
         } else {

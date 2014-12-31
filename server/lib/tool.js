@@ -226,13 +226,13 @@ function orgScale(scale) {
 function blurAge(n) {
     if (n < 20) {
         return '不到20岁'
-    } else if (n < 30) {
+    } else if (n <= 30) {
         return '介于20到30岁';
-    } else if (n < 40) {
+    } else if (n <= 40) {
         return '介于30到40岁';
-    } else if (n < 50) {
+    } else if (n <= 50) {
         return '介于40到50岁';
-    }  else if (n < 60) {
+    }  else if (n <= 60) {
         return '介于50到60岁';
     }  else if (n > 60) {
         return '大于60岁';
@@ -413,6 +413,38 @@ function trimObject(obj) {
     return trimmed;
 }
 
+// 用户查询人员求职信的$where查询条件
+function manpowerWhere(gender, ageFrom, ageTo) {
+    var sex = -1;
+    if (gender == '男') {
+        sex = 1;
+    } else if (gender == '女') {
+        sex = 0;
+    }
+    var year = (new Date()).getFullYear();
+    var yearFrom = parseInt(ageTo);
+    var yearTo = parseInt(ageFrom);
+    yearFrom = yearFrom > 0 ? year - yearFrom : -1;
+    yearTo = yearTo > 0 ? year - yearTo : -1;
+
+    var base = ' return !this.idNumber || this.idNumber.length != 18';
+    var cond = true;
+    if (sex >= 0) {
+        cond += ' && this.idNumber[16] % 2 == ' + sex;
+    }
+    var first = 'var year = this.idNumber.slice(6, 10); ';
+    if (yearFrom > 0) {
+        cond += ' && ' + yearFrom + ' <= year';
+    }
+    if (yearTo > 0) {
+        cond += ' && ' + 'year <= ' + yearTo;
+    }
+    if (sex == -1 && yearFrom == -1 && yearTo == -1) {
+        return '';
+    }
+    return first + base + ' || ' + cond;
+}
+
 module.exports = {
     log: log,
     period: period,
@@ -436,5 +468,6 @@ module.exports = {
     base64ImgData: base64ImgData,
     base64ImgType: base64ImgType,
     base64ToUtf8: base64ToUtf8,
-    trimObject: trimObject
+    trimObject: trimObject,
+    manpowerWhere: manpowerWhere
 };

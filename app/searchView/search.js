@@ -80,6 +80,8 @@ angular.module('myApp.search', ['ngRoute'])
                 $scope.curPage = page;
                 // 清空选中列表
                 $scope.removalList = [];
+                // 将选中所有设为否
+                $scope.selectedAll = false;
 
                 $scope.job.skip = (page - 1) * limit;
                 console.log('districtId: ' + $scope.districtId);
@@ -94,7 +96,7 @@ angular.module('myApp.search', ['ngRoute'])
                             $scope.pageList = pagination
                                 .pageList(totalPage, $scope.curPage, pageNav);
                             $scope.baseNumber = (page - 1) * limit + 1;
-                            $window.scrollTo(x, y)
+                            $window.scrollTo(x, y);
                         }
                         //console.log(res.jobList);
                         //console.log('$scope.pageList: %o', $scope.pageList);
@@ -113,6 +115,7 @@ angular.module('myApp.search', ['ngRoute'])
                 }
                 $scope.itemList = filterFilter($scope.itemListRaw, newValue);
                 $scope.removalList = [];
+                $scope.selectedAll = false;
             });
 
             // 获取单位介绍信息
@@ -298,26 +301,11 @@ angular.module('myApp.search', ['ngRoute'])
                         console.log('因出现异常，无法查询到相关信息\n' + err);
                     });
             };
-
-            //function makeReference(info) {
-            //    var ref = '';
-            //    if (info.hasOwnProperty('date')) {
-            //        var d = new Date(info.date);
-            //        ref += '发布日期：';
-            //        ref += d.getFullYear() + '-';
-            //        ref += d.getMonth() + 1;
-            //        ref += '-' + d.getDate();
-            //    }
-            //    if (info.hasOwnProperty('source')) {
-            //        ref += info.source;
-            //    }
-            //    return ref;
-            //}
         }
     ])
 
-    .controller('ManpowerCtrl', ['$scope', '$http', 'page',
-        function($scope, $http, page) {
+    .controller('ManpowerCtrl', ['$scope', '$http', '$window', '$location',
+        'pagination', function($scope, $http, $window, $location, pagination) {
             // 每页的显示数目
             var limit = 50;
             // 页码导航条显示的页码数
@@ -325,42 +313,207 @@ angular.module('myApp.search', ['ngRoute'])
             // 设置翻页时自动滚屏到x/y坐标
             var x = 0;
             var y = 450;
-            // 用于保存页面显示相关信息，此处还仅是为了能调用其初始化函数
-            $scope.pageOption = {};
+
             // 查询条件
             $scope.manpower = {};
 
+            // 总页面数
+            var totalPage = 0;
+            // 当前页面条目编号起始值
+            $scope.baseNumber = 1;
 
-            $scope.searchManpower = function() {
-                $scope.manpower.districtId = $scope.districtId;
-                console.log('manpower condition: %o', $scope.manpower);
-                $http.post('/searchManpower', $scope.manpower)
-                    .success(function(res) {
-                        if (res.status == 'ok') {
-                            $scope.pageOption =
-                                page(res.list, limit, pageNav, x, y);
-                        } else {
-                            alert('未查询到任何求职信息\n' + res.message);
-                        }
-                    })
-                    .error(function(err) {
-                        alert('因出现异常，无法正确查询到相关信息\n' + err);
-                    });
+            // 基本查询条件
+            $scope.manpower = {limit: limit};
+            // 当前页码，注意不能为1（否则无法自动加载第一页）
+            $scope.curPage = 0;
+            // 当前页面列表
+            $scope.pageList = [];
+
+            // 当前数据列表
+            $scope.itemList = [];
+
+            // 待删除项目表
+            $scope.removalList = [];
+
+            // 设置激活页面（函数）
+            $scope.active = pagination.active;
+            // 向前翻一个导航列表
+            $scope.previousList = function() {
+                //console.log(totalPage, $scope.pageList, pageNav);
+                $scope.pageList = pagination
+                    .previousNavBar(totalPage, $scope.pageList, pageNav);
+            };
+            // 向后翻一个导航列表
+            $scope.nextList = function() {
+                //console.log(totalPage, $scope.pageList, pageNav);
+                $scope.pageList = pagination
+                    .nextNavBar(totalPage, $scope.pageList, pageNav);
             };
 
             $scope.getDate = function(date) {
-                //var d = new Date(date);
-                //if (d == 'Invalid Date') {
-                //    return '';
-                //}
-                //var ref = '';
-                //ref += d.getFullYear() + '-';
-                //ref += d.getMonth() + 1;
-                //ref += '-' + d.getDate();
-                //return ref;
                 return !date ? '未知' : date.toString().split('T')[0];
             };
 
+            // 获取符合约束条件的总求职信息条目数量，以及分页后指定页面具体信息
+            $scope.searchManpower = function(page) {
+                // 如果为真的改变当前活动页面则直接返回
+                if (page == $scope.curPage) {
+                    return;
+                }
+                if (!page) {
+                    page = $scope.curPage;
+                }
+                page = page < 1 ? 1 : page;
+                // 设置当前页面
+                $scope.curPage = page;
+                // 清空选中列表
+                $scope.removalList = [];
+                $scope.selectedAll = false;
+
+                $scope.manpower.skip = (page - 1) * limit;
+                console.log('districtId: ' + $scope.districtId);
+                $scope.manpower.districtId = $scope.districtId;
+                $http.post('/searchManpower', $scope.manpower)
+                    .success(function(res) {
+                        if (res.status != 'ok') {
+                            console.log(res.message);
+                            return;
+                        }
+                        $scope.itemListRaw = res.list;
+                        $scope.itemList = res.list;
+                        totalPage = Math.ceil(res.count / limit);
+                        $scope.pageList = pagination
+                            .pageList(totalPage, $scope.curPage, pageNav);
+                        $scope.baseNumber = (page - 1) * limit + 1;
+                        $window.scrollTo(x, y);
+
+                    })
+                    .error(function(err) {
+                        console.log('无法查询到相关信息，错误原因：\n%o', err);
+                    });
+            };
+            // 用于初始化列表信息
+            //$scope.searchManpower(1);
+
+            // 跟踪过滤关键字的变化
+            $scope.$watch('quickFilter', function(newValue, oldValue) {
+                if (newValue == oldValue) {
+                    return;
+                }
+                $scope.itemList = filterFilter($scope.itemListRaw, newValue);
+                $scope.removalList = [];
+                $scope.selectedAll = false;
+            });
+
+            $scope.parseSalary = function(salary) {
+                if (salary) {
+                    return salary;
+                } else {
+                    return '面议';
+                }
+            };
+
+            $scope.getDate = function(date) {
+                return !date ? '未知' : date.toString().split('T')[0];
+            };
+
+            // 管理模式设置
+            function management() {
+                var manage = $location.search().hasOwnProperty('management');
+                //console.log('$scope.manage:' + JSON.stringify(manage));
+                if (manage) {
+                    $http.get('/users/clientType')
+                        .success(function(res) {
+                            console.log(res.type);
+                            if (res.type == 'register') {
+                                $scope.manage = true;
+                            } else {
+                                $location.search('management', undefined);
+                                $scope.manage = false;
+                            }
+                        });
+                }
+            }
+            management();
+
+            $scope.gotoPanel = function() {
+                $location.path('/users/panel');
+            };
+
+            $scope.logout = function() {
+                $http.get('/users/logout')
+                    .success(function(res) {
+                        console.log(res.message);
+                        $location.search('management', undefined);
+                        //$location.path('/search/job');
+                        location.reload();
+                    })
+                    .error(function(err) {
+                        alert('系统出现异常：\n' + err);
+                    });
+            };
+
+            $scope.reverse = function(index) {
+                $scope.removalList[index] = !$scope.removalList[index];
+                //console.log('reversed index: ' + index);
+            };
+
+            $scope.selectAll = function(selected) {
+                $scope.selectedAll = !selected;
+                for (var i = 0; i < limit; i++) {
+                    $scope.removalList[i] = !selected;
+                }
+                //console.log($scope.removelList);
+            };
+
+            // 将选中条目的时间参数抽出，作为删除的条件
+            function getRemovals(selList) {
+                var items = $scope.itemList;
+                var dates = [];
+                for (var i = 0, len = selList.length; i < len; i++) {
+                    if (selList[i]) {
+                        dates.push(items[i].date);
+                    }
+                }
+                return dates;
+            }
+
+            // 根据条件删除条目
+            function removeItemList(dates) {
+                if (!dates || !dates.length) {
+                    return;
+                }
+                console.log('removing');
+                $http.post('/users/removeManpower', {date: dates})
+                    .success(function(res) {
+                        if (res.status == 'ok') {
+                            console.log('remove ok');
+                            location.reload();
+                        }
+                        console.log(res.message);
+                    })
+                    .error(function(err) {
+                        console.log('error: %o', err);
+                    });
+            }
+
+            // 删除所有选中条目
+            $scope.removeSelected = function() {
+                var dates = getRemovals($scope.removalList);
+                if (dates.length && !confirm('确实要删除这些信息吗')) {
+                    return;
+                }
+                removeItemList(dates);
+            };
+
+            $scope.removeItem = function(index) {
+                var date = $scope.itemList[index].date;
+                if (!confirm('确实要删除这些信息吗')) {
+                    return;
+                }
+                console.log('date: %o', $scope.itemList[index].date);
+                removeItemList([date]);
+            }
         }
     ])
 

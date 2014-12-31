@@ -89,13 +89,13 @@ angular.module('myApp.service', [])
             if (curPageList.length < pageNav) {
                 return curPageList;
             }
-            console.log(totalPage, curPageList, pageNav);
+            //console.log(totalPage, curPageList, pageNav);
             var total = [];
             for (var i = 1; i <= totalPage; i++) {
                 total.push(i);
             }
             var last = curPageList[pageNav - 1];
-            console.log('last: ' + last);
+            //console.log('last: ' + last);
             if (last <= totalPage - pageNav) {
                 return total.slice(last, last + pageNav);
             } else {

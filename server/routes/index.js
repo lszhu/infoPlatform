@@ -422,12 +422,9 @@ router.post('/postSuggestion', function(req, res) {
 /* get job info posted by employer */
 router.post('/searchJob', function(req, res) {
     // query items limit
-    var limit = req.body.limit;
-    if (limit && parseInt(limit)) {
-        limit = parseInt(limit);
-    } else {
-        limit = 2000;
-    }
+    var limit = parseInt(req.body.limit);
+    limit = limit > 0 ? limit : 2000;
+
     var skip = parseInt(req.body.skip);
     skip = skip > 0 ? skip : 0;
 
@@ -539,10 +536,14 @@ router.post('/searchOrganization', function(req, res) {
 
 /* search for manpower info */
 router.post('/searchManpower', function(req, res) {
+    // query items limit
+    var limit = parseInt(req.body.limit);
+    limit = limit > 0 ? limit : 5000;
+
+    var skip = parseInt(req.body.skip);
+    skip = skip > 0 ? skip : 0;
+
     var condition = {};
-    //if (req.body.gender) {
-    //    condition.gender = req.body.gender;
-    //}
     var salary = tool.salarySpan(req.body.salary);
     if (salary) {
         condition.salary = salary;
@@ -559,38 +560,56 @@ router.post('/searchManpower', function(req, res) {
         condition.districtId = new RegExp('^' + req.body.districtId);
     }
 
+    // 加入性别和年龄的查询条件
+    var where = tool.manpowerWhere(req.body.gender,
+        req.body.ageFrom, req.body.ageTo);
+    if (where) {
+        condition.$where = where;
+        debug('where: ' + condition.$where.toString());
+    }
+
     debug('search manpower condition: ' + JSON.stringify(condition));
     debug('ageFrom: ' + req.body.ageFrom);
     debug('ageTo: ' + req.body.ageTo);
+    debug('gender:' + req.body.gender);
+    debug('limit, skip: ' + limit + ' ' + skip);
 
-    // query items limit
-    var limit = 5000;
-    // response items limit
-    //var resLimit = 2000;
-    db.querySort('employee', condition, {date: -1}, function(err, docs) {
-        if (err) {
-            console.log('db access error');
-            res.send({status: 'dbReadErr', message: 求职信息读取失败});
+    // 保存正常的响应数据
+    var response = {status: 'ok'};
+    // 用于并发访问的计数器
+    var counter = {count: 2, error: false};
+
+    db.count('employee', condition, function(err, count) {
+        counter.count--;
+        if (err && !counter.error) {
+            counter.error = true;
+            res.send({status: 'dbReadErr', message: '数据库访问错误'});
             return;
         }
-        var data = [];
-        var gender;
-        for (var i = 0, len = docs.length; i < len; i++) {
-            gender = tool.getGender(docs[i]);
-            if (req.body.gender && req.body.gender != gender) {
-                continue;
-            }
-            if (tool.validAge(req.body.ageFrom, req.body.ageTo,
-                    docs[i].idNumber)) {
-                docs[i].age = tool.blurAge(tool.getAge(docs[i]));
-                docs[i].gender = tool.getGender(docs[i]);
-                docs[i].idNumber = '';
-                data.push(docs[i]);
-            }
+        debug('count: ' + count);
+        response.count = count;
+        if (counter.count == 0) {
+            res.send(response);
         }
-        //data = data.slice(0, resLimit);
-        res.send({status: 'ok', list: data});
-    }, '', limit);
+    });
+
+    db.querySort('employee', condition, {date: -1}, function(err, docs) {
+        counter.count--;
+        if (err && !counter.error) {
+            counter.error = true;
+            console.log('db access error');
+            res.send({status: 'dbReadErr', message: '求职信息读取失败'});
+            debug('error:' + JSON.stringify(err));
+            return;
+        }
+        for (var i = 0, len = docs.length; i < len; i++) {
+            docs[i].age = tool.blurAge(tool.getAge(docs[i]));
+            docs[i].gender = tool.getGender(docs[i]);
+        }
+        response.list = docs;
+        debug('docs.length: ' + docs.length);
+        res.send(response);
+    }, '', limit, skip);
 });
 
 /* search for worker info */
