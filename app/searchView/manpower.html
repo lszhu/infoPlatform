@@ -65,7 +65,7 @@
 
     <div class="form-group">
       <div class="col-sm-offset-4 col-sm-4">
-        <button ng-click="searchManpower()" class="btn btn-primary btn-block">查&nbsp;&nbsp;询</button>
+        <button ng-click="page.queryItems()" class="btn btn-primary btn-block">查&nbsp;&nbsp;询</button>
       </div>
     </div>
   </form>
@@ -96,7 +96,7 @@
     </div><!-- /.modal-dialog -->
   </div><!-- /.modal -->
 
-  <div class="panel panel-default" ng-show="itemList.length">
+  <div class="panel panel-default" ng-show="page.params.itemList.length">
     <!-- Default panel contents -->
     <div class="panel-heading text-center">人才求职信息列表</div>
     <!-- Table -->
@@ -119,8 +119,9 @@
           </div>
         </td>
       </tr>
+
       <!-- 开始显示表格主题内容 -->
-      <tr ng-repeat="h in itemList">
+      <tr ng-repeat="h in page.params.itemList">
         <td class="index-col">
           <div ng-show="manage">
             <div><i ng-show="removalList[$index]" ng-click="reverse($index)" class="fa fa-check-square-o"></i></div>
@@ -128,8 +129,9 @@
             <div><i ng-click="removeItem($index)" class="fa fa-times-circle-o red"></i></div>
           </div>
           <div ng-hide="manage">&nbsp;<br>&nbsp;<br></div>
-          <div class="index">{{$index + baseNumber}}</div>
+          <div class="index">{{$index + page.params.baseNumber}}</div>
         </td>
+
         <td>
           <table class="table embedded">
             <tr>
@@ -144,7 +146,7 @@
             </tr>
             <tr>
               <td><strong>学历： </strong>{{h.education}}</td>
-              <td colspan="2" class="col-sm-2"><strong>月薪要求（元）： </strong>{{parseSalary(h.salary)}}</td>
+              <td colspan="2" class="col-sm-2"><strong>月薪要求（元）： </strong>{{h.salary || '面议'}}</td>
             </tr>
             <tr>
               <td colspan="3"><div><strong>工作经验： </strong></div>
@@ -157,11 +159,11 @@
     </table>
   </div>
 
-  <nav class="col-sm-offset-7" ng-show="pageList.length > 1">
+  <nav class="col-sm-offset-7" ng-show="page.params.pageList.length > 1">
     <ul class="pagination">
-      <li><a ng-click="previousList()" href="">«</a></li>
-      <li ng-class="active(p, curPage)" ng-click="searchManpower(p)" ng-repeat="p in pageList"><a href="" ng-bind="p"></a></li>
-      <li><a ng-click="nextList()" href="">»</a></li>
+      <li><a ng-click="page.previousNavBar()" href="">«</a></li>
+      <li ng-class="page.active(p, page.params.curPage)" ng-click="page.queryItems(p)" ng-repeat="p in page.params.pageList"><a href="" ng-bind="p"></a></li>
+      <li><a ng-click="page.nextNavBar()" href="">»</a></li>
     </ul>
   </nav>
 

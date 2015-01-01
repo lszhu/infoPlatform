@@ -76,10 +76,11 @@
             <div class="input-group-addon">快速过滤</div>
             <input class="form-control" ng-model="quickFilter" type="text" placeholder="输入包含的关键词">
           </div>
-      </td>
+        </td>
       </tr>
+
       <!-- 开始显示表格主题内容 -->
-      <tr ng-repeat="job in itemList">
+      <tr ng-repeat="job in page.params.itemList">
         <td class="index-col">
           <div ng-show="manage">
             <div><i ng-show="removalList[$index]" ng-click="reverse($index)" class="fa fa-check-square-o"></i></div>
@@ -87,8 +88,9 @@
             <div><i ng-click="removeItem($index)" class="fa fa-times-circle-o red"></i></div>
           </div>
           <div ng-hide="manage">&nbsp;<br>&nbsp;<br></div>
-          <div class="index">{{$index + baseNumber}}</div>
+          <div class="index">{{$index + page.params.baseNumber}}</div>
         </td>
+
         <td>
           <table class="table embedded">
             <tr>
@@ -121,11 +123,11 @@
   <!-- 显示企事业单位介绍信息对话框 -->
   <div info-dialog><div ng-bind-html="information.content"></div></div>
 
-  <nav class="col-sm-offset-7" ng-show="pageList.length > 1">
+  <nav class="col-sm-offset-7" ng-show="page.params.pageList.length > 1">
     <ul class="pagination">
-      <li><a ng-click="previousList()" href="">«</a></li>
-      <li ng-class="active(p, curPage)" ng-click="queryJob(p)" ng-repeat="p in pageList"><a href="" ng-bind="p"></a></li>
-      <li><a ng-click="nextList()" href="">»</a></li>
+      <li><a ng-click="page.previousNavBar()" href="">«</a></li>
+      <li ng-class="page.active(p, page.params.curPage)" ng-click="page.queryItems(p)" ng-repeat="p in page.params.pageList"><a href="" ng-bind="p"></a></li>
+      <li><a ng-click="page.nextNavBar()" href="">»</a></li>
     </ul>
   </nav>
 

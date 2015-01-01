@@ -26,6 +26,7 @@ angular.module('myApp.search', ['ngRoute'])
         '$window', 'pagination', 'formatInfo', 'filterFilter',
         function($scope, $http, $sce, $location,
                  $window, pagination, formatInfo, filterFilter) {
+            /*
             // 每页的显示数目
             var limit = 50;
             // 页码导航条显示的页码数
@@ -117,6 +118,43 @@ angular.module('myApp.search', ['ngRoute'])
                 $scope.removalList = [];
                 $scope.selectedAll = false;
             });
+*/
+            // 初始化页面参数
+            $scope.page = pagination({target: '/searchJob'});
+            // 关联查询条件
+            $scope.job = $scope.page.params.condition;
+            // 初始化查询参数中的区域选择参数districtId
+            $scope.job.districtId = $scope.districtId;
+
+            // 跟踪区域选择参数districtId
+            $scope.$watch('districtId', function(newValue, oldValue) {
+                if (newValue == oldValue) {
+                    return;
+                }
+                $scope.job.districtId = newValue;
+            });
+
+            // 待删除项目表
+            $scope.removalList = [];
+            $scope.selectedAll = false;
+
+            // 用于初始化列表信息
+            $scope.page.queryItems(1);
+
+            // 跟踪过滤关键字的变化
+            $scope.$watch('quickFilter', function(newValue, oldValue) {
+                if (newValue == oldValue) {
+                    return;
+                }
+                $scope.page.params.itemList =
+                    filterFilter($scope.page.params.itemListRaw, newValue);
+                $scope.removalList = [];
+                $scope.selectedAll = false;
+            });
+
+            $scope.getDate = function(date) {
+                return !date ? '未知' : date.toString().split('T')[0];
+            };
 
             // 获取单位介绍信息
             $scope.getMsg = function(infoId) {
@@ -191,7 +229,8 @@ angular.module('myApp.search', ['ngRoute'])
 
             $scope.selectAll = function(selected) {
                 $scope.selectedAll = !selected;
-                for (var i = 0; i < limit; i++) {
+                var len = $scope.page.params.itemList.length;
+                for (var i = 0; i < len; i++) {
                     $scope.removalList[i] = !selected;
                 }
                 //console.log($scope.removelList);
@@ -199,15 +238,14 @@ angular.module('myApp.search', ['ngRoute'])
 
             // 将选中条目的时间参数抽出，作为删除的条件
             function getRemovals(selList) {
-                var items = $scope.itemList;
-                var dates = [];
+                var items = $scope.page.params.itemList;
+                var ids = [];
                 for (var i = 0, len = selList.length; i < len; i++) {
                     if (selList[i]) {
-                        console.log('item: %o', items[i]);
-                        dates.push(items[i]._id);
+                        ids.push(items[i]._id);
                     }
                 }
-                return dates;
+                return ids;
             }
 
             // 根据条件删除条目
@@ -231,6 +269,7 @@ angular.module('myApp.search', ['ngRoute'])
 
             // 删除所有选中条目
             $scope.removeSelected = function() {
+                console.log('removing');
                 var ids = getRemovals($scope.removalList);
                 if (ids.length && !confirm('确实要删除这些信息吗')) {
                     return;
@@ -287,107 +326,39 @@ angular.module('myApp.search', ['ngRoute'])
         }
     ])
 
-    .controller('ManpowerCtrl', ['$scope', '$http', '$window', '$location',
-        'pagination', function($scope, $http, $window, $location, pagination) {
-            // 每页的显示数目
-            var limit = 50;
-            // 页码导航条显示的页码数
-            var pageNav = 5;
-            // 设置翻页时自动滚屏到x/y坐标
-            var x = 0;
-            var y = 450;
+    .controller('ManpowerCtrl', ['$scope', '$http', '$location',
+        'filterFilter', 'pagination', function($scope, $http, $location,
+                                               filterFilter, pagination) {
 
-            // 总页面数
-            var totalPage = 0;
-            // 当前页面条目编号起始值
-            $scope.baseNumber = 1;
+            // 初始化页面参数
+            $scope.page = pagination({target: '/searchManpower'});
+            // 关联查询条件
+            $scope.manpower = $scope.page.params.condition;
+            // 初始化查询参数中的区域选择参数districtId
+            $scope.manpower.districtId = $scope.districtId;
 
-            // 基本查询条件
-            $scope.manpower = {limit: limit};
-            // 当前页码，注意不能为1（否则无法自动加载第一页）
-            $scope.curPage = 0;
-            // 当前页面列表
-            $scope.pageList = [];
-
-            // 当前数据列表
-            $scope.itemList = [];
+            // 跟踪区域选择参数districtId
+            $scope.$watch('districtId', function(newValue, oldValue) {
+                if (newValue == oldValue) {
+                    return;
+                }
+                $scope.manpower.districtId = newValue;
+            });
 
             // 待删除项目表
             $scope.removalList = [];
-
-            // 设置激活页面（函数）
-            $scope.active = pagination.active;
-            // 向前翻一个导航列表
-            $scope.previousList = function() {
-                //console.log(totalPage, $scope.pageList, pageNav);
-                $scope.pageList = pagination
-                    .previousNavBar(totalPage, $scope.pageList, pageNav);
-            };
-            // 向后翻一个导航列表
-            $scope.nextList = function() {
-                //console.log(totalPage, $scope.pageList, pageNav);
-                $scope.pageList = pagination
-                    .nextNavBar(totalPage, $scope.pageList, pageNav);
-            };
-
-            // 获取符合约束条件的总求职信息条目数量，以及分页后指定页面具体信息
-            $scope.searchManpower = function(page) {
-                // 如果为真的改变当前活动页面则直接返回
-                if (page == $scope.curPage) {
-                    return;
-                }
-                if (!page) {
-                    page = $scope.curPage;
-                }
-                page = page < 1 ? 1 : page;
-                // 设置当前页面
-                $scope.curPage = page;
-                // 清空选中列表
-                $scope.removalList = [];
-                $scope.selectedAll = false;
-
-                $scope.manpower.skip = (page - 1) * limit;
-                console.log('districtId: ' + $scope.districtId);
-                $scope.manpower.districtId = $scope.districtId;
-                $http.post('/searchManpower', $scope.manpower)
-                    .success(function(res) {
-                        if (res.status != 'ok') {
-                            console.log(res.message);
-                            return;
-                        }
-                        $scope.itemListRaw = res.list;
-                        $scope.itemList = res.list;
-                        totalPage = Math.ceil(res.count / limit);
-                        $scope.pageList = pagination
-                            .pageList(totalPage, $scope.curPage, pageNav);
-                        $scope.baseNumber = (page - 1) * limit + 1;
-                        $window.scrollTo(x, y);
-
-                    })
-                    .error(function(err) {
-                        console.log('无法查询到相关信息，错误原因：\n%o', err);
-                    });
-            };
-            // 用于初始化列表信息
-            //$scope.searchManpower(1);
+            $scope.selectedAll = false;
 
             // 跟踪过滤关键字的变化
             $scope.$watch('quickFilter', function(newValue, oldValue) {
                 if (newValue == oldValue) {
                     return;
                 }
-                $scope.itemList = filterFilter($scope.itemListRaw, newValue);
+                $scope.page.params.itemList =
+                    filterFilter($scope.page.params.itemListRaw, newValue);
                 $scope.removalList = [];
                 $scope.selectedAll = false;
             });
-
-            $scope.parseSalary = function(salary) {
-                if (salary) {
-                    return salary;
-                } else {
-                    return '面议';
-                }
-            };
 
             $scope.getDate = function(date) {
                 return !date ? '未知' : date.toString().split('T')[0];
@@ -436,7 +407,8 @@ angular.module('myApp.search', ['ngRoute'])
 
             $scope.selectAll = function(selected) {
                 $scope.selectedAll = !selected;
-                for (var i = 0; i < limit; i++) {
+                var len = $scope.page.params.itemList.length;
+                for (var i = 0; i < len; i++) {
                     $scope.removalList[i] = !selected;
                 }
                 //console.log($scope.removelList);
@@ -444,7 +416,7 @@ angular.module('myApp.search', ['ngRoute'])
 
             // 将选中条目的时间参数抽出，作为删除的条件
             function getRemovals(selList) {
-                var items = $scope.itemList;
+                var items = $scope.page.params.itemList;
                 var ids = [];
                 for (var i = 0, len = selList.length; i < len; i++) {
                     if (selList[i]) {
@@ -483,11 +455,12 @@ angular.module('myApp.search', ['ngRoute'])
             };
 
             $scope.removeItem = function(index) {
-                var objectId = $scope.itemList[index]._id;
+                var objectId = $scope.page.params.itemList[index]._id;
                 if (!confirm('确实要删除这些信息吗')) {
                     return;
                 }
-                console.log('objectId: %o', $scope.itemList[index]._id);
+                console.log('objectId: %o',
+                    $scope.page.params.itemList[index]._id);
                 removeItemList([objectId]);
             }
         }

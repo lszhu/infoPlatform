@@ -485,7 +485,7 @@ router.post('/searchJob', function(req, res) {
             res.send({status: 'dbReadErr', message: 数据库访问错误});
             return;
         }
-        response.jobList = docs;
+        response.list = docs;
         if (counter.count == 0) {
             res.send(response);
         }
