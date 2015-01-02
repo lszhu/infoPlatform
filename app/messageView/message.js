@@ -157,64 +157,26 @@ angular.module('myApp.message', ['ngRoute'])
     }])
 
     .controller('PolicyCtrl', ['$scope', '$http', '$sce', 'formatInfo',
-        'pagination', 'management',
-        function($scope, $http, $sce, formatInfo, pagination, management) {
-
-
-            //$scope.queryPolicyList = function() {
-            //    $http.post('/getPolicyMsg', {list: true})
-            //        .success(function(res) {
-            //            if (res.status == 'ok') {
-            //                $scope.pageOption =
-            //                    page(res.policyList, limit, pageNav, x, y);
-            //            }
-            //            console.log(res.policyList);
-            //        })
-            //        .error(function(err) {
-            //            console.log('无法获取人力资源与就业服务政策信息，' +
-            //            '错误原因：%o', err);
-            //        });
-            //};
-            // 用于初始化列表信息
-            //$scope.queryPolicyList();
-
-            // 获取政策信息具体内容（以时间戳为标准）
-            //$scope.getMsg = function(date) {
-            //    var infoId = new Date(date);
-            //    console.log('policyId: ' + date);
-            //    $http.post('/getPolicyMsg', {infoId: infoId})
-            //        .success(function(res) {
-            //            if (res.status == 'ok') {
-            //                $scope.information = formatInfo(res.policyList[0]);
-            //                $scope.information.content =
-            //                    $sce.trustAsHtml($scope.information.content);
-            //            } else {
-            //                console.log('没有相关单位的信息\n' + res.message);
-            //            }
-            //        })
-            //        .error(function(err) {
-            //            console.log('无法获取人力资源与就业服务政策信息，' +
-            //            '错误原因：%o', err);
-            //        });
-            //};
+        'pagination', 'management', 'filterFilter',
+        function($scope, $http, $sce, formatInfo,
+                 pagination, management, filterFilter) {
 
             // 初始化页面参数
-            $scope.page = pagination({limit: 20, target: '/getPolicyMsg'});
-            // 初始化显示第一页
-            $scope.page.queryItems(1);
+            $scope.page = pagination({limit: 10, target: '/getPolicyMsg'});
 
-            // 用于初始化列表信息
-            $scope.page.queryItems(1);
             // 初始化管理操作
             $scope.manage = management({removeUrl: '/users/removePolicy'});
+
+            // 初始化显示第一页
+            $scope.page.queryItems(1);
 
             // 获取单位介绍信息
             $scope.getMsg = function(infoId) {
                 //console.log('informationId: ' + infoId);
-                $http.get('/getPolicyMsg/' + infoId)
+                $http.post('/getPolicyMsg', {infoId: infoId})
                     .success(function(res) {
                         if (res.status == 'ok') {
-                            $scope.information = formatInfo(res.itemList[0]);
+                            $scope.information = formatInfo(res.list[0]);
                             $scope.information.content =
                                 $sce.trustAsHtml($scope.information.content);
                         } else {

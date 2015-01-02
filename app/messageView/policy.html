@@ -6,8 +6,8 @@
         <h3 class="page-header"><span class="alarm"><strong>（管理模式）</strong></span></h3>
       </div>
       <div class="col-md-4 col-lg-3 management">
-        <a ng-click="gotoPanel()" class="btn btn-default"><i class="fa fa-th fa-2x"></i><br>管理面板</a>&nbsp;
-        <a ng-click="logout()" class="btn btn-default"><i class="fa fa-sign-out fa-2x"></i><br>退出管理</a><br>&nbsp;
+        <a ng-click="manage.gotoPanel()" class="btn btn-default"><i class="fa fa-th fa-2x"></i><br>管理面板</a>&nbsp;
+        <a ng-click="manage.logout()" class="btn btn-default"><i class="fa fa-sign-out fa-2x"></i><br>退出管理</a><br>&nbsp;
       </div>
     </div>
     <div>&nbsp;</div>
@@ -20,8 +20,37 @@
       <!-- Table -->
       <table class="table table-striped">
         <tbody>
-        <tr ng-repeat="p in pageOption.dataToShow">
-          <td><a href="" ng-click="getMsg(p.date)" onclick="$('#informationMsg').modal('show')">{{p.heading}}</a></td>
+        <tr ng-show="manage.params.register">
+          <td class="index-col" colspan="2">
+            <div id="select-all" ng-click="manage.selectAll(page.params.itemList)">
+              <i ng-show="manage.params.selectedAll" class="fa fa-check-square-o"></i>
+              <i ng-hide="manage.params.selectedAll" class="fa fa-square-o"></i>
+            </div>
+          </td>
+          <td colspan="3">
+            <div class="col-xs-4">
+              <a ng-click="removeItems()" class="btn btn-danger"><i class="fa fa-times"></i> 删除选中</a>
+            </div>
+            <div class="input-group col-xs-6 col-xs-offset-2">
+              <div class="input-group-addon">快速过滤</div>
+              <input class="form-control" ng-model="quickFilter" type="text" placeholder="输入包含的关键词">
+            </div>
+          </td>
+        </tr>
+
+        <tr ng-repeat="p in page.params.itemList">
+          <td>
+            <div ng-show="manage.params.register">
+              <i ng-show="manage.params.removalList[$index]" ng-click="manage.reverse($index)" class="fa fa-check-square-o"></i>
+              <i ng-hide="manage.params.removalList[$index]" ng-click="manage.reverse($index)" class="fa fa-square-o"></i>
+              <i ng-click="removeItems(p)" class="fa fa-times-circle-o red"></i>
+            </div>
+          </td>
+          <td>
+            <div>{{$index + page.params.baseNumber}}</div>
+          </td>
+
+          <td><a href="" ng-click="getMsg(p._id)" onclick="$('#informationMsg').modal('show')">{{p.heading}}</a></td>
           <td>{{formatDate(p.date)}}</td>
         </tr>
         </tbody>
@@ -33,11 +62,11 @@
   <div info-dialog><div ng-bind-html="information.content"></div></div>
 
   <!-- 自动分页显示 -->
-  <nav class="col-sm-offset-7" ng-show="pageOption.pages > 1">
+  <nav class="col-sm-offset-7" ng-show="page.params.pageList.length > 1">
     <ul class="pagination">
-      <li><a ng-click="pageOption.previousList()" href="">«</a></li>
-      <li ng-class="pageOption.active(p)" ng-click="pageOption.select(p)" ng-repeat="p in pageOption.pageList"><a href="">{{p}}</a></li>
-      <li><a ng-click="pageOption.nextList()" href="">»</a></li>
+      <li><a ng-click="page.previousNavBar()" href="">«</a></li>
+      <li ng-class="page.active(p, page.params.curPage)" ng-click="queryItems(p)" ng-repeat="p in page.params.pageList"><a href="" ng-bind="p"></a></li>
+      <li><a ng-click="page.nextNavBar()" href="">»</a></li>
     </ul>
   </nav>
 

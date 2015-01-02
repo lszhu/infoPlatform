@@ -160,9 +160,6 @@ angular.module('myApp.service', [])
 
             // 设置当前页面
             params.curPage = page;
-            // 清空选中列表
-            params.removalList = [];
-            params.selectedAll = false;
 
             // 设置查询条件
             var cond = params.condition;

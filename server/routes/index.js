@@ -52,31 +52,60 @@ router.get('/picture/:id', function(req, res) {
 
 /* get policy heading or content */
 router.post('/getPolicyMsg', function(req, res) {
-    // 最大查询条目
-    var limit = 5000;
-    var condition = {};
-    var fields = '';
+    // query items limit
+    var limit = parseInt(req.body.limit);
+    limit = limit > 0 ? limit : 2000;
 
-    if (req.body.list == true) {
-        fields = 'heading date';
-    } else if (req.body.infoId) {
+    var skip = parseInt(req.body.skip);
+    skip = skip > 0 ? skip : 0;
+
+    var condition = {};
+    var fields = 'heading date';
+
+    if (req.body.infoId) {
         condition._id = db.ObjectId(req.body.infoId);
-        //var date = new Date(req.body.infoId);
-        //debug('date: ' + date.toString());
-        //if (date != 'Invalid Date') {
-        //    condition.date = date;
-        //}
+        fields = '';
     }
     debug('condition: ' + JSON.stringify(condition));
+    // 保存正常的响应数据
+    var response = {status: 'ok'};
+    // 用于并发访问的计数器
+    var counter = {count: 2, error: false};
+
+    db.count('policy', condition, function(err, count) {
+        counter.count--;
+        if (err) {
+            if (counter.error) {
+                console.log('db access error');
+                return;
+            }
+            counter.error = true;
+            res.send({status: 'dbReadErr', message: 数据库访问错误});
+            return;
+        }
+        response.count = count;
+        if (counter.count == 0) {
+            res.send(response);
+        }
+    });
 
     db.querySort('policy', condition, {date: -1}, function(err, docs) {
+        counter.count--;
         if (err) {
-            res.send({status: 'dbErr', message: '访问数据库系统出现异常'});
+            if (counter.error) {
+                console.log('db access error');
+                return;
+            }
+            counter.error = true;
+            res.send({status: 'dbReadErr', message: 数据库访问错误});
             return;
         }
         debug('docs length: ' + docs.length);
-        res.send({status: 'ok', itemList: docs});
-    }, fields, limit);
+        response.list = docs;
+        if (counter.count == 0) {
+            res.send(response);
+        }
+    }, fields, limit, skip);
 });
 
 /* get policy heading or content */
