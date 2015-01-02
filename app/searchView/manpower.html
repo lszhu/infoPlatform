@@ -65,7 +65,7 @@
 
     <div class="form-group">
       <div class="col-sm-offset-4 col-sm-4">
-        <button ng-click="page.queryItems()" class="btn btn-primary btn-block">查&nbsp;&nbsp;询</button>
+        <button ng-click="queryItems()" class="btn btn-primary btn-block">查&nbsp;&nbsp;询</button>
       </div>
     </div>
   </form>
@@ -96,7 +96,7 @@
     </div><!-- /.modal-dialog -->
   </div><!-- /.modal -->
 
-  <div class="panel panel-default" ng-show="page.params.itemList.length">
+  <div class="panel panel-default" ng-show="showTable">
     <!-- Default panel contents -->
     <div class="panel-heading text-center">人才求职信息列表</div>
     <!-- Table -->
@@ -104,14 +104,14 @@
       <thead></thead>
       <tr ng-show="manage">
         <td class="index-col">
-          <div id="select-all" ng-click="selectAll(selectedAll)">
-            <i ng-show="selectedAll" class="fa fa-check-square-o"></i>
-            <i ng-hide="selectedAll" class="fa fa-square-o"></i>
+          <div id="select-all" ng-click="manage.selectAll(page.params.itemList)">
+            <i ng-show="manage.params.selectedAll" class="fa fa-check-square-o"></i>
+            <i ng-hide="manage.params.selectedAll" class="fa fa-square-o"></i>
           </div>
         </td>
         <td>
-          <div class="col-sm-2" ng-show="manage">
-            <a ng-click="removeSelected()" class="btn btn-danger"><i class="fa fa-times"></i> 删除选中</a>
+          <div class="col-sm-2">
+            <a ng-click="removeItems()" class="btn btn-danger"><i class="fa fa-times"></i> 删除选中</a>
           </div>
           <div class="input-group col-sm-6 col-sm-offset-2">
             <div class="input-group-addon">快速过滤</div>
@@ -124,9 +124,9 @@
       <tr ng-repeat="h in page.params.itemList">
         <td class="index-col">
           <div ng-show="manage">
-            <div><i ng-show="removalList[$index]" ng-click="reverse($index)" class="fa fa-check-square-o"></i></div>
-            <div><i ng-hide="removalList[$index]" ng-click="reverse($index)" class="fa fa-square-o"></i></div>
-            <div><i ng-click="removeItem($index)" class="fa fa-times-circle-o red"></i></div>
+            <div><i ng-show="manage.params.removalList[$index]" ng-click="manage.reverse($index)" class="fa fa-check-square-o"></i></div>
+            <div><i ng-hide="manage.params.removalList[$index]" ng-click="manage.reverse($index)" class="fa fa-square-o"></i></div>
+            <div><i ng-click="removeItems(h)" class="fa fa-times-circle-o red"></i></div>
           </div>
           <div ng-hide="manage">&nbsp;<br>&nbsp;<br></div>
           <div class="index">{{$index + page.params.baseNumber}}</div>
@@ -162,7 +162,7 @@
   <nav class="col-sm-offset-7" ng-show="page.params.pageList.length > 1">
     <ul class="pagination">
       <li><a ng-click="page.previousNavBar()" href="">«</a></li>
-      <li ng-class="page.active(p, page.params.curPage)" ng-click="page.queryItems(p)" ng-repeat="p in page.params.pageList"><a href="" ng-bind="p"></a></li>
+      <li ng-class="page.active(p, page.params.curPage)" ng-click="queryItems(p)" ng-repeat="p in page.params.pageList"><a href="" ng-bind="p"></a></li>
       <li><a ng-click="page.nextNavBar()" href="">»</a></li>
     </ul>
   </nav>

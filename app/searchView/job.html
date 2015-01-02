@@ -47,7 +47,7 @@
 
     <div class="form-group">
       <div class="col-sm-offset-4 col-sm-4">
-        <button ng-click="queryJob()" class="btn btn-primary btn-block">重 新 查 询</button>
+        <button ng-click="queryItems()" class="btn btn-primary btn-block">重 新 查 询</button>
       </div>
     </div>
 
@@ -63,14 +63,14 @@
       <thead></thead>
       <tr ng-show="manage">
         <td class="index-col">
-          <div id="select-all" ng-click="selectAll(selectedAll)">
-            <i ng-show="selectedAll" class="fa fa-check-square-o"></i>
-            <i ng-hide="selectedAll" class="fa fa-square-o"></i>
+          <div id="select-all" ng-click="manage.selectAll(page.params.itemList)">
+            <i ng-show="manage.params.selectedAll" class="fa fa-check-square-o"></i>
+            <i ng-hide="manage.params.selectedAll" class="fa fa-square-o"></i>
           </div>
         </td>
         <td>
-          <div class="col-sm-2" ng-show="manage">
-            <a ng-click="removeSelected()" class="btn btn-danger"><i class="fa fa-times"></i> 删除选中</a>
+          <div class="col-sm-2">
+            <a ng-click="removeItems()" class="btn btn-danger"><i class="fa fa-times"></i> 删除选中</a>
           </div>
           <div class="input-group col-sm-6 col-sm-offset-2">
             <div class="input-group-addon">快速过滤</div>
@@ -83,9 +83,9 @@
       <tr ng-repeat="job in page.params.itemList">
         <td class="index-col">
           <div ng-show="manage">
-            <div><i ng-show="removalList[$index]" ng-click="reverse($index)" class="fa fa-check-square-o"></i></div>
-            <div><i ng-hide="removalList[$index]" ng-click="reverse($index)" class="fa fa-square-o"></i></div>
-            <div><i ng-click="removeItem($index)" class="fa fa-times-circle-o red"></i></div>
+            <div><i ng-show="manage.params.removalList[$index]" ng-click="manage.reverse($index)" class="fa fa-check-square-o"></i></div>
+            <div><i ng-hide="manage.params.removalList[$index]" ng-click="manage.reverse($index)" class="fa fa-square-o"></i></div>
+            <div><i ng-click="removeItems(job)" class="fa fa-times-circle-o red"></i></div>
           </div>
           <div ng-hide="manage">&nbsp;<br>&nbsp;<br></div>
           <div class="index">{{$index + page.params.baseNumber}}</div>
@@ -106,7 +106,7 @@
             <tr>
               <td><strong>职位名称： </strong>{{job.position}}</td>
               <td><strong>学历要求： </strong>{{job.education}}</td>
-              <td class="col-sm-3"><strong>月薪（元）： </strong>{{parseSalary(job.salary)}}</td>
+              <td class="col-sm-3"><strong>月薪（元）： </strong>{{job.salary || '面议'}}</td>
             </tr>
             <tr>
               <td colspan="3"><div><strong>职位描述： </strong></div>
@@ -126,7 +126,7 @@
   <nav class="col-sm-offset-7" ng-show="page.params.pageList.length > 1">
     <ul class="pagination">
       <li><a ng-click="page.previousNavBar()" href="">«</a></li>
-      <li ng-class="page.active(p, page.params.curPage)" ng-click="page.queryItems(p)" ng-repeat="p in page.params.pageList"><a href="" ng-bind="p"></a></li>
+      <li ng-class="page.active(p, page.params.curPage)" ng-click="queryItems(p)" ng-repeat="p in page.params.pageList"><a href="" ng-bind="p"></a></li>
       <li><a ng-click="page.nextNavBar()" href="">»</a></li>
     </ul>
   </nav>

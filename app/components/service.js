@@ -10,11 +10,6 @@ angular.module('myApp.service', [])
             }
             var ref = '';
             if (info.hasOwnProperty('date')) {
-                //var d = new Date(info.date);
-                //ref += '（ 发布日期：';
-                //ref += d.getFullYear() + '-';
-                //ref += d.getMonth() + 1;
-                //ref += '-' + d.getDate();
                 ref = '发布日期：' + info.date.toString().split('T')[0];
             }
             if (info.hasOwnProperty('source')) {
@@ -37,6 +32,7 @@ angular.module('myApp.service', [])
         return formatInfo;
     }])
 
+    // not used
     .factory('job', ['$http', function($http) {
 
         function getJob(condition) {
@@ -158,11 +154,7 @@ angular.module('myApp.service', [])
 
         // 获取符合约束条件的总求职信息条目数量，以及分页后指定页面具体信息
         function queryItems(page) {
-            // 如果为真的改变当前活动页面则直接返回
-            if (page == params.curPage) {
-                return;
-            }
-            if (!page) {
+            if (!parseInt(page)) {
                 page = 1;
             }
 
@@ -340,4 +332,158 @@ angular.module('myApp.service', [])
         }
 
         return initPage;
+    }])
+
+    .factory('management', ['$window', '$http', '$location',
+        function($window, $http, $location) {
+            var params = {
+                removalList: [],
+                selectedAll: false,
+                userTypeUrl: '/users/clientType',
+                logoutUrl: '/users/logout',
+                panelUrl: '/users/panel',
+                removeUrl: ''
+            };
+
+            function gotoPanel() {
+                $location.path(params.panelUrl);
+            }
+
+            function logout() {
+                $http.get(params.logoutUrl)
+                    .success(function(res) {
+                        console.log(res.message);
+                        $location.search('management', undefined);
+                        //$location.path('/search/job');
+                        location.reload();
+                    })
+                    .error(function(err) {
+                        alert('系统出现异常：\n' + err);
+                    });
+            }
+
+            function reverse(index) {
+                params.removalList[index] = !params.removalList[index];
+                //console.log('reversed index: ' + index);
+            }
+
+            function selectAll(itemList) {
+                params.selectedAll = !params.selectedAll;
+                var len = itemList.length;
+                for (var i = 0; i < len; i++) {
+                    params.removalList[i] = params.selectedAll;
+                }
+                //console.log($scope.removelList);
+            }
+
+            // 将选中条目的mongodb存储_id号抽出，作为删除的条件
+            function getRemovals(itemList) {
+                //var items = $scope.page.params.itemList;
+                var ids = [];
+                var selList = params.removalList;
+                for (var i = 0, len = itemList.length; i < len; i++) {
+                    if (selList[i]) {
+                        ids.push(itemList[i]._id);
+                    }
+                }
+                return ids;
+            }
+
+            // 由item中的id列表过滤itemList和itemListRaw中的数据
+            function filterItems(idList, itemList, itemListRaw) {
+                if (!idList || !idList.length) {
+                    return;
+                }
+                //console.log('idList: %o', idList);
+                // 注意此处没有直接用过滤函数，而是在原对象上直接操作
+                var i, j, test;
+                var len = itemList ? itemList.length : 0;
+                if (itemList && len) {
+                    for (i = 0, j = 0; i < len; i++) {
+                        test = idList.some(function(e) {
+                            return e == itemList[i]._id});
+                        //!test || console.log('_id: ' + itemList[i]._id);
+                        if (!test) {
+                            itemList[j] = itemList[i];
+                            j++;
+                        }
+                    }
+                    itemList.splice(j);
+                }
+                len = itemListRaw ? itemListRaw.length : 0;
+                if (itemListRaw && len) {
+                    for (i = 0, j = 0; i < len; i++) {
+                        test = idList.some(function(e) {
+                            return e == itemListRaw[i]._id});
+                        if (!test) {
+                            itemListRaw[j] = itemListRaw[i];
+                            j++;
+                        }
+                    }
+                    itemListRaw.splice(j);
+                }
+            }
+
+            // 删除所有选中条目
+            function removeItems(item, itemList, itemListRaw) {
+                var idList = item ? [item._id] : getRemovals(itemList);
+
+                if (!idList.length || !confirm('确实要删除这些信息吗')) {
+                    return;
+                }
+
+                console.log('removing');
+                $http.post(params.removeUrl, {objectId: idList})
+                    .success(function(res) {
+                        if (res.status == 'ok') {
+                            console.log('removed ok');
+                            params.selectedAll = false;
+                            params.removalList = [];
+                            filterItems(idList, itemList, itemListRaw);
+                            //location.reload();
+                        }
+                        console.log(res.message);
+                    })
+                    .error(function(err) {
+                        console.log('error: %o', err);
+                    });
+            }
+
+            function init(init) {
+                if (init) {
+                    for (var i in init) {
+                        if (init.hasOwnProperty(i)) {
+                            params[i] = init[i];
+                        }
+                    }
+                }
+                // 管理模式设置
+                var manage = $location.search().hasOwnProperty('management');
+                //console.log('$scope.manage:' + JSON.stringify(manage));
+                if (manage) {
+                    $http.get(params.userTypeUrl)
+                        .success(function(res) {
+                            console.log(res.type);
+                            if (res.type == 'register') {
+                                params.manage = true;
+                            } else {
+                                $location.search('management', undefined);
+                                params.manage = false;
+                            }
+                        });
+                }
+                return {
+                    params: params,
+                    gotoPanel:  gotoPanel,
+                    logout: logout,
+                    reverse: reverse,
+                    selectAll: selectAll,
+                    //removeItemList: removeItemList,
+                    getRemovals: getRemovals,
+                    removeItems: removeItems
+                    //removeItem: removeItem
+                };
+            }
+
+            return init;
     }]);
