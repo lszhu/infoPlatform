@@ -337,6 +337,7 @@ angular.module('myApp.service', [])
     .factory('management', ['$window', '$http', '$location',
         function($window, $http, $location) {
             var params = {
+                register: false,
                 removalList: [],
                 selectedAll: false,
                 userTypeUrl: '/users/clientType',
@@ -465,10 +466,10 @@ angular.module('myApp.service', [])
                         .success(function(res) {
                             console.log(res.type);
                             if (res.type == 'register') {
-                                params.manage = true;
+                                params.register = true;
                             } else {
                                 $location.search('management', undefined);
-                                params.manage = false;
+                                params.register = false;
                             }
                         });
                 }

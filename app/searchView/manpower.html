@@ -1,8 +1,8 @@
 <div class="container">
   <div class="col-sm-8 col-lg-9">
-    <h3 class="page-header">人才求职信息查询<span class="alarm" ng-show="manage"><strong>（管理模式）</strong></span></h3>
+    <h3 class="page-header">人才求职信息查询<span class="alarm" ng-show="manage.params.register"><strong>（管理模式）</strong></span></h3>
   </div>
-  <div class="col-md-4 col-lg-3 management" ng-show="manage">
+  <div class="col-md-4 col-lg-3 management" ng-show="manage.params.register">
     <a ng-click="gotoPanel()" class="btn btn-default"><i class="fa fa-th fa-2x"></i><br>管理面板</a>&nbsp;
     <a ng-click="logout()" class="btn btn-default"><i class="fa fa-sign-out fa-2x"></i><br>退出管理</a><br>&nbsp;
   </div>
@@ -102,7 +102,7 @@
     <!-- Table -->
     <table class="table table-striped table-bordered">
       <thead></thead>
-      <tr ng-show="manage">
+      <tr ng-show="manage.params.register">
         <td class="index-col">
           <div id="select-all" ng-click="manage.selectAll(page.params.itemList)">
             <i ng-show="manage.params.selectedAll" class="fa fa-check-square-o"></i>
@@ -123,12 +123,12 @@
       <!-- 开始显示表格主题内容 -->
       <tr ng-repeat="h in page.params.itemList">
         <td class="index-col">
-          <div ng-show="manage">
+          <div ng-show="manage.params.register">
             <div><i ng-show="manage.params.removalList[$index]" ng-click="manage.reverse($index)" class="fa fa-check-square-o"></i></div>
             <div><i ng-hide="manage.params.removalList[$index]" ng-click="manage.reverse($index)" class="fa fa-square-o"></i></div>
             <div><i ng-click="removeItems(h)" class="fa fa-times-circle-o red"></i></div>
           </div>
-          <div ng-hide="manage">&nbsp;<br>&nbsp;<br></div>
+          <div ng-hide="manage.params.register">&nbsp;<br>&nbsp;<br></div>
           <div class="index">{{$index + page.params.baseNumber}}</div>
         </td>
 

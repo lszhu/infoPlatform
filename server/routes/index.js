@@ -60,11 +60,12 @@ router.post('/getPolicyMsg', function(req, res) {
     if (req.body.list == true) {
         fields = 'heading date';
     } else if (req.body.infoId) {
-        var date = new Date(req.body.infoId);
-        debug('date: ' + date.toString());
-        if (date != 'Invalid Date') {
-            condition.date = date;
-        }
+        condition._id = db.ObjectId(req.body.infoId);
+        //var date = new Date(req.body.infoId);
+        //debug('date: ' + date.toString());
+        //if (date != 'Invalid Date') {
+        //    condition.date = date;
+        //}
     }
     debug('condition: ' + JSON.stringify(condition));
 
@@ -74,7 +75,7 @@ router.post('/getPolicyMsg', function(req, res) {
             return;
         }
         debug('docs length: ' + docs.length);
-        res.send({status: 'ok', policyList: docs});
+        res.send({status: 'ok', itemList: docs});
     }, fields, limit);
 });
 
