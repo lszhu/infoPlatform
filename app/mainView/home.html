@@ -10,7 +10,7 @@
 <!--  显示选择“发布招聘信息”还是“发布应聘信息”的对话框  -->
 <div class="modal fade" id="messageOption">
   <div class="modal-dialog">
-    <div class="modal-content type">
+    <div class="modal-content search">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
         <h4 class="modal-title text-center"><strong>发布内容类型选择</strong></h4>
@@ -27,11 +27,16 @@
             <a type="button" class="btn btn-lg btn-primary btn-block" onclick="$('#searchOption').modal('hide');" href="#/etc/introduction">刊登企业介绍</a>
           </div>
           <div class="col-sm-6 col-sm-offset-3">
+            <a type="button" class="btn btn-lg btn-primary btn-block" onclick="$('#searchOption').modal('hide');" href="#/etc/suggestion">投诉与建议</a>
+          </div>
+          <!--
+          <div class="col-sm-6 col-sm-offset-3">
             <a type="button" class="btn btn-lg btn-primary btn-block" onclick="$('#searchOption').modal('hide');" href="#/etc/policy">转载政策法规</a>
           </div>
           <div class="col-sm-6 col-sm-offset-3">
             <a type="button" class="btn btn-lg btn-primary btn-block" onclick="$('#searchOption').modal('hide');" href="#/etc/news">发布就业动态</a>
           </div>
+          -->
         </div>
       </div>
     </div><!-- /.modal-content -->

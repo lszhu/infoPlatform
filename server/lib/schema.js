@@ -26,6 +26,7 @@ var employee = {
     date: Date
 };
 var orgInfo = {
+    type: String,
     name: String,
     code: String,
     districtId: String,
@@ -48,6 +49,7 @@ var communityInfo = {
     date: Date
 };
 var policy = {
+    type: String,
     districtId: String,
     heading: String,
     publisher: String,
@@ -56,6 +58,7 @@ var policy = {
     date: Date
 };
 var message = {
+    type: String,
     districtId: String,
     heading: String,
     publisher: String,

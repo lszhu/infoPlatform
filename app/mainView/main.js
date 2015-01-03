@@ -12,6 +12,14 @@ angular.module('myApp.home', ['ngRoute'])
                 templateUrl: 'mainView/login.html',
                 controller: 'LoginCtrl'
             })
+            .when('/main/policy', {
+                templateUrl: 'mainView/policy.html',
+                controller: 'PostPolicyCtrl'
+            })
+            .when('/main/news', {
+                templateUrl: 'mainView/news.html',
+                controller: 'PostNewsCtrl'
+            })
             .when('/main/home', {
                 templateUrl: 'mainView/home.html',
                 controller: 'HomeCtrl'
@@ -75,6 +83,62 @@ angular.module('myApp.home', ['ngRoute'])
                 return hash.toString();
             }
         }])
+
+    .controller('PostPolicyCtrl', ['$scope', '$http', '$document',
+        function($scope, $http, $document) {
+            // 初始化投诉建议信息
+            $scope.policy = {};
+
+            console.log('in policy');
+            // 信息上传函数
+            $scope.postMsg = function() {
+                console.log('in policy');
+                $scope.policy.content =
+                    $document.find('.note-editable').html();
+                console.log('districtId: %s', $scope.districtId);
+                $scope.policy.districtId = $scope.districtId;
+                $http.post('/postPolicy', {policy: $scope.policy})
+                    .success(function(res) {
+                        if (res.status == 'ok') {
+                            alert('您成功转载政策法规信息！');
+                        } else {
+                            alert('信息提交失败，原因是：' + res.message);
+                        }
+                    })
+                    .error(function(err) {
+                        alert('信息提交失败，原因是：' + err);
+                    });
+            };
+
+        }
+    ])
+
+    .controller('PostNewsCtrl', ['$scope', '$http', '$document',
+        function($scope, $http, $document) {
+            // 初始化投诉建议信息
+            $scope.news = {};
+
+            // 信息上传函数
+            $scope.postMsg = function() {
+                $scope.news.content =
+                    $document.find('.note-editable').html();
+                console.log('districtId: %s', $scope.districtId);
+                $scope.news.districtId = $scope.districtId;
+                $http.post('/postNews', {news: $scope.news})
+                    .success(function(res) {
+                        if (res.status == 'ok') {
+                            alert('您成功发布了就业动态新闻！');
+                        } else {
+                            alert('信息提交失败，原因是：' + res.message);
+                        }
+                    })
+                    .error(function(err) {
+                        alert('信息提交失败，原因是：' + err);
+                    });
+            };
+
+        }
+    ])
 
     .controller('HomeCtrl', ['$scope', '$http', '$sce', 'formatInfo',
         'page', function($scope, $http, $sce, formatInfo, page) {
