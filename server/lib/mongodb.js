@@ -41,8 +41,8 @@ function createModels() {
     var employeeSchema = new mongoose.Schema(schema.employee);
     var orgInfoSchema = new mongoose.Schema(schema.orgInfo);
     var communityInfoSchema = new mongoose.Schema(schema.communityInfo);
-    var policySchema = new mongoose.Schema(schema.policy);
-    var messageSchema = new mongoose.Schema(schema.message);
+    //var policySchema = new mongoose.Schema(schema.policy);
+    var newsSchema = new mongoose.Schema(schema.news);
     var organizationSchema = new mongoose.Schema(schema.organization);
     var personSchema = new mongoose.Schema(schema.person);
     var suggestionSchema = new mongoose.Schema(schema.suggestion);
@@ -55,8 +55,8 @@ function createModels() {
         employee: mongoose.model('employee', employeeSchema),
         orgInfo: mongoose.model('orgInfo', orgInfoSchema),
         communityInfo: mongoose.model('communityInfo', communityInfoSchema),
-        policy: mongoose.model('policy', policySchema),
-        message: mongoose.model('message', messageSchema),
+        //policy: mongoose.model('policy', policySchema),
+        news: mongoose.model('news', newsSchema),
         organization: mongoose.model('organization', organizationSchema),
         // temporary change collection name to hrmsg
         person: mongoose.model('hrmsg', personSchema),

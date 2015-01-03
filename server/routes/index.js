@@ -387,25 +387,25 @@ router.post('/uploadFile', function(req, res) {
 });
 
 /* save policy submitted by staff */
-router.post('/postPolicy', function(req, res) {
-    var policy = tool.trimObject(req.body.policy);
-    debug('Policy: ' + JSON.stringify(policy));
-    if (!policy.heading || !policy.content) {
-        res.send({status: 'paramErr', message: '提供的信息不够完整'});
-        return;
-    }
-
-    policy.date = new Date();
-
-    db.save('policy', {heading: policy.heading}, policy,
-        function(err) {
-            if (err) {
-                res.send({status: 'dbWriteErr', message: '建议信息保存失败'});
-                return;
-            }
-            res.send({status: 'ok', message: '投诉建议信息保存成功'});
-        });
-});
+//router.post('/postPolicy', function(req, res) {
+//    var policy = tool.trimObject(req.body.policy);
+//    debug('Policy: ' + JSON.stringify(policy));
+//    if (!policy.heading || !policy.content) {
+//        res.send({status: 'paramErr', message: '提供的信息不够完整'});
+//        return;
+//    }
+//
+//    policy.date = new Date();
+//
+//    db.save('policy', {heading: policy.heading}, policy,
+//        function(err) {
+//            if (err) {
+//                res.send({status: 'dbWriteErr', message: '建议信息保存失败'});
+//                return;
+//            }
+//            res.send({status: 'ok', message: '投诉建议信息保存成功'});
+//        });
+//});
 
 /* save news submitted by staff */
 router.post('/postNews', function(req, res) {
@@ -418,7 +418,7 @@ router.post('/postNews', function(req, res) {
 
     news.date = new Date();
 
-    db.save('message', {heading: news.heading}, news,
+    db.save('news', {heading: news.heading}, news,
         function(err) {
             if (err) {
                 res.send({status: 'dbWriteErr', message: '信息保存失败'});

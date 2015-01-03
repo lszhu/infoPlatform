@@ -27,7 +27,8 @@ angular.module('myApp.search', ['ngRoute'])
         function($scope, $http, $sce, management,
                  pagination, formatInfo, filterFilter) {
             // 初始化页面参数
-            $scope.page = pagination({target: '/searchJob'});
+            $scope.page = pagination({limit: 50,
+                target: '/searchJob'});
             // 关联查询条件
             $scope.job = $scope.page.params.condition;
             // 初始化查询参数中的区域选择参数districtId
@@ -44,7 +45,8 @@ angular.module('myApp.search', ['ngRoute'])
             // 用于初始化列表信息
             $scope.page.queryItems(1);
             // 初始化管理操作
-            $scope.manage = management({removeUrl: '/users/removeJob'});
+            $scope.manage = management({
+                limit: 50, removeUrl: '/users/removeJob'});
 
             // 跟踪过滤关键字的变化
             $scope.$watch('quickFilter', function(newValue, oldValue) {
@@ -101,7 +103,11 @@ angular.module('myApp.search', ['ngRoute'])
         'pagination', 'formatInfo',
         function($scope, $http, $sce, $window, pagination, formatInfo) {
             // 初始化页面参数
-            $scope.page = pagination({target: '/searchOrganization'});
+            $scope.page = pagination({limit: 50,
+                target: '/searchOrganization'});
+            // 清空缓存数据
+            $scope.page.params.itemList = [];
+            $scope.page.params.pageList = [];
             // 关联查询条件
             $scope.org = $scope.page.params.condition;
             // 初始化查询参数中的区域选择参数districtId
@@ -140,7 +146,8 @@ angular.module('myApp.search', ['ngRoute'])
         function($scope, $http, filterFilter, pagination, management) {
 
             // 初始化页面参数
-            $scope.page = pagination({target: '/searchManpower'});
+            $scope.page = pagination({limit: 50,
+                target: '/searchManpower'});
             // 关联查询条件
             $scope.manpower = $scope.page.params.condition;
             // 初始化查询参数中的区域选择参数districtId
@@ -193,7 +200,11 @@ angular.module('myApp.search', ['ngRoute'])
     .controller('WorkerCtrl', ['$scope', '$http', 'pagination',
         function($scope, $http, pagination) {
             // 初始化页面参数
-            $scope.page = pagination({target: '/searchWorker'});
+            $scope.page = pagination({limit: 50,
+                target: '/searchWorker'});
+            // 清空缓存数据
+            $scope.page.params.itemList = [];
+            $scope.page.params.pageList = [];
             // 关联查询条件
             $scope.worker = $scope.page.params.condition;
             // 初始化查询参数中的区域选择参数districtId

@@ -7,17 +7,20 @@ angular.module('myApp.etc', ['ngRoute'])
             .when('/etc/introduction', {
                 templateUrl: 'etcView/introduction.html',
                 controller: 'IntroductionCtrl'
-
-            }).when('/etc/suggestion', {
+            })
+            .when('/etc/suggestion', {
                 templateUrl: 'etcView/suggestion.html',
                 controller: 'SuggestionCtrl'
-            }).when('/etc/clause', {
+            })
+            .when('/etc/clause', {
                 templateUrl: 'etcView/clause.html',
                 controller: 'EtcCtrl'
-            }).when('/etc/help', {
+            })
+            .when('/etc/help', {
                 templateUrl: 'etcView/help.html',
                 controller: 'EtcCtrl'
-            }).when('/etc/about', {
+            })
+            .when('/etc/about', {
                 templateUrl: 'etcView/about.html',
                 controller: 'EtcCtrl'
             });

@@ -1,5 +1,5 @@
 <div class="container">
-  <h3 class="page-header">发布就业新闻动态</h3>
+  <h3 class="page-header">发布就业政策法规或新闻动态</h3>
 
   <form class="form-horizontal" name="newsForm" role="form">
     <div class="form-group col-sm-12">
@@ -10,10 +10,22 @@
       <label class="control-label remark"><strong>必填</strong></label>
     </div>
     <div class="form-group col-sm-12">
-      <label for="source" class="col-sm-2 control-label">信息来源</label>
+      <label for="source" class="col-sm-2 control-label">来源</label>
       <div class="col-sm-9">
         <input type="text" class="form-control" name="source" ng-model="news.source" id="source" placeholder="输入信息来源出处">
       </div>
+    </div>
+    <div class="form-group col-sm-12">
+      <label for="msgtype" class="col-sm-2 control-label">类型</label>
+      <div class="col-sm-9">
+        <select class="form-control" ng-model="news.type" id="msgtype">
+          <option value=""></option>
+          <option>政策法规</option>
+          <option>新闻</option>
+          <option>其他</option>
+        </select>
+      </div>
+      <label class="control-label remark"><strong>必填</strong></label>
     </div>
     <!--
     <div class="form-group col-sm-12">
@@ -29,7 +41,7 @@
   <div class="col-sm-12"><hr></div>
   <div class="container">
     <div class="form-group col-sm-12">
-      <label class="col-sm-2 text-center control-label">正文</label>
+      <label class="col-sm-2 text-center control-label">正文内容</label>
       <label class="control-label remark">（在此可以填入正文详细内容，可插入图片和表格等等）</label>
     </div>
   </div>

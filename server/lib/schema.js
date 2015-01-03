@@ -57,7 +57,7 @@ var policy = {
     content: String,
     date: Date
 };
-var message = {
+var news = {
     type: String,
     districtId: String,
     heading: String,
@@ -216,7 +216,7 @@ module.exports = {
     orgInfo: orgInfo,
     communityInfo: communityInfo,
     policy: policy,
-    message: message,
+    news: news,
     suggestion: suggestion,
     log: log,
     account: account,

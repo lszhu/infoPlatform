@@ -159,7 +159,7 @@
     </table>
   </div>
 
-  <nav class="col-sm-offset-7" ng-show="page.params.pageList.length > 1">
+  <nav class="col-sm-offset-7" ng-show="page.params.pageList.length > 1 && showTable">
     <ul class="pagination">
       <li><a ng-click="page.previousNavBar()" href="">«</a></li>
       <li ng-class="page.active(p, page.params.curPage)" ng-click="queryItems(p)" ng-repeat="p in page.params.pageList"><a href="" ng-bind="p"></a></li>
