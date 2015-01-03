@@ -27,7 +27,7 @@ angular.module('myApp.search', ['ngRoute'])
         function($scope, $http, $sce, management,
                  pagination, formatInfo, filterFilter) {
             // 初始化页面参数
-            $scope.page = pagination({limit: 50,
+            $scope.page = pagination({y: 450, limit: 50,
                 target: '/searchJob'});
             // 关联查询条件
             $scope.job = $scope.page.params.condition;
@@ -102,7 +102,7 @@ angular.module('myApp.search', ['ngRoute'])
         'pagination', 'formatInfo',
         function($scope, $http, $sce, $window, pagination, formatInfo) {
             // 初始化页面参数
-            $scope.page = pagination({limit: 50,
+            $scope.page = pagination({y: 450, limit: 50,
                 target: '/searchOrganization'});
             // 清空缓存数据
             $scope.page.params.itemList = [];
@@ -145,7 +145,7 @@ angular.module('myApp.search', ['ngRoute'])
         function($scope, $http, filterFilter, pagination, management) {
 
             // 初始化页面参数
-            $scope.page = pagination({limit: 50,
+            $scope.page = pagination({y: 450, limit: 50,
                 target: '/searchManpower'});
             // 关联查询条件
             $scope.manpower = $scope.page.params.condition;
@@ -199,7 +199,7 @@ angular.module('myApp.search', ['ngRoute'])
     .controller('WorkerCtrl', ['$scope', '$http', 'pagination',
         function($scope, $http, pagination) {
             // 初始化页面参数
-            $scope.page = pagination({limit: 50,
+            $scope.page = pagination({y: 450, limit: 50,
                 target: '/searchWorker'});
             // 清空缓存数据
             $scope.page.params.itemList = [];

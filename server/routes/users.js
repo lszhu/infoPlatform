@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 var path = require('path');
 
+// useful tools
+var tool = require('../lib/tool');
 // access database
 var db = require('../lib/mongodb');
 // account authentication
@@ -124,7 +126,27 @@ router.post(/\/remove(\w+)/, function(req, res) {
     });
 });
 
-/* webpage for post news */
+/* web page for list suggestions */
+router.get('/suggestion', function(req, res) {
+    if (!req.session.user) {
+        res.redirect('/main/home');
+    } else {
+        res.sendFile(path.join(__dirname,
+            '../../app/manageView/suggestion.html'));
+    }
+});
+
+/* web page for post community info */
+router.get('/community', function(req, res) {
+    if (!req.session.user) {
+        res.redirect('/main/home');
+    } else {
+        res.sendFile(path.join(__dirname,
+            '../../app/manageView/community.html'));
+    }
+});
+
+/* web page for post news */
 router.get('/news', function(req, res) {
     if (!req.session.user) {
         res.redirect('/main/home');
@@ -139,7 +161,8 @@ router.post('/postNews', function(req, res) {
         res.send({status: 'authErr', message: '未授权的非法操作'});
         return;
     }
-    var news = req.body.news;
+    //var news = req.body.news;
+    var news = tool.trimObject(req.body.news);
     debug('news: ' + JSON.stringify(news));
     if (!news.heading || !news.content) {
         res.send({status: 'paramErr', message: '提供的信息不够完整'});

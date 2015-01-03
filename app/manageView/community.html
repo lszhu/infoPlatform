@@ -1,71 +1,67 @@
 <div class="container">
-  <h3 class="page-header">刊登乡镇/社区服务中心信息</h3>
+  <div class="col-sm-8 col-lg-9">
+    <h3 class="page-header">刊登乡镇/社区/村服务中心信息<span class="alarm"><strong>（管理模式）</strong></span></h3>
+  </div>
+  <div class="col-md-4 col-lg-3 management">
+    <a href="#/users/panel" class="btn btn-default"><i class="fa fa-th fa-2x"></i><br>管理面板</a>&nbsp;
+    <a ng-click="manage.logout()" class="btn btn-default"><i class="fa fa-sign-out fa-2x"></i><br>退出管理</a><br>&nbsp;
+  </div>
 
   <form class="form-horizontal" name="queryCondition" role="form">
     <div class="form-group col-sm-12">
-      <label for="name" class="col-sm-2 control-label">乡镇/社区名称</label>
-      <div class="col-sm-4">
-        <input type="text" class="form-control" name="name" ng-model="employer.name" id="name" placeholder="输入单位名称全称">
+      <label for="name" class="col-sm-2 control-label">名称</label>
+      <div class="col-sm-5">
+        <input type="text" class="form-control" name="name" ng-model="community.name" id="name" placeholder="输入单位名称全称">
       </div>
-      <label class="control-label remark"><strong>必填，</strong></label>
+      <label class="control-label remark"><strong>必填</strong></label>
+    </div>
+    <div class="form-group col-sm-12">
+      <label for="name" class="col-sm-2 control-label">行政区代码</label>
+      <div class="col-sm-5">
+        <input type="text" class="form-control" name="name" ng-model="community.districtId" id="districtId" placeholder="输入单位名称全称">
+      </div>
+      <label class="control-label remark"><strong>必填</strong></label>
     </div>
 
     <div class="form-group col-sm-12">
       <label for="picture" class="col-sm-2 control-label">宣传图片</label>
-      <div class="col-sm-4">
-        <input type="file" class="form-control" name="picture" fileread="employer.picture" id="picture">
+      <div class="col-sm-5">
+        <input type="file" class="form-control" name="picture" fileread="community.picture" id="picture">
       </div>
-      <label class="control-label remark"><strong>必填，</strong>展示办公场所等（文件大小不能超过5兆）</label>
+      <label class="control-label remark"><strong>必填，</strong>展示办公场所等（文件需小于5兆）</label>
     </div>
     <div class="form-group col-sm-12">
       <label for="address" class="col-sm-2 control-label">详细地址</label>
-      <div class="col-sm-4">
-        <input type="text" class="form-control" name="address" ng-model="employer.address" id="address" placeholder="输入详细地址">
+      <div class="col-sm-5">
+        <input type="text" class="form-control" name="address" ng-model="community.address" id="address" placeholder="输入详细地址">
       </div>
       <label class="control-label remark"><strong>必填，</strong>企业或单位办公地点的详细地址</label>
     </div>
 
     <div class="form-group col-sm-12">
       <label for="phone" class="col-sm-2 control-label">联系电话</label>
-      <div class="col-sm-4">
-        <input type="text" class="form-control" name="phone" ng-model="employer.phone" id="phone" placeholder="可输入多个电话">
+      <div class="col-sm-5">
+        <input type="text" class="form-control" name="phone" ng-model="community.phone" id="phone" placeholder="可输入多个电话">
       </div>
-      <label class="control-label remark"><strong>必填，</strong>请务必填写正确，如有多个号码，可用逗号或空格分开</label>
-    </div>
-    <div class="form-group col-sm-12">
-      <label for="contact" class="col-sm-2 control-label">其他联络方式</label>
-      <div class="col-sm-4">
-        <input type="text" class="form-control" name="contact" ng-model="employer.contact" id="contact" placeholder="输入各类联系方式">
-      </div>
-      <label class="control-label remark">QQ号或邮箱等联系方式，联系方式间用逗号或空格分开</label>
+      <label class="control-label remark"><strong>必填，</strong>如有多个号码可用逗号或空格分开</label>
     </div>
     <div class="form-group col-sm-12">
       <label for="overview" class="col-sm-2 control-label">概要介绍</label>
-      <div class="col-sm-4">
-        <textarea rows="5" class="form-control" name="overview" ng-model="employer.overview" id="overview" placeholder="输入单位简介"></textarea>
+      <div class="col-sm-5">
+        <textarea rows="8" class="form-control" name="overview" ng-model="community.overview" id="overview" placeholder="输入单位简介"></textarea>
       </div>
-      <label class="control-label remark"><strong>必填，</strong>请控制字数在100-200之间，多出部分不会显示</label>
+      <label class="control-label remark"><strong>必填，</strong>请控制字数在100-200之间</label>
     </div>
   </form>
 
   <div class="col-sm-12"><hr></div>
-
-  <div class="form-group col-sm-12">
-    <label class="col-sm-4 control-label">企业或单位详细介绍</label>
-    <label class="control-label remark">（在此可以填入对贵单位或企业的详细介绍，甚至插入图片和表格等等）</label>
-  </div>
-
-  <!--  在线编辑器插入位置  -->
-  <div class="col-sm-12">
-    <div id="summernote"></div>
-  </div>
-
-  <div class="col-sm-12"><br></div>
 
   <div class="form-group">
     <div class="col-sm-offset-4 col-sm-3">
       <button ng-disabled="postDisabled()" class="btn btn-primary btn-block" onclick="$('#postAlertMsg').modal('show')">发&nbsp;&nbsp;布</button>
     </div>
   </div>
+
+  <div class="col-sm-12"><br></div>
 
 </div>

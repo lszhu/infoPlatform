@@ -104,7 +104,7 @@ angular.module('myApp.message', ['ngRoute'])
 
         // 检测输入的身份证信息
         $scope.checkIdNumber = function() {
-            $scope.idNumber = $scope.idNumber.trim();
+            $scope.idNumber = $scope.idNumber ? $scope.idNumber.trim() : '';
             if (!validIdNumber($scope.idNumber)) {
                 alert('身份证输入有无，请重新输入');
             }
@@ -162,7 +162,8 @@ angular.module('myApp.message', ['ngRoute'])
                  pagination, management, filterFilter) {
 
             // 初始化页面参数
-            $scope.page = pagination({limit: 20, target: '/getNewsMsg'});
+            $scope.page = pagination({y: 350, limit: 20,
+                target: '/getNewsMsg'});
             // 设置查询条件为仅限政策法规
             $scope.page.params.condition  = {type: 'policy'};
 

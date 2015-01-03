@@ -33,33 +33,33 @@ angular.module('myApp.service', [])
     }])
 
     // not used
-    .factory('job', ['$http', function($http) {
-
-        function getJob(condition) {
-            var job = {};
-            $http.post('/searchJob', {condition: condition})
-                .success(function(res) {
-                    if (res.status == 'ok') {
-                        var tmp = res.jobList;
-                        tmp.sort(function(a, b) {
-                            if (a.date == b.date) {
-                                return 0;
-                            } else {
-                                return a.date < b.date ? 1 : -1;
-                            }
-                        });
-                        job.list = tmp;
-                    }
-                })
-                .error(function(err) {
-                    console.log('无法获取招聘信息，错误原因：%o', err);
-                    job.list = [];
-                });
-            return job;
-        }
-
-        return getJob;
-    }])
+    //.factory('job', ['$http', function($http) {
+    //
+    //    function getJob(condition) {
+    //        var job = {};
+    //        $http.post('/searchJob', {condition: condition})
+    //            .success(function(res) {
+    //                if (res.status == 'ok') {
+    //                    var tmp = res.jobList;
+    //                    tmp.sort(function(a, b) {
+    //                        if (a.date == b.date) {
+    //                            return 0;
+    //                        } else {
+    //                            return a.date < b.date ? 1 : -1;
+    //                        }
+    //                    });
+    //                    job.list = tmp;
+    //                }
+    //            })
+    //            .error(function(err) {
+    //                console.log('无法获取招聘信息，错误原因：%o', err);
+    //                job.list = [];
+    //            });
+    //        return job;
+    //    }
+    //
+    //    return getJob;
+    //}])
 
     .factory('pagination', ['$window', '$http', function($window, $http) {
 
@@ -212,7 +212,7 @@ angular.module('myApp.service', [])
         };
     }])
 
-    .factory('page', ['$window', function($window) {
+    /*.factory('page', ['$window', function($window) {
 
         // n为当前显示页的页码，从1开始
         // window为angular内置window服务模块
@@ -330,7 +330,7 @@ angular.module('myApp.service', [])
 
         return initPage;
     }])
-
+*/
     .factory('management', ['$window', '$http', '$location',
         function($window, $http, $location) {
             var params = {

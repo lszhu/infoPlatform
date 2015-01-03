@@ -222,7 +222,7 @@ angular.module('myApp.home', ['ngRoute'])
                 $http.post('/searchJob', factor)
                     .success(function(res) {
                         if (res.status == 'ok') {
-                            $scope.market = res.jobList || [];
+                            $scope.market = res.list || [];
                             //$scope.market = market.slice(0, limit);
                         }
                         console.log('market: %o', $scope.market);
