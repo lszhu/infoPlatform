@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var path = require('path');
 
 // access database
 var db = require('../lib/mongodb');
@@ -100,8 +101,7 @@ router.post(/\/remove(\w+)/, function(req, res) {
     var models = {
         Job: 'employer',
         Manpower: 'employee',
-        Policy: 'policy',
-        Message: 'message',
+        News: 'news',
         Suggestion: 'suggestion'
     };
     if (!models.hasOwnProperty(target)) {
@@ -122,6 +122,40 @@ router.post(/\/remove(\w+)/, function(req, res) {
             res.send({status: 'ok', message: '信息删除成功'});
         }
     });
+});
+
+/* webpage for post news */
+router.get('/news', function(req, res) {
+    if (!req.session.user) {
+        res.redirect('/main/home');
+    } else {
+        res.sendFile(path.join(__dirname, '../../app/mainView/news.html'));
+    }
+});
+
+/* save news submitted by staff */
+router.post('/postNews', function(req, res) {
+    if (!req.session.user) {
+        res.send({status: 'authErr', message: '未授权的非法操作'});
+        return;
+    }
+    var news = req.body.news;
+    debug('news: ' + JSON.stringify(news));
+    if (!news.heading || !news.content) {
+        res.send({status: 'paramErr', message: '提供的信息不够完整'});
+        return;
+    }
+
+    news.date = new Date();
+
+    db.save('news', {heading: news.heading}, news,
+        function(err) {
+            if (err) {
+                res.send({status: 'dbWriteErr', message: '信息保存失败'});
+                return;
+            }
+            res.send({status: 'ok', message: '就业动态新闻保存成功'});
+        });
 });
 
 module.exports = router;

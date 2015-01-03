@@ -45,8 +45,7 @@ angular.module('myApp.search', ['ngRoute'])
             // 用于初始化列表信息
             $scope.page.queryItems(1);
             // 初始化管理操作
-            $scope.manage = management({
-                limit: 50, removeUrl: '/users/removeJob'});
+            $scope.manage = management({removeUrl: '/users/removeJob'});
 
             // 跟踪过滤关键字的变化
             $scope.$watch('quickFilter', function(newValue, oldValue) {

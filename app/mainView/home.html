@@ -73,7 +73,7 @@
         <table class="table table-striped">
           <tbody>
           <tr ng-repeat="n in news">
-            <td><a href="" ng-click="getMsg(n.date, n.news)" onclick="$('#informationMsg').modal('show')">{{n.heading}}</a></td>
+            <td><a href="" ng-click="getMsg(n._id)" onclick="$('#informationMsg').modal('show')">{{n.heading}}</a></td>
             <td class="text-right date">{{formatDate(n.date)}}</td>
           </tr>
           </tbody>

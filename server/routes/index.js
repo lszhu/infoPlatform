@@ -51,10 +51,69 @@ router.get('/picture/:id', function(req, res) {
 });
 
 /* get policy heading or content */
-router.post('/getPolicyMsg', function(req, res) {
+//router.post('/getPolicyMsg', function(req, res) {
+//    // query items limit
+//    var limit = parseInt(req.body.limit);
+//    limit = limit > 0 ? limit : 2000;
+//
+//    var skip = parseInt(req.body.skip);
+//    skip = skip > 0 ? skip : 0;
+//
+//    // 指定类型为政策法规
+//    var condition = {type: 'policy'};
+//    var fields = 'heading date';
+//
+//    if (req.body.infoId) {
+//        condition._id = db.ObjectId(req.body.infoId);
+//        fields = '';
+//    }
+//    debug('condition: ' + JSON.stringify(condition));
+//    // 保存正常的响应数据
+//    var response = {status: 'ok'};
+//    // 用于并发访问的计数器
+//    var counter = {count: 2, error: false};
+//
+//    db.count('news', condition, function(err, count) {
+//        counter.count--;
+//        if (err) {
+//            if (counter.error) {
+//                console.log('db access error');
+//                return;
+//            }
+//            counter.error = true;
+//            res.send({status: 'dbReadErr', message: 数据库访问错误});
+//            return;
+//        }
+//        response.count = count;
+//        if (counter.count == 0) {
+//            res.send(response);
+//        }
+//    });
+//
+//    db.querySort('news', condition, {date: -1}, function(err, docs) {
+//        counter.count--;
+//        if (err) {
+//            if (counter.error) {
+//                console.log('db access error');
+//                return;
+//            }
+//            counter.error = true;
+//            res.send({status: 'dbReadErr', message: 数据库访问错误});
+//            return;
+//        }
+//        debug('docs length: ' + docs.length);
+//        response.list = docs;
+//        if (counter.count == 0) {
+//            res.send(response);
+//        }
+//    }, fields, limit, skip);
+//});
+
+/* get policy heading or content */
+router.post('/getNewsMsg', function(req, res) {
     // query items limit
     var limit = parseInt(req.body.limit);
-    limit = limit > 0 ? limit : 2000;
+    limit = limit > 0 ? limit : 100;
 
     var skip = parseInt(req.body.skip);
     skip = skip > 0 ? skip : 0;
@@ -66,13 +125,17 @@ router.post('/getPolicyMsg', function(req, res) {
         condition._id = db.ObjectId(req.body.infoId);
         fields = '';
     }
+    if (req.body.districtId) {
+        condition.districtId = req.body.districtId;
+    }
     debug('condition: ' + JSON.stringify(condition));
+
     // 保存正常的响应数据
     var response = {status: 'ok'};
     // 用于并发访问的计数器
     var counter = {count: 2, error: false};
 
-    db.count('policy', condition, function(err, count) {
+    db.count('news', condition, function(err, count) {
         counter.count--;
         if (err) {
             if (counter.error) {
@@ -89,7 +152,7 @@ router.post('/getPolicyMsg', function(req, res) {
         }
     });
 
-    db.querySort('policy', condition, {date: -1}, function(err, docs) {
+    db.querySort('news', condition, {date: -1}, function(err, docs) {
         counter.count--;
         if (err) {
             if (counter.error) {
@@ -100,70 +163,11 @@ router.post('/getPolicyMsg', function(req, res) {
             res.send({status: 'dbReadErr', message: 数据库访问错误});
             return;
         }
-        debug('docs length: ' + docs.length);
         response.list = docs;
         if (counter.count == 0) {
             res.send(response);
         }
     }, fields, limit, skip);
-});
-
-/* get policy heading or content */
-router.post('/getNewsMsg', function(req, res) {
-    // 最大查询条目
-    var limit = 5000;
-    var condition = {};
-    var fields = '';
-
-    if (req.body.list == true) {
-        fields = 'heading date';
-    } else if (req.body.infoId) {
-        var date = new Date(req.body.infoId);
-        debug('date: ' + date.toString());
-        if (date != 'Invalid Date') {
-            condition.date = date;
-        }
-    }
-    if (req.body.districtId) {
-        condition.districtId = req.body.districtId;
-    }
-    debug('condition: ' + JSON.stringify(condition));
-
-    db.querySort('message', condition, {date: -1}, function(err, docs) {
-        if (err) {
-            res.send({status: 'dbErr', message: '访问数据库系统出现异常'});
-            return;
-        }
-        if (condition.date) {
-            debug('news docs length: ' + docs.length);
-            res.send({status: 'ok', newsList: docs});
-            return;
-        }
-        // for querying news list, we have to query policy list too
-        var data = docs;
-        // add a lable to be different from plicy item
-        for (var i = 0, len = docs.length; i < len; i++) {
-            data[i].news = '1';
-        }
-        db.querySort('policy', {}, {date: -1}, function(err, docs) {
-            if (err) {
-                res.send({status: 'dbErr', message: '访问数据库系统出现异常'});
-                return;
-            }
-            debug('policy docs length: ' + docs.length);
-            // concatenate message and policy docs
-            data = data.concat(docs);
-            data.sort(function(a, b) {
-                if (a.date < b.date) {
-                    return 1;
-                } else {
-                    return a.date == b.date ? 0 : -1
-                }
-            });
-            data.slice(0, limit);
-            res.send({status: 'ok', newsList: data});
-        }, fields, limit);
-    }, fields, limit);
 });
 
 /* get organization introduction */
@@ -407,26 +411,6 @@ router.post('/uploadFile', function(req, res) {
 //        });
 //});
 
-/* save news submitted by staff */
-router.post('/postNews', function(req, res) {
-    var news = tool.trimObject(req.body.news);
-    debug('news: ' + JSON.stringify(news));
-    if (!news.heading || !news.content) {
-        res.send({status: 'paramErr', message: '提供的信息不够完整'});
-        return;
-    }
-
-    news.date = new Date();
-
-    db.save('news', {heading: news.heading}, news,
-        function(err) {
-            if (err) {
-                res.send({status: 'dbWriteErr', message: '信息保存失败'});
-                return;
-            }
-            res.send({status: 'ok', message: '就业动态新闻保存成功'});
-        });
-});
 
 /* save suggestion submitted by adviser */
 router.post('/postSuggestion', function(req, res) {
@@ -585,15 +569,7 @@ router.post('/searchOrganization', function(req, res) {
             res.send({status: 'dbReadErr', message: 单位信息读取失败});
             return;
         }
-        //docs.sort(function(a, b) {
-        //    if (a.staffs < b.staffs) {
-        //        return 1;
-        //    } else if (a.staffs == b.staffs) {
-        //        return 0;
-        //    } else {
-        //        return -1;
-        //    }
-        //});
+
         for (var i = 0, len = docs.length; i < len; i++) {
             docs[i].staffs = tool.blurStaffs(docs[i].staffs);
             if (!docs[i].address) {

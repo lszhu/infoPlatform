@@ -17,7 +17,7 @@ angular.module('myApp.home', ['ngRoute'])
             //    controller: 'PostPolicyCtrl'
             //})
             .when('/main/news', {
-                templateUrl: 'mainView/news.html',
+                templateUrl: 'users/news',
                 controller: 'PostNewsCtrl'
             })
             .when('/main/home', {
@@ -113,9 +113,9 @@ angular.module('myApp.home', ['ngRoute'])
     //    }
     //])
 
-    .controller('PostNewsCtrl', ['$scope', '$http', '$document',
-        function($scope, $http, $document) {
-            // 初始化投诉建议信息
+    .controller('PostNewsCtrl', ['$scope', '$http', '$document', '$location',
+        function($scope, $http, $document, $location) {
+            // 初始信息
             $scope.news = {};
 
             // 信息上传函数
@@ -128,7 +128,7 @@ angular.module('myApp.home', ['ngRoute'])
                     return;
                 }
                 $scope.news.districtId = $scope.districtId;
-                $http.post('/postNews', {news: $scope.news})
+                $http.post('/users/postNews', {news: $scope.news})
                     .success(function(res) {
                         if (res.status == 'ok') {
                             alert('您成功发布了就业动态新闻！');
@@ -138,6 +138,19 @@ angular.module('myApp.home', ['ngRoute'])
                     })
                     .error(function(err) {
                         alert('信息提交失败，原因是：' + err);
+                    });
+            };
+
+            // 退出登录状态
+            $scope.logout = function() {
+                $http.get('/users/logout')
+                    .success(function(res) {
+                        console.log(res.message);
+                        $location.search('management', undefined);
+                        $location.path('/')
+                    })
+                    .error(function(err) {
+                        alert('系统出现异常：\n' + err);
                     });
             };
 
@@ -152,34 +165,27 @@ angular.module('myApp.home', ['ngRoute'])
     ])
 
     .controller('HomeCtrl', ['$scope', '$http', '$sce', 'formatInfo',
-        'page', function($scope, $http, $sce, formatInfo, page) {
+        function($scope, $http, $sce, formatInfo) {
             // 广告位个数
             var adPosition = 3;
             // 页面显示的条目数
             var limit = 10;
-            // 页码导航条显示的页码数
-            var pageNav = 5;
-            // 设置翻页时自动滚屏到x/y坐标
-            var x = 0;
-            var y = 400;
 
             $scope.formatDate = function(date) {
                 return !date ? '未知' : date.toString().split('T')[0];
             };
 
             function queryNewsList(n) {
-                var factor = {list: true, districtId: $scope.districtId};
+                var factor = {};
                 if (n && parseInt(n)) {
                     factor.limit = n;
                 }
                 $http.post('/getNewsMsg', factor)
                     .success(function(res) {
                         if (res.status == 'ok') {
-                            var news =
-                                page(res.newsList, limit, pageNav, x, y);
-                            $scope.news = news.dataToShow;
+                            $scope.news = res.list || [];
                         }
-                        console.log($scope.news);
+                        console.log('news: %o', $scope.news);
                     })
                     .error(function(err) {
                         console.log('无法获取人力资源与就业服务政策信息，' +
@@ -191,15 +197,11 @@ angular.module('myApp.home', ['ngRoute'])
 
             // 获取新闻或政策信息具体内容（以时间戳为标准）
             // 通过参数news为'1'决定是新闻，否则是政策
-            $scope.getMsg = function(date, news) {
-                var infoId = new Date(date);
-                console.log('NewsId: ' + date);
-                var url = news ? '/getNewsMsg' : '/getPolicyMsg';
-                $http.post(url, {infoId: infoId})
+            $scope.getMsg = function(infoId) {
+                $http.post('/getNewsMsg', {infoId: infoId})
                     .success(function(res) {
                         if (res.status == 'ok') {
-                            var list = news ? 'newsList' : 'policyList';
-                            $scope.information = formatInfo(res[list][0]);
+                            $scope.information = formatInfo(res.list[0]);
                             $scope.information.content =
                                 $sce.trustAsHtml($scope.information.content);
                         } else {
@@ -223,7 +225,7 @@ angular.module('myApp.home', ['ngRoute'])
                             $scope.market = res.jobList || [];
                             //$scope.market = market.slice(0, limit);
                         }
-                        console.log($scope.market);
+                        console.log('market: %o', $scope.market);
                     })
                     .error(function(err) {
                         console.log('无法获取招聘信息，错误原因：%o', err);

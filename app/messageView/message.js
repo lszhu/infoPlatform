@@ -162,7 +162,9 @@ angular.module('myApp.message', ['ngRoute'])
                  pagination, management, filterFilter) {
 
             // 初始化页面参数
-            $scope.page = pagination({limit: 10, target: '/getPolicyMsg'});
+            $scope.page = pagination({limit: 20, target: '/getNewsMsg'});
+            // 设置查询条件为仅限政策法规
+            $scope.page.params.condition  = {type: 'policy'};
 
             // 初始化管理操作
             $scope.manage = management({removeUrl: '/users/removePolicy'});
@@ -173,7 +175,7 @@ angular.module('myApp.message', ['ngRoute'])
             // 获取单位介绍信息
             $scope.getMsg = function(infoId) {
                 //console.log('informationId: ' + infoId);
-                $http.post('/getPolicyMsg', {infoId: infoId})
+                $http.post('/getNewsMsg', {infoId: infoId})
                     .success(function(res) {
                         if (res.status == 'ok') {
                             $scope.information = formatInfo(res.list[0]);
@@ -221,59 +223,49 @@ angular.module('myApp.message', ['ngRoute'])
         }])
 
     .controller('NewsCtrl', ['$scope', '$http', '$sce', 'formatInfo',
-        'page', function($scope, $http, $sce, formatInfo, page) {
-            // 每页的显示数目
-            var limit = 20;
-            // 页码导航条显示的页码数
-            var pageNav = 5;
-            // 设置翻页时自动滚屏到x/y坐标
-            var x = 0;
-            var y = 400;
-            // 用于保存页面显示相关信息
-            $scope.pageOption = {};
+        'pagination', 'management', 'filterFilter',
+        function($scope, $http, $sce, formatInfo,
+                 pagination, management, filterFilter) {
+
+            // 初始化页面参数
+            $scope.page = pagination({limit: 20, target: '/getNewsMsg'});
+
+            // 用于初始化列表信息
+            $scope.page.queryItems(1);
+            // 初始化管理操作
+            $scope.manage = management({removeUrl: '/users/removeNews'});
+
+            // 跟踪过滤关键字的变化
+            $scope.$watch('quickFilter', function(newValue, oldValue) {
+                if (newValue == oldValue) {
+                    return;
+                }
+                $scope.page.params.itemList =
+                    filterFilter($scope.page.params.itemListRaw, newValue);
+                $scope.manage.params.removalList = [];
+                $scope.manage.params.selectedAll = false;
+            });
 
             $scope.formatDate = function(date) {
-                //var d = new Date(date);
-                //if (d == 'Invalid Date') {
-                //    return '';
-                //}
-                //var ref = '';
-                //ref += d.getFullYear() + '-';
-                //ref += d.getMonth() + 1;
-                //ref += '-' + d.getDate();
-                //return ref;
                 return !date ? '未知' : date.toString().split('T')[0];
             };
 
-            $scope.queryNewsList = function() {
-                var factor = {list: true, districtId: $scope.districtId};
-                $http.post('/getNewsMsg', factor)
-                    .success(function(res) {
-                        if (res.status == 'ok') {
-                            $scope.pageOption =
-                                page(res.newsList, limit, pageNav, x, y);
-                        }
-                        console.log(res.newsList);
-                    })
-                    .error(function(err) {
-                        console.log('无法获取人力资源与就业服务政策信息，' +
-                        '错误原因：%o', err);
-                    });
+            // 获取指定页面的数据，同时清空删除列表及状态
+            $scope.queryItems = function(p) {
+                // 清除快速过滤关键字
+                $scope.quickFilter = '';
+                $scope.manage.params.removalList = [];
+                $scope.manage.params.selectedAll = false;
+                $scope.page.queryItems(p);
             };
-            // 用于初始化列表信息
-            $scope.queryNewsList();
 
-            // 获取新闻或政策信息具体内容（以时间戳为标准）
-            // 通过参数news为'1'决定是新闻，否则是政策
-            $scope.getMsg = function(date, news) {
-                var infoId = new Date(date);
-                console.log('NewsId: ' + date);
-                var url = news ? '/getNewsMsg' : '/getPolicyMsg';
-                $http.post(url, {infoId: infoId})
+            // 获取介绍信息
+            $scope.getMsg = function(infoId) {
+                //console.log('informationId: ' + infoId);
+                $http.post('/getNewsMsg', {infoId: infoId})
                     .success(function(res) {
                         if (res.status == 'ok') {
-                            var list = news ? 'newsList' : 'policyList';
-                            $scope.information = formatInfo(res[list][0]);
+                            $scope.information = formatInfo(res.list[0]);
                             $scope.information.content =
                                 $sce.trustAsHtml($scope.information.content);
                         } else {
@@ -281,8 +273,14 @@ angular.module('myApp.message', ['ngRoute'])
                         }
                     })
                     .error(function(err) {
-                        console.log('无法获取人力资源与就业服务政策信息，' +
-                        '错误原因：%o', err);
+                        console.log('因出现异常，无法查询到相关信息\n' + err);
                     });
             };
+
+            // 删除选中数据项
+            $scope.removeItems = function(p) {
+                $scope.manage.removeItems(p, $scope.page.params.itemList,
+                    $scope.page.params.itemListRaw);
+            };
+
     }]);
