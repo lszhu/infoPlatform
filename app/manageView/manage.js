@@ -8,28 +8,24 @@ angular.module('myApp.manage', ['ngRoute'])
                 templateUrl: 'users/panel',
                 controller: 'PanelCtrl'
             })
-            .when('/manage/user', {
-                templateUrl: 'manageView/user.html',
-                controller: 'UserCtrl'
-            })
             .when('/manage/community', {
-                templateUrl: 'users/community',
+                templateUrl: 'users/auth/community',
                 controller: 'CommunityCtrl'
             })
             .when('/manage/suggestion', {
-                templateUrl: 'users/suggestion',
+                templateUrl: 'users/auth/suggestion',
                 controller: 'SuggestionCtrl'
             })
             .when('/manage/system', {
-                templateUrl: 'users/system',
+                templateUrl: 'users/auth/system',
                 controller: 'CommunityCtrl'
             })
             .when('/manage/account', {
-                templateUrl: 'users/account',
-                controller: 'CommunityCtrl'
+                templateUrl: 'users/auth/account',
+                controller: 'AccountCtrl'
             })
             .when('/manage/carousel', {
-                templateUrl: 'users/carousel',
+                templateUrl: 'users/auth/carousel',
                 controller: 'CommunityCtrl'
             });
     }])
@@ -45,7 +41,7 @@ angular.module('myApp.manage', ['ngRoute'])
                         location.reload();
                     })
                     .error(function(err) {
-                        alert('系统出现异常');
+                        alert('系统出现异常：\n%o', err);
                     });
                 //$location.path('/users/logout');
                 //location.hash = '#/users/logout';
@@ -54,7 +50,7 @@ angular.module('myApp.manage', ['ngRoute'])
 
         }])
 
-    .controller('UserCtrl', [function() {
+    .controller('AccountCtrl', [function() {
 
     }])
 

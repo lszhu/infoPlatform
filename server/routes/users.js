@@ -127,31 +127,51 @@ router.post(/\/remove(\w+)/, function(req, res) {
 });
 
 /* web page for list suggestions */
-router.get('/suggestion', function(req, res) {
-    if (!req.session.user) {
-        res.redirect('/main/home');
-    } else {
-        res.sendFile(path.join(__dirname,
-            '../../app/manageView/suggestion.html'));
-    }
-});
+//router.get('/suggestion', function(req, res) {
+//    if (!req.session.user) {
+//        res.redirect('/main/home');
+//    } else {
+//        res.sendFile(path.join(__dirname,
+//            '../../app/manageView/suggestion.html'));
+//    }
+//});
 
 /* web page for post community info */
-router.get('/community', function(req, res) {
-    if (!req.session.user) {
-        res.redirect('/main/home');
-    } else {
-        res.sendFile(path.join(__dirname,
-            '../../app/manageView/community.html'));
-    }
-});
+//router.get('/community', function(req, res) {
+//    if (!req.session.user) {
+//        res.redirect('/main/home');
+//    } else {
+//        res.sendFile(path.join(__dirname,
+//            '../../app/manageView/community.html'));
+//    }
+//});
 
 /* web page for post news */
-router.get('/news', function(req, res) {
-    if (!req.session.user) {
+//router.get('/news', function(req, res) {
+//    if (!req.session.user) {
+//        res.redirect('/main/home');
+//    } else {
+//        res.sendFile(path.join(__dirname, '../../app/mainView/news.html'));
+//    }
+//});
+
+/* management webPage */
+router.get('/auth/:page', function(req, res) {
+    var page = req.params.page;
+    debug('target:' + page);
+
+    var pages = {
+        news: 'app/mainView/news.html',
+        community: 'app/manageView/community.html',
+        suggestion: 'app/manageView/suggestion.html',
+        system: 'app/manageView/system.html',
+        account: 'app/manageView/account.html',
+        carousel: 'app/manageView/carousel.html'
+    };
+    if (!req.session.user || !pages.hasOwnProperty(page)) {
         res.redirect('/main/home');
     } else {
-        res.sendFile(path.join(__dirname, '../../app/mainView/news.html'));
+        res.sendFile(path.join(__dirname, '../..', pages[page]));
     }
 });
 

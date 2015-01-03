@@ -17,7 +17,7 @@ angular.module('myApp.home', ['ngRoute'])
             //    controller: 'PostPolicyCtrl'
             //})
             .when('/main/news', {
-                templateUrl: 'users/news',
+                templateUrl: 'users/auth/news',
                 controller: 'PostNewsCtrl'
             })
             .when('/main/home', {
