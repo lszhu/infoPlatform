@@ -41,7 +41,7 @@ angular.module('myApp.manage', ['ngRoute'])
                         location.reload();
                     })
                     .error(function(err) {
-                        alert('系统出现异常：\n%o', err);
+                        alert('系统出现异常：\n' + JSON.stringify(err));
                     });
                 //$location.path('/users/logout');
                 //location.hash = '#/users/logout';
@@ -54,8 +54,59 @@ angular.module('myApp.manage', ['ngRoute'])
 
     }])
 
-    .controller('CommunityCtrl', [function() {
+    .controller('CommunityCtrl', ['$scope', '$http', '$document',
+        function($scope, $http, $document) {
+        $scope.community = {};
 
+        // 信息上传函数
+        $scope.postMsg = function() {
+            $scope.community.introduction =
+                $document.find('.note-editable').html();
+            console.log('community: %o', $scope.community.picture);
+            $scope.community.districtId = $scope.districtId;
+            $http.post('/postCommunity', {community: $scope.community})
+                .success(function(res) {
+                    if (res.status == 'ok') {
+                        alert('您成功发布了社区介绍信息！');
+                    } else {
+                        alert('信息发布失败，原因是：' + res.message);
+                    }
+                })
+                .error(function(err) {
+                    alert('信息发布失败，原因是：' + err);
+                });
+            postPicture();
+        };
+
+        $scope.postDisabled = function() {
+            //return false;
+            var name = $scope.community.name;
+            var districtId = $scope.community.districtId;
+            var phone = $scope.community.phone;
+            //var picture = $scope.community.picture;
+            var address = $scope.community.address;
+            var overview = $scope.community.overview;
+            return !name || !districtId || !phone || !address || !overview;
+        };
+
+        $scope.test = postPicture;
+        function postPicture() {
+            var frame = $document.find('iframe')[0];
+            //var frame = angular.element('#fileUpload').contents();
+            if (!frame) {
+                console.log('找不到要提交的文档');
+                return;
+            }
+            frame = frame.contentDocument || frame.contentWindow.document;
+            console.log(frame);
+            var districtId = frame.getElementById('code');
+            console.log(districtId);
+            var format = frame.getElementById('format');
+            var picture = frame.getElementById('picture');
+            format.value = picture.value.split('.').slice(-1)[0];
+            districtId.value = $scope.community.districtId;
+            frame.getElementById('submit').click();
+        }
     }])
 
     .controller('SuggestionCtrl', ['$scope', '$http', '$sce', 'formatInfo',

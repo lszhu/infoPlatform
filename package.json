@@ -7,7 +7,7 @@
   "license": "MIT",
   "dependencies": {
     "express": "~4.10",
-    "express-session": "~1.9",
+    "express-session": "~1.10",
     "body-parser": "~1.10",
     "multiparty": "~4.1",
     "cookie-parser": "~1.3",
