@@ -86,7 +86,12 @@ router.get('/panel', function(req, res) {
 
 /* client type */
 router.get('/clientType', function(req, res) {
-    var type = req.session.user ? 'register' : 'anonymous';
+    //var type = req.session.user ? 'register' : 'anonymous';
+    var type = 'anonymous';
+    var user = req.session.user;
+    if (user) {
+        type = user.rights == 'administrator' ? 'administrator' : 'register';
+    }
     res.send({status: 'ok', type: type});
 });
 
@@ -106,7 +111,8 @@ router.post(/\/remove(\w+)/, function(req, res) {
         News: 'news',
         Suggestion: 'suggestion'
     };
-    if (!models.hasOwnProperty(target)) {
+    if (!models.hasOwnProperty(target) ||
+        target == 'Suggestion' && req.session.user.rights != 'administrator') {
         res.send({status: 'targetErr', message: '非法操作对象'});
         return;
     }
@@ -211,7 +217,7 @@ router.post('/postCommunity', function(req, res) {
     var community = tool.trimObject(req.body.community);
     debug('community: ' + JSON.stringify(community));
     if (!community.name || !community.districtId || !community.address ||
-        !community.phone|| !community.overview) {
+        !community.phone || !community.overview) {
         res.send({status: 'paramErr', message: '提供的信息不够完整'});
         return;
     }
@@ -226,6 +232,55 @@ router.post('/postCommunity', function(req, res) {
             }
             res.send({status: 'ok', message: '就业动态新闻保存成功'});
         });
+});
+
+/* get user suggestions */
+router.post('/getSuggestion', function(req, res) {
+    // query items limit
+    var limit = parseInt(req.body.limit);
+    limit = 0 < limit && limit < 500 ? limit : 100;
+
+    var skip = parseInt(req.body.skip);
+    skip = skip > 0 ? skip : 0;
+
+    // 保存正常的响应数据
+    var response = {status: 'ok'};
+    // 用于并发访问的计数器
+    var counter = {count: 2, error: false};
+
+    db.count('suggestion', {}, function(err, count) {
+        counter.count--;
+        if (err) {
+            if (counter.error) {
+                console.log('db access error');
+                return;
+            }
+            counter.error = true;
+            res.send({status: 'dbReadErr', message: '数据库访问错误'});
+            return;
+        }
+        response.count = count;
+        if (counter.count == 0) {
+            res.send(response);
+        }
+    });
+
+    db.querySort('suggestion', {}, {date: -1}, function(err, docs) {
+        counter.count--;
+        if (err) {
+            if (counter.error) {
+                console.log('db access error');
+                return;
+            }
+            counter.error = true;
+            res.send({status: 'dbReadErr', message: '数据库访问错误'});
+            return;
+        }
+        response.list = docs;
+        if (counter.count == 0) {
+            res.send(response);
+        }
+    }, '', limit, skip);
 });
 
 module.exports = router;

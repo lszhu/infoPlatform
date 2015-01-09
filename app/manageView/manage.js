@@ -14,7 +14,7 @@ angular.module('myApp.manage', ['ngRoute'])
             })
             .when('/manage/suggestion', {
                 templateUrl: 'users/auth/suggestion',
-                controller: 'SuggestionCtrl'
+                controller: 'ShowSuggestionCtrl'
             })
             .when('/manage/system', {
                 templateUrl: 'users/auth/system',
@@ -123,18 +123,33 @@ angular.module('myApp.manage', ['ngRoute'])
 
         }])
 
-    .controller('SuggestionCtrl', ['$scope', '$http', '$sce', 'formatInfo',
-        'pagination', 'management', 'filterFilter',
+    .controller('ShowSuggestionCtrl', ['$scope', '$http', '$sce',
+        'formatInfo', 'pagination', 'management', 'filterFilter',
         function($scope, $http, $sce, formatInfo,
                  pagination, management, filterFilter) {
 
             // 初始化页面参数
-            $scope.page = pagination({limit: 20, target: '/getNewsMsg'});
+            $scope.page = pagination({y: 300, limit: 20,
+                target: '/users/getSuggestion'});
 
             // 用于初始化列表信息
             $scope.page.queryItems(1);
             // 初始化管理操作
-            $scope.manage = management({removeUrl: '/users/removeNews'});
+            $scope.manage = management({removeUrl: '/users/removeSuggestion'});
+
+            // 用于显示具体建议内容
+            $scope.information = {};
+
+            $scope.formatDate = function (date) {
+                return !date ? '未知' : date.toString().split('T')[0];
+            };
+
+            $scope.showMsg = function(suggestion) {
+                var s = $scope.information;
+                s.heading = '来自网友' + suggestion.name + '的投诉建议';
+                s.content = $sce.trustAsHtml(suggestion.suggestion);
+                s.reference = '';
+            };
 
             // 跟踪过滤关键字的变化
             $scope.$watch('quickFilter', function (newValue, oldValue) {
@@ -147,10 +162,6 @@ angular.module('myApp.manage', ['ngRoute'])
                 $scope.manage.params.selectedAll = false;
             });
 
-            $scope.formatDate = function (date) {
-                return !date ? '未知' : date.toString().split('T')[0];
-            };
-
             // 获取指定页面的数据，同时清空删除列表及状态
             $scope.queryItems = function (p) {
                 // 清除快速过滤关键字
@@ -160,10 +171,17 @@ angular.module('myApp.manage', ['ngRoute'])
                 $scope.page.queryItems(p);
             };
 
+            // 删除选中数据项
+            $scope.removeItems = function(p) {
+                $scope.manage.removeItems(p, $scope.page.params.itemList,
+                    $scope.page.params.itemListRaw);
+            };
+
+            /* 未使用，因为这里不用单独获取介绍信息
             // 获取介绍信息
             $scope.getMsg = function (infoId) {
                 //console.log('informationId: ' + infoId);
-                $http.post('/getNewsMsg', {infoId: infoId})
+                $http.post('/users/getSuggestion', {infoId: infoId})
                     .success(function (res) {
                         if (res.status == 'ok') {
                             $scope.information = formatInfo(res.list[0]);
@@ -183,5 +201,6 @@ angular.module('myApp.manage', ['ngRoute'])
                 $scope.manage.removeItems(p, $scope.page.params.itemList,
                     $scope.page.params.itemListRaw);
             };
+            */
         }
     ]);

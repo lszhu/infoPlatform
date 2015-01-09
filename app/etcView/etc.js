@@ -98,6 +98,7 @@ angular.module('myApp.etc', ['ngRoute'])
                     .success(function(res) {
                         if (res.status == 'ok') {
                             alert('您成功提交了投诉建议信息！');
+                            $scope.suggestion = {};
                         } else {
                             alert('信息提交失败，原因是：' + res.message);
                         }

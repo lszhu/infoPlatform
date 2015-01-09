@@ -54,7 +54,7 @@ router.get('/picture/:id', function(req, res) {
 //router.post('/getPolicyMsg', function(req, res) {
 //    // query items limit
 //    var limit = parseInt(req.body.limit);
-//    limit = limit > 0 ? limit : 2000;
+//    limit = 0 < limit && limit < 500 ? limit : 100;
 //
 //    var skip = parseInt(req.body.skip);
 //    skip = skip > 0 ? skip : 0;
@@ -113,7 +113,7 @@ router.get('/picture/:id', function(req, res) {
 router.post('/getNewsMsg', function(req, res) {
     // query items limit
     var limit = parseInt(req.body.limit);
-    limit = limit > 0 ? limit : 100;
+    limit = 0 < limit && limit < 500 ? limit : 100;
 
     var skip = parseInt(req.body.skip);
     skip = skip > 0 ? skip : 0;
@@ -193,8 +193,8 @@ router.get('/searchInformation/:id', function(req, res) {
 router.post('/searchInformation', function(req, res) {
     var condition = {};
     var fields = '-code -districtId -introduction -picture';
-    var queryLimit = 2000;
-    var responseLimit = 2000;
+    var queryLimit = 1000;
+    var responseLimit = 100;
     if (req.body.id && parseInt(req.body.id)) {
         var infoId = parseInt(req.params.id);
         debug('infoId: ' + infoId);
@@ -332,6 +332,7 @@ router.post('/postOrgInfo', function(req, res) {
 router.get('/uploadFile', function(req, res) {
     res.sendfile(path.join(__dirname, '../../app/mainView/upload.html'));
 });
+
 /* save organization introduction picture */
 router.post('/uploadFile', function(req, res) {
     // file format, the attribute name is base64 encoded file extension
@@ -421,6 +422,7 @@ router.post('/postSuggestion', function(req, res) {
         res.send({status: 'paramErr', message: '提供的个人信息不够完整'});
         return;
     }
+    suggestion.date = new Date();
 
     db.save('suggestion', {idNumber: suggestion.idNumber}, suggestion,
         function(err) {
@@ -436,7 +438,7 @@ router.post('/postSuggestion', function(req, res) {
 router.post('/searchJob', function(req, res) {
     // query items limit
     var limit = parseInt(req.body.limit);
-    limit = limit > 0 ? limit : 2000;
+    limit = 0 < limit && limit < 500 ? limit : 100;
 
     var skip = parseInt(req.body.skip);
     skip = skip > 0 ? skip : 0;
@@ -509,7 +511,7 @@ router.post('/searchJob', function(req, res) {
 router.post('/searchOrganization', function(req, res) {
     // query items limit
     var limit = parseInt(req.body.limit);
-    limit = limit > 0 ? limit : 2000;
+    limit = 0 < limit && limit < 500 ? limit : 100;
 
     var skip = parseInt(req.body.skip);
     skip = skip > 0 ? skip : 0;
@@ -587,7 +589,7 @@ router.post('/searchOrganization', function(req, res) {
 router.post('/searchManpower', function(req, res) {
     // query items limit
     var limit = parseInt(req.body.limit);
-    limit = limit > 0 ? limit : 5000;
+    limit = 0 < limit && limit < 500 ? limit : 100;
 
     var skip = parseInt(req.body.skip);
     skip = skip > 0 ? skip : 0;
@@ -698,7 +700,7 @@ router.post('/searchWorker', function(req, res) {
 
     // query items limit
     var limit = parseInt(req.body.limit);
-    limit = limit > 0 ? limit : 5000;
+    limit = 0 < limit && limit < 500 ? limit : 100;
 
     var skip = parseInt(req.body.skip);
     skip = skip > 0 ? skip : 0;

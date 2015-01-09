@@ -65,7 +65,7 @@ angular.module('myApp.service', [])
 
         // 分页相关参数
         var params = {
-            target: '/searchJob',   // 查询的目标路径
+            target: '',             // 查询的目标路径
             limit: 50,              // 每页显示的条目数目
             pageNav: 5,             // 页码导航条显示的页码数
             x: 0,                   // 自动滚屏到横坐标
@@ -169,6 +169,10 @@ angular.module('myApp.service', [])
                 cond.districtId = params.districtId;
             }
 
+            if (!params.target) {
+                console.log('Please initiate data source path');
+                return;
+            }
             //console.log('condition: %o', cond);
             // 查询数据
             $http.post(params.target, cond)
@@ -334,7 +338,7 @@ angular.module('myApp.service', [])
     .factory('management', ['$window', '$http', '$location',
         function($window, $http, $location) {
             var params = {
-                register: false,
+                register: '',
                 removalList: [],
                 selectedAll: false,
                 userTypeUrl: '/users/clientType',
@@ -430,6 +434,10 @@ angular.module('myApp.service', [])
                     return;
                 }
 
+                if (!params.removeUrl) {
+                    console.log('Do not support removal');
+                    return;
+                }
                 console.log('removing');
                 $http.post(params.removeUrl, {objectId: idList})
                     .success(function(res) {
@@ -462,12 +470,15 @@ angular.module('myApp.service', [])
                     $http.get(params.userTypeUrl)
                         .success(function(res) {
                             console.log(res.type);
-                            if (res.type == 'register') {
-                                params.register = true;
-                            } else {
-                                $location.search('management', null);
-                                params.register = false;
+                            if (res.type != 'anonymous') {
+                                params.register = res.type;
                             }
+                            //if (res.type == 'register') {
+                            //    params.register = true;
+                            //} else {
+                            //    $location.search('management', null);
+                            //    params.register = false;
+                            //}
                         });
                 }
                 return {

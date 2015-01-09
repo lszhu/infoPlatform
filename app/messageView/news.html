@@ -39,8 +39,8 @@
         </tr>
 
         <tr ng-repeat="p in page.params.itemList">
-          <td>
-            <div ng-show="manage.params.register">
+          <td ng-show="manage.params.register">
+            <div>
               <i ng-show="manage.params.removalList[$index]" ng-click="manage.reverse($index)" class="fa fa-check-square-o"></i>
               <i ng-hide="manage.params.removalList[$index]" ng-click="manage.reverse($index)" class="fa fa-square-o"></i>
               <i ng-click="removeItems(p)" class="fa fa-times-circle-o red"></i>

@@ -23,6 +23,10 @@ iframe {
     padding: 0;
     margin: 0;
 }
+
+#select-all {
+    width: 30px;
+}
 /* CUSTOMIZE THE NAVBAR
 -------------------------------------------------- */
 
