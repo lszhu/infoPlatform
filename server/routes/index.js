@@ -81,7 +81,7 @@ router.get('/picture/:id', function(req, res) {
 //                return;
 //            }
 //            counter.error = true;
-//            res.send({status: 'dbReadErr', message: 数据库访问错误});
+//            res.send({status: 'dbReadErr', message: '数据库访问错误'});
 //            return;
 //        }
 //        response.count = count;
@@ -98,7 +98,7 @@ router.get('/picture/:id', function(req, res) {
 //                return;
 //            }
 //            counter.error = true;
-//            res.send({status: 'dbReadErr', message: 数据库访问错误});
+//            res.send({status: 'dbReadErr', message: '数据库访问错误'});
 //            return;
 //        }
 //        debug('docs length: ' + docs.length);
@@ -143,7 +143,7 @@ router.post('/getNewsMsg', function(req, res) {
                 return;
             }
             counter.error = true;
-            res.send({status: 'dbReadErr', message: 数据库访问错误});
+            res.send({status: 'dbReadErr', message: '数据库访问错误'});
             return;
         }
         response.count = count;
@@ -160,7 +160,7 @@ router.post('/getNewsMsg', function(req, res) {
                 return;
             }
             counter.error = true;
-            res.send({status: 'dbReadErr', message: 数据库访问错误});
+            res.send({status: 'dbReadErr', message: '数据库访问错误'});
             return;
         }
         response.list = docs;
@@ -188,15 +188,16 @@ router.get('/searchInformation/:id', function(req, res) {
     }, '-code -districtId');
 
 });
+
 /* get organization introduction */
 router.post('/searchInformation', function(req, res) {
-    //var infoId = parseInt(req.params.id);
-    //debug('infoId: ' + infoId);
     var condition = {};
     var fields = '-code -districtId -introduction -picture';
     var queryLimit = 2000;
     var responseLimit = 2000;
     if (req.body.id && parseInt(req.body.id)) {
+        var infoId = parseInt(req.params.id);
+        debug('infoId: ' + infoId);
         condition.date = new Date(infoId);
         fields = '-code -districtId -picture';
     }
@@ -421,8 +422,6 @@ router.post('/postSuggestion', function(req, res) {
         return;
     }
 
-    employer.date = new Date();
-
     db.save('suggestion', {idNumber: suggestion.idNumber}, suggestion,
         function(err) {
             if (err) {
@@ -479,7 +478,7 @@ router.post('/searchJob', function(req, res) {
                 return;
             }
             counter.error = true;
-            res.send({status: 'dbReadErr', message: 数据库访问错误});
+            res.send({status: 'dbReadErr', message: '数据库访问错误'});
             return;
         }
         response.count = count;
@@ -496,7 +495,7 @@ router.post('/searchJob', function(req, res) {
                 return;
             }
             counter.error = true;
-            res.send({status: 'dbReadErr', message: 数据库访问错误});
+            res.send({status: 'dbReadErr', message: '数据库访问错误'});
             return;
         }
         response.list = docs;
@@ -549,7 +548,7 @@ router.post('/searchOrganization', function(req, res) {
                 return;
             }
             counter.error = true;
-            res.send({status: 'dbReadErr', message: 数据库访问错误});
+            res.send({status: 'dbReadErr', message: '数据库访问错误'});
             return;
         }
         response.count = count;
@@ -566,7 +565,7 @@ router.post('/searchOrganization', function(req, res) {
                 return;
             }
             counter.error = true;
-            res.send({status: 'dbReadErr', message: 单位信息读取失败});
+            res.send({status: 'dbReadErr', message: '单位信息读取失败'});
             return;
         }
 
@@ -633,7 +632,7 @@ router.post('/searchManpower', function(req, res) {
                 return;
             }
             counter.error = true;
-            res.send({status: 'dbReadErr', message: 数据库访问错误});
+            res.send({status: 'dbReadErr', message: '数据库访问错误'});
             return;
         }
         debug('count: ' + count);
@@ -651,7 +650,7 @@ router.post('/searchManpower', function(req, res) {
                 return;
             }
             counter.error = true;
-            res.send({status: 'dbReadErr', message: 数据库访问错误});
+            res.send({status: 'dbReadErr', message: '数据库访问错误'});
             return;
         }
         for (var i = 0, len = docs.length; i < len; i++) {
@@ -717,7 +716,7 @@ router.post('/searchWorker', function(req, res) {
                 return;
             }
             counter.error = true;
-            res.send({status: 'dbReadErr', message: 数据库访问错误});
+            res.send({status: 'dbReadErr', message: '数据库访问错误'});
             return;
         }
         debug('count: ' + count);
@@ -735,7 +734,7 @@ router.post('/searchWorker', function(req, res) {
                 return;
             }
             counter.error = true;
-            res.send({status: 'dbReadErr', message: 数据库访问错误});
+            res.send({status: 'dbReadErr', message: '数据库访问错误'});
             return;
         }
         var data = [];

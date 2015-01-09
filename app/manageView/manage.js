@@ -64,7 +64,7 @@ angular.module('myApp.manage', ['ngRoute'])
                 $document.find('.note-editable').html();
             console.log('community: %o', $scope.community.picture);
             $scope.community.districtId = $scope.districtId;
-            $http.post('/postCommunity', {community: $scope.community})
+            $http.post('/users/postCommunity', {community: $scope.community})
                 .success(function(res) {
                     if (res.status == 'ok') {
                         alert('您成功发布了社区介绍信息！');

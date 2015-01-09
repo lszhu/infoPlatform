@@ -201,4 +201,9 @@ router.post('/postNews', function(req, res) {
         });
 });
 
+/* save community info posted by staff */
+router.post('/postCommunity', function(req, res) {
+
+});
+
 module.exports = router;
