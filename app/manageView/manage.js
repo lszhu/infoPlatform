@@ -18,7 +18,7 @@ angular.module('myApp.manage', ['ngRoute'])
             })
             .when('/manage/system', {
                 templateUrl: 'users/auth/system',
-                controller: 'CommunityCtrl'
+                controller: 'SystemCtrl'
             })
             .when('/manage/account', {
                 templateUrl: 'users/auth/account',
@@ -26,7 +26,7 @@ angular.module('myApp.manage', ['ngRoute'])
             })
             .when('/manage/carousel', {
                 templateUrl: 'users/auth/carousel',
-                controller: 'CommunityCtrl'
+                controller: 'CarouselCtrl'
             });
     }])
 
@@ -49,10 +49,6 @@ angular.module('myApp.manage', ['ngRoute'])
             };
 
         }])
-
-    .controller('AccountCtrl', [function() {
-
-    }])
 
     .controller('CommunityCtrl', ['$scope', '$http', '$document',
         function($scope, $http, $document) {
@@ -203,4 +199,142 @@ angular.module('myApp.manage', ['ngRoute'])
             };
             */
         }
-    ]);
+    ])
+
+    .controller('SystemCtrl', ['$scope', '$http', function($scope, $http) {
+        $scope.projects = [];
+        $scope.consistence = '正常';
+        $scope.figureNum = 32353;
+        $scope.carryOverNum = 231;
+        $scope.boundFileNum = 12342;
+        $scope.logNum = 63421;
+        $scope.logOk = 23523;
+        $scope.login = 1233;
+        $scope.loginErr = 328;
+
+        var counter = function(parameter, collect, condition, regExp) {
+            $http.post('/counter', {
+                collect: collect,
+                regExp: regExp,
+                condition: condition
+            }).success(function(res) {
+                $scope.msgClass = res.status == 'ok' ?
+                    'alert-success' : 'alert-danger';
+                $scope.message = res.message;
+                $scope[parameter] = res.count;
+            }).error(function (res) {
+                $scope.msgClass = 'alert-danger';
+                $scope.message = 'system error: ' + JSON.stringify(res);
+            })
+        };
+
+        counter('figureNum', 'figure', {});
+        counter('carryOverNum', 'figure', {'voucher.id': '10000'});
+        counter('boundFileNum', 'figure', {}, {'voucher.path': '.+'});
+        counter('logNum', 'log', {});
+        counter('logOk', 'log', {status: '成功'});
+        counter('login', 'log', {operation: '登录操作'});
+        counter('loginErr', 'log', {operation: '登录操作', status: '失败'});
+
+    }])
+
+    .controller('AccountCtrl', ['$scope', '$http', function($scope, $http) {
+        // 用于测试的伪造账号
+        $scope.accounts = [
+            {username: 'aaa', description: 'aaaaaa', enabled: true},
+            {username: 'eee', description: '', rights: 'register'},
+            {username: 'fff', description: '', enabled: false}
+        ];
+
+        // 保存修改账号的信息
+        $scope.account = {};
+
+        fetchUser();
+        $scope.enabled = true;
+        $scope.rights = 'readWrite';
+
+        $scope.loadUser = function(account) {
+            var a = account || {};
+            $scope.account.username = a.username;
+            $scope.account.originalName = a.username;
+            $scope.account.description = a.description;
+            $scope.account.rights = a.rights;
+            $scope.account.enabled = a.enabled;
+        };
+
+        $scope.deleteUser = function(name) {
+            $scope.message = '';
+            if (!name) {
+                return;
+            }
+            if (!confirm('确认要删除该用户？')) {
+                return;
+            }
+            console.log('account name: ' + name);
+            $http.post('/users/deleteAccount', {username: name})
+                .success(function(res) {
+                    if (res.status == 'ok') {
+                        $scope.msgClass = 'alert-success';
+                        $scope.accounts = $scope.accounts
+                            .filter(function(e) {return e.username != name;});
+                    } else {
+                        $scope.msgClass = 'alert-danger';
+                        $scope.message = res.message ?
+                            res.message : '未知错误，请先退出后重新登录尝试';
+                    }
+                }).error(function(res) {
+                    $scope.msgClass = 'alert-danger';
+                    $scope.message = 'system error: ' + JSON.stringify(res);
+                });
+        };
+
+        $scope.modifyUser = function() {
+            $scope.accountmessage = '';
+            if (!$scope.account.username) {
+                alert('用户名不能为空');
+                return;
+            }
+            if ($scope.account.password != $scope.account.retryPassword) {
+                alert('两次输入的密码不一致');
+                return;
+            }
+
+            console.log('upload account: %o', $scope.account);
+            $http.post('/users/modifyAccount', {account: $scope.account})
+                .success(function(res) {
+                    if (res.status == 'ok') {
+                        fetchUser();
+                        $scope.msgClass = 'alert-success';
+                    } else {
+                        $scope.msgClass = 'alert-danger';
+                        $scope.message = res.message ?
+                            res.message : '未知错误，请先退出后重新登录尝试';
+                    }
+                }).error(function(res) {
+                    $scope.msgClass = 'alert-danger';
+                    $scope.message = 'system error: ' + JSON.stringify(res);
+                });
+        };
+
+        function fetchUser() {
+            $http.get('/users/getAccount')
+                .success(function(res) {
+                    if (res.status == 'ok') {
+                        $scope.accounts = res.accounts ? res.accounts : [];
+                        $scope.msgClass = 'alert-success';
+                        $scope.message = res.message;
+                    } else {
+                        $scope.msgClass = 'alert-danger';
+                        $scope.message = res.message ?
+                            res.message : '未知错误，请先退出后重新登录尝试';
+                    }
+                }).error(function(res) {
+                    $scope.msgClass = 'alert-danger';
+                    $scope.message = 'system error: ' + JSON.stringify(res);
+                });
+        }
+    }])
+
+    .controller('CarouselCtrl', [function() {
+
+    }]);

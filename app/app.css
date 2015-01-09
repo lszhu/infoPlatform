@@ -240,6 +240,10 @@ td div.index {
     color: red;
 }
 
+.fa.green {
+    color: green;
+}
+
 td .fa {
     cursor: pointer;
 }
