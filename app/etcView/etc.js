@@ -67,7 +67,7 @@ angular.module('myApp.etc', ['ngRoute'])
                 var frame = $document.find('iframe')[0];
                 //var frame = angular.element('#fileUpload').contents();
                 if (!frame) {
-                    console.log('找不到要提交的文档');
+                    console.log('找不到要提交的图片');
                     return;
                 }
                 frame = frame.contentDocument || frame.contentWindow.document;

@@ -46,7 +46,7 @@ function createModels() {
     var organizationSchema = new mongoose.Schema(schema.organization);
     var personSchema = new mongoose.Schema(schema.person);
     var suggestionSchema = new mongoose.Schema(schema.suggestion);
-    var logSchema = new mongoose.Schema(schema.logs);
+    var logSchema = new mongoose.Schema(schema.log);
     var accountSchema = new mongoose.Schema(schema.account);
     var groupSchema = new mongoose.Schema(schema.group);
 

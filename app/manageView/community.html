@@ -23,6 +23,7 @@
       <label class="control-label remark"><strong>必填</strong></label>
     </div>
 
+    <!--
     <div class="form-group col-sm-12">
       <label for="picture" class="col-sm-2 control-label">宣传图片</label>
       <div class="col-sm-5">
@@ -30,6 +31,16 @@
       </div>
       <label class="control-label remark"><strong>必填，</strong>展示办公场所等（文件需小于5兆）</label>
     </div>
+    -->
+
+    <div class="form-group col-sm-12">
+      <label class="col-sm-2 control-label">宣传图片</label>
+      <div class="col-sm-5">
+        <iframe id="fileUpload" class="col-sm-12" src="/uploadFile"></iframe>
+      </div>
+      <label class="control-label remark"><strong>必填，</strong>展示办公场所等（文件需小于5兆）</label>
+    </div>
+
     <div class="form-group col-sm-12">
       <label for="address" class="col-sm-2 control-label">详细地址</label>
       <div class="col-sm-5">
@@ -58,7 +69,7 @@
 
   <div class="form-group">
     <div class="col-sm-offset-4 col-sm-3">
-      <button ng-disabled="postDisabled()" class="btn btn-primary btn-block" onclick="$('#postAlertMsg').modal('show')">发&nbsp;&nbsp;布</button>
+      <button ng-disabled="postDisabled()" class="btn btn-primary btn-block" ng-click="postMsg()">发&nbsp;&nbsp;布</button>
     </div>
   </div>
 

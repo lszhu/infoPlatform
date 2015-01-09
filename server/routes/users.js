@@ -203,7 +203,29 @@ router.post('/postNews', function(req, res) {
 
 /* save community info posted by staff */
 router.post('/postCommunity', function(req, res) {
+    if (!req.session.user) {
+        res.send({status: 'authErr', message: '未授权的非法操作'});
+        return;
+    }
+    //var community = req.body.community;
+    var community = tool.trimObject(req.body.community);
+    debug('community: ' + JSON.stringify(community));
+    if (!community.name || !community.districtId || !community.address ||
+        !community.phone|| !community.overview) {
+        res.send({status: 'paramErr', message: '提供的信息不够完整'});
+        return;
+    }
 
+    community.date = new Date();
+
+    db.save('communityInfo', {districtId: community.districtId}, community,
+        function(err) {
+            if (err) {
+                res.send({status: 'dbWriteErr', message: '信息保存失败'});
+                return;
+            }
+            res.send({status: 'ok', message: '就业动态新闻保存成功'});
+        });
 });
 
 module.exports = router;

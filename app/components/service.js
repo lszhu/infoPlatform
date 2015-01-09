@@ -351,7 +351,7 @@ angular.module('myApp.service', [])
                 $http.get(params.logoutUrl)
                     .success(function(res) {
                         console.log(res.message);
-                        $location.search('management', undefined);
+                        $location.search('management', null);
                         //$location.path('/search/job');
                         location.reload();
                     })
@@ -465,7 +465,7 @@ angular.module('myApp.service', [])
                             if (res.type == 'register') {
                                 params.register = true;
                             } else {
-                                $location.search('management', undefined);
+                                $location.search('management', null);
                                 params.register = false;
                             }
                         });

@@ -146,7 +146,7 @@ angular.module('myApp.home', ['ngRoute'])
                 $http.get('/users/logout')
                     .success(function(res) {
                         console.log(res.message);
-                        $location.search('management', undefined);
+                        $location.search('management', null);
                         $location.path('/')
                     })
                     .error(function(err) {
