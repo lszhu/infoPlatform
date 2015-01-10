@@ -203,7 +203,7 @@ iframe {
   }
 
   .featurette-heading {
-    font-size: 50px;
+    font-size: 2em;
   }
 
 }
@@ -211,6 +211,16 @@ iframe {
 @media (min-width: 992px) {
   .carousel-caption h1 {
     font-size: 4em;
+  }
+
+}
+
+@media (min-width: 1200px) {
+  .carousel-caption h1 {
+      font-size: 4em;
+  }
+  .featurette-heading {
+      font-size: 3.2em;
   }
 }
 
