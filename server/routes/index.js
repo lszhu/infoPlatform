@@ -356,6 +356,7 @@ router.post('/uploadFile', function(req, res) {
         // no file data
         if (!data[2]) {
             res.redirect('/uploadFile');
+            return;
         }
         var picture = format[data[1]] + data[2];
         // data[0] is base64 encoded organization code or district id

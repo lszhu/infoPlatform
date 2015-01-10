@@ -187,138 +187,163 @@ angular.module('myApp.manage', ['ngRoute'])
         }
     ])
 
-    .controller('SystemCtrl', ['$scope', '$http', function($scope, $http) {
-        $scope.projects = [];
-        $scope.consistence = '正常';
-        $scope.figureNum = 32353;
-        $scope.carryOverNum = 231;
-        $scope.boundFileNum = 12342;
-        $scope.logNum = 63421;
-        $scope.logOk = 23523;
-        $scope.login = 1233;
-        $scope.loginErr = 328;
+    .controller('SystemCtrl', ['$scope', '$http', 'logout',
+        function($scope, $http, logout) {
+            $scope.figureNum = 32353;
+            $scope.carryOverNum = 231;
+            $scope.boundFileNum = 12342;
+            $scope.logNum = 63421;
+            $scope.logOk = 23523;
+            $scope.login = 1233;
+            $scope.loginErr = 328;
 
-        var counter = function(parameter, collect, condition, regExp) {
-            $http.post('/counter', {
-                collect: collect,
-                regExp: regExp,
-                condition: condition
-            }).success(function(res) {
-                $scope.msgClass = res.status == 'ok' ?
-                    'alert-success' : 'alert-danger';
-                $scope.message = res.message;
-                $scope[parameter] = res.count;
-            }).error(function (res) {
-                $scope.msgClass = 'alert-danger';
-                $scope.message = 'system error: ' + JSON.stringify(res);
-            })
-        };
+            // 退出登录函数
+            $scope.logout = logout;
 
-        counter('figureNum', 'figure', {});
-        counter('carryOverNum', 'figure', {'voucher.id': '10000'});
-        counter('boundFileNum', 'figure', {}, {'voucher.path': '.+'});
-        counter('logNum', 'log', {});
-        counter('logOk', 'log', {status: '成功'});
-        counter('login', 'log', {operation: '登录操作'});
-        counter('loginErr', 'log', {operation: '登录操作', status: '失败'});
+            // 动态更新数据
+            $scope.activeData = [
+                {collection: 'employee', comment: '个人求职'},
+                {collection: 'employer', comment: '企业单位招聘'},
+                {collection: 'news', comment: '新闻动态'},
+                {collection: 'orgInfo', comment: '企业单位简介'},
+                {collection: 'communityInfo', comment: '社区中心简介'},
+                {collection: 'suggestion', comment: '投诉建议'}
+            ];
+            countActiveData($scope.activeData);
+
+            // 人力资源统计数据
+            var person = {collection: 'person', comment: '人力资源'};
+            counter($scope, 'person', person.collection);
+            // 企业单位统计数据
+            var org = {collection: 'organization', comment: '企业单位'};
+            counter($scope, 'org', org.collection);
+
+            function countActiveData(data) {
+                var halfYear = 183 * 24 * 3600 * 1000;
+                var condition = {date: {gt: (Date.now() - halfYear)}};
+                console.log('condition: ', JSON.stringify(condition));
+                for (var i = 0; i < $scope.activeData.length; i++) {
+                    counter(data[i], 'total', data[i].collection);
+                    counter(data[i], 'recent', data[i].collection, condition);
+                }
+            }
+
+            function counter(store, attr, collect, condition, regExp) {
+                $http.post('/users/counter', {
+                    collect: collect,
+                    regExp: regExp,
+                    condition: condition
+                }).success(function(res) {
+                    $scope.msgClass = res.status == 'ok' ?
+                        'alert-success' : 'alert-danger';
+                    $scope.message = res.message;
+                    store[attr] = res.count;
+                }).error(function (res) {
+                    $scope.msgClass = 'alert-danger';
+                    $scope.message = 'system error: ' + JSON.stringify(res);
+                })
+            }
+
+            //counter('figureNum', 'figure', {});
+            //counter('carryOverNum', 'figure', {'voucher.id': '10000'});
+            //counter('boundFileNum', 'figure', {}, {'voucher.path': '.+'});
+            //counter('logNum', 'log', {});
+            //counter('logOk', 'log', {status: '成功'});
+            //counter('login', 'log', {operation: '登录操作'});
+            //counter('loginErr', 'log', {operation: '登录操作', status: '失败'});
 
     }])
 
-    .controller('AccountCtrl', ['$scope', '$http', function($scope, $http) {
-        // 用于测试的伪造账号
-        $scope.accounts = [
-            {username: 'aaa', description: 'aaaaaa', enabled: true},
-            {username: 'eee', description: '', rights: 'register'},
-            {username: 'fff', description: '', enabled: false}
-        ];
+    .controller('AccountCtrl', ['$scope', '$http', 'logout',
+        function($scope, $http, logout) {
 
-        // 保存修改账号的信息
-        $scope.account = {};
+            // 退出登录函数
+            $scope.logout = logout;
+            // 保存修改账号的信息
+            $scope.account = {};
+            // 加载账号列表
+            fetchUser();
 
-        fetchUser();
-        $scope.enabled = true;
-        $scope.rights = 'readWrite';
+            $scope.loadUser = function(account) {
+                var a = account || {};
+                $scope.account.username = a.username;
+                $scope.account.originalName = a.username;
+                $scope.account.description = a.description;
+                $scope.account.rights = a.rights;
+                $scope.account.enabled = a.enabled;
+            };
 
-        $scope.loadUser = function(account) {
-            var a = account || {};
-            $scope.account.username = a.username;
-            $scope.account.originalName = a.username;
-            $scope.account.description = a.description;
-            $scope.account.rights = a.rights;
-            $scope.account.enabled = a.enabled;
-        };
-
-        $scope.deleteUser = function(name) {
-            $scope.message = '';
-            if (!name) {
-                return;
-            }
-            if (!confirm('确认要删除该用户？')) {
-                return;
-            }
-            console.log('account name: ' + name);
-            $http.post('/users/deleteAccount', {username: name})
-                .success(function(res) {
-                    if (res.status == 'ok') {
-                        $scope.msgClass = 'alert-success';
-                        $scope.accounts = $scope.accounts
-                            .filter(function(e) {return e.username != name;});
-                    } else {
+            $scope.deleteUser = function(name) {
+                $scope.message = '';
+                if (!name) {
+                    return;
+                }
+                if (!confirm('确认要删除该用户？')) {
+                    return;
+                }
+                console.log('account name: ' + name);
+                $http.post('/users/deleteAccount', {username: name})
+                    .success(function(res) {
+                        if (res.status == 'ok') {
+                            $scope.msgClass = 'alert-success';
+                            $scope.accounts = $scope.accounts.filter(
+                                function(e) {return e.username != name;});
+                        } else {
+                            $scope.msgClass = 'alert-danger';
+                            $scope.message = res.message ?
+                                res.message : '未知错误，请重新登录后尝试';
+                        }
+                    }).error(function(res) {
                         $scope.msgClass = 'alert-danger';
-                        $scope.message = res.message ?
-                            res.message : '未知错误，请先退出后重新登录尝试';
-                    }
-                }).error(function(res) {
-                    $scope.msgClass = 'alert-danger';
-                    $scope.message = 'system error: ' + JSON.stringify(res);
-                });
-        };
+                        $scope.message = '系统错误: ' + JSON.stringify(res);
+                    });
+            };
 
-        $scope.modifyUser = function() {
-            $scope.accountmessage = '';
-            if (!$scope.account.username) {
-                alert('用户名不能为空');
-                return;
-            }
-            if ($scope.account.password != $scope.account.retryPassword) {
-                alert('两次输入的密码不一致');
-                return;
-            }
+            $scope.modifyUser = function() {
+                $scope.accountmessage = '';
+                if (!$scope.account.username) {
+                    alert('用户名不能为空');
+                    return;
+                }
+                if ($scope.account.password != $scope.account.retryPassword) {
+                    alert('两次输入的密码不一致');
+                    return;
+                }
 
-            console.log('upload account: %o', $scope.account);
-            $http.post('/users/modifyAccount', {account: $scope.account})
-                .success(function(res) {
-                    if (res.status == 'ok') {
-                        fetchUser();
-                        $scope.msgClass = 'alert-success';
-                    } else {
+                console.log('upload account: %o', $scope.account);
+                $http.post('/users/modifyAccount', {account: $scope.account})
+                    .success(function(res) {
+                        if (res.status == 'ok') {
+                            fetchUser();
+                            $scope.msgClass = 'alert-success';
+                        } else {
+                            $scope.msgClass = 'alert-danger';
+                            $scope.message = res.message ?
+                                res.message : '未知错误，请重新登录后尝试';
+                        }
+                    }).error(function(res) {
                         $scope.msgClass = 'alert-danger';
-                        $scope.message = res.message ?
-                            res.message : '未知错误，请先退出后重新登录尝试';
-                    }
-                }).error(function(res) {
-                    $scope.msgClass = 'alert-danger';
-                    $scope.message = 'system error: ' + JSON.stringify(res);
-                });
-        };
+                        $scope.message = '系统错误: ' + JSON.stringify(res);
+                    });
+            };
 
-        function fetchUser() {
-            $http.get('/users/getAccount')
-                .success(function(res) {
-                    if (res.status == 'ok') {
-                        $scope.accounts = res.accounts ? res.accounts : [];
-                        $scope.msgClass = 'alert-success';
-                        $scope.message = res.message;
-                    } else {
+            function fetchUser() {
+                $http.get('/users/getAccount')
+                    .success(function(res) {
+                        if (res.status == 'ok') {
+                            $scope.accounts = res.accounts ? res.accounts : [];
+                            $scope.msgClass = 'alert-success';
+                            $scope.message = res.message;
+                        } else {
+                            $scope.msgClass = 'alert-danger';
+                            $scope.message = res.message ?
+                                res.message : '未知错误，请重新登录后尝试';
+                        }
+                    }).error(function(res) {
                         $scope.msgClass = 'alert-danger';
-                        $scope.message = res.message ?
-                            res.message : '未知错误，请先退出后重新登录尝试';
-                    }
-                }).error(function(res) {
-                    $scope.msgClass = 'alert-danger';
-                    $scope.message = 'system error: ' + JSON.stringify(res);
-                });
-        }
+                        $scope.message = '系统错误: ' + JSON.stringify(res);
+                    });
+            }
     }])
 
     .controller('CarouselCtrl', [function() {

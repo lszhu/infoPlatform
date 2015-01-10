@@ -33,6 +33,11 @@ angular.module('myApp.etc', ['ngRoute'])
 
             // 信息上传函数
             $scope.postMsg = function() {
+                var code = $scope.employer.code;
+                if (!code || code.toString().length != 9) {
+                    alert('组织机构代码不正确');
+                    return;
+                }
                 $scope.employer.introduction =
                     $document.find('.note-editable').html();
                 console.log('employer: %o', $scope.employer.picture);

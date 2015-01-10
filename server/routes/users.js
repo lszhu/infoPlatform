@@ -296,7 +296,19 @@ router.post('/counter', function(req, res) {
 
     var collect = req.body.collect;
     var condition = req.body.condition;
-    condition = condition ? condition : {};
+    condition = condition || {};
+
+    if (condition.hasOwnProperty('date')) {
+        var date = condition.date;
+        condition.date = {};
+        if (date.hasOwnProperty('lt')) {
+            condition.date.$lt = new Date(parseInt(date.lt));
+        }
+        if (date.hasOwnProperty('gt')) {
+            condition.date.$gt = new Date(parseInt(date.gt));
+        }
+    }
+
     var regExp = req.body.regExp;
     for (var i in regExp) {
         if (!regExp.hasOwnProperty(i)) {

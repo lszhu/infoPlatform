@@ -392,7 +392,7 @@ angular.module('myApp.service', [])
                 for (var i = 0; i < len; i++) {
                     params.removalList[i] = params.selectedAll;
                 }
-                //console.log($scope.removelList);
+                //console.log($scope.removalList);
             }
 
             // 将选中条目的mongodb存储_id号抽出，作为删除的条件

@@ -10,38 +10,62 @@
   </div>
   <div>&nbsp;</div>
 
-  <div class="col-sm-10"><h3>项目</h3></div>
 
-  <div class="col-sm-10 col-sm-offset-1">
-    <p>总项目个数（含子项目）：<strong>{{projects.length}}</strong></p>
-    <p>项目结构一致性：
-      <strong ng-hide="projectsErr.length" style="color: green;">正常</strong>
-      <strong ng-show="projectsErr.length" style="color: red;">异常</strong>
-    </p>
-    <p ng-show="projectsErr.length">结构异常，需要修正的项目有：</p>
-    <div>
-      <ul ng-repeat="pErrs in projectsErr">
-        <li ng-repeat="err in pErrs">{{err}}</li>
-      </ul>
+  <div class="col-sm-12">
+    <div class="panel panel-primary">
+      <div class="panel-heading text-center">
+        <strong>动态数据统计</strong>
+      </div>
+      <table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+          <th><div class="col-sm-12">序号</div></th>
+          <th><div class="col-sm-12">数据类型</div></th>
+          <th><div class="col-sm-12 text-right">汇总数据条目数</div></th>
+          <th><div class="col-sm-12 text-right">最近半年更新数目</div></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="a in activeData">
+          <td><div class="col-sm-12">{{$index + 1}}</div></td>
+          <td><div class="col-sm-12">{{a.comment}}</div></td>
+          <td><div class="col-sm-12 text-right">{{a.total}}</div></td>
+          <td><div class="col-sm-12 text-right">{{a.recent}}</div></td>
+        </tr>
+        </tbody>
+      </table>
     </div>
   </div>
-
+  <div class="col-sm-10 col-sm-offset-1">
+    <div class="col-xs-11"><h4>登记在册人力资源总数： {{person}} （人）</h4></div>
+    <div class="col-xs-11"><h4>登记在册企业单位总数： {{org}} （个）</h4></div>
+  </div>
+  <!--
   <div class="col-sm-10"><h3>凭证</h3></div>
   <div class="col-sm-10 col-sm-offset-1">
-    <p>总凭证数据条数目：<strong>{{figureNum}}</strong></p>
-    <p>年度结转数据条数目：<strong>{{carryOverNum}}</strong></p>
-    <p>已关联凭证扫描文件数目：<strong>{{boundFileNum}}</strong></p>
+    <div class="col-xs-6">政策法规汇总数据：</div>
+    <div class="col-xs-4 col-sm-offset-1"><strong>{{figureNum}}</strong></div>
+    <div class="col-xs-6 col-sm-offset-1">最近半年更新数据：</div>
+    <div class="col-xs-4 col-sm-offset-1"><strong>{{carryOverNum}}</strong></div>
+    <div class="col-xs-6">新闻动态汇总数据：</div>
+    <div class="col-xs-4 col-sm-offset-1"><strong>{{figureNum}}</strong></div>
+    <div class="col-xs-6 col-sm-offset-1">最近半年更新数据：</div>
+    <div class="col-xs-4 col-sm-offset-1"><strong>{{carryOverNum}}</strong></div>
+    <div class="col-xs-6">个人求职汇总数据：</div>
+    <div class="col-xs-2 col-sm-offset-1"><strong>{{figureNum}}</strong></div>
+    <div class="col-xs-6 col-sm-offset-1">最近半年更新数据：</div>
+    <div class="col-xs-4 col-sm-offset-1"><strong>{{carryOverNum}}</strong></div>
+    <div class="col-xs-6">企业单位招聘汇总数据：</div>
+    <div class="col-xs-4 col-sm-offset-1"><strong>{{figureNum}}</strong></div>
+    <div class="col-xs-6 col-sm-offset-1">最近半年更新数据：</div>
+    <div class="col-xs-4 col-sm-offset-1"><strong>{{carryOverNum}}</strong></div>
+    <div class="col-xs-6">企事业单位汇总数据：</div>
+    <div class="col-xs-4 col-sm-offset-1"><strong>{{figureNum}}</strong></div>
+    <div class="col-xs-6">人力资源汇总数据：</div>
+    <div class="col-xs-4 col-sm-offset-1"><strong>{{carryOverNum}}</strong></div>
   </div>
-
-  <div class="col-sm-10"><h3>日志</h3></div>
-  <div class="col-sm-10 col-sm-offset-1">
-    <p>总日志数据条数目：<strong>{{logNum}}</strong></p>
-    <p>其中操作成功数目：<strong>{{logOk}}</strong></p>
-    <p>其中登录操作数目：<strong>{{login}}</strong></p>
-    <p>其中登录操作失败数目：<strong>{{loginErr}}</strong></p>
-  </div>
-
-  <div class="col-md-8 col-md-offset-2" ng-show="showMsg">
+-->
+  <div class="col-md-6 col-md-offset-3 text-center" ng-show="message">
     <div ng-class="msgClass" class="alert" role="alert">
       <strong >{{message}}</strong>
     </div>
