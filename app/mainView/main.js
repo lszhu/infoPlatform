@@ -151,7 +151,7 @@ angular.module('myApp.home', ['ngRoute'])
                         if (res.status == 'ok') {
                             $scope.news = res.list || [];
                         }
-                        console.log('news: %o', $scope.news);
+                        //console.log('news: %o', $scope.news);
                     })
                     .error(function(err) {
                         console.log('无法获取人力资源与就业服务政策信息，' +
@@ -191,7 +191,7 @@ angular.module('myApp.home', ['ngRoute'])
                             $scope.market = res.list || [];
                             //$scope.market = market.slice(0, limit);
                         }
-                        console.log('market: %o', $scope.market);
+                        //console.log('market: %o', $scope.market);
                     })
                     .error(function(err) {
                         console.log('无法获取招聘信息，错误原因：%o', err);
