@@ -2,6 +2,22 @@
 
 angular.module('myApp.service', [])
 
+    .factory('logout', ['$http', '$location',
+        function($http, $location) {
+
+            return function() {
+                $http.get('/users/logout')
+                    .success(function(res) {
+                        console.log(res.message);
+                        $location.path('/main/homepage');
+                        location.reload();
+                    })
+                    .error(function(err) {
+                        alert('系统出现异常：\n' + JSON.stringify(err));
+                    });
+            };
+    }])
+
     .factory('formatInfo', [function() {
 
         function makeReference(info) {
@@ -351,12 +367,13 @@ angular.module('myApp.service', [])
                 $location.path(params.panelUrl);
             }
 
-            function logout() {
+            function logout(target) {
                 $http.get(params.logoutUrl)
                     .success(function(res) {
                         console.log(res.message);
                         $location.search('management', null);
-                        //$location.path('/search/job');
+                        // 如果target存在，则转到对应页面
+                        target && $location.path(target);
                         location.reload();
                     })
                     .error(function(err) {

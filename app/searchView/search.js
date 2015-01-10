@@ -94,7 +94,6 @@ angular.module('myApp.search', ['ngRoute'])
                 $scope.manage.removeItems(p, $scope.page.params.itemList,
                     $scope.page.params.itemListRaw);
             };
-
         }
     ])
 

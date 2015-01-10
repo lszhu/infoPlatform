@@ -30,30 +30,16 @@ angular.module('myApp.manage', ['ngRoute'])
             });
     }])
 
-    .controller('PanelCtrl', ['$scope', '$http', '$location',
-        function($scope, $http, $location) {
-
-            $scope.logout = function() {
-                $http.get('/users/logout')
-                    .success(function(res) {
-                        console.log(res.message);
-                        $location.path('/main/homepage');
-                        location.reload();
-                    })
-                    .error(function(err) {
-                        alert('系统出现异常：\n' + JSON.stringify(err));
-                    });
-                //$location.path('/users/logout');
-                //location.hash = '#/users/logout';
-                //location.reload();
-            };
-
+    .controller('PanelCtrl', ['$scope', 'logout', function($scope, logout) {
+            $scope.logout = logout;
         }])
 
-    .controller('CommunityCtrl', ['$scope', '$http', '$document',
-        function($scope, $http, $document) {
+    .controller('CommunityCtrl', ['$scope', '$http', '$document', 'logout',
+        function($scope, $http, $document, logout) {
             $scope.community = {};
 
+            // 退出函数
+            $scope.logout = logout;
             // 信息上传函数
             $scope.postMsg = function() {
                 if (!validPicture()) {

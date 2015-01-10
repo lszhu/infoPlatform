@@ -4,18 +4,14 @@ angular.module('myApp.home', ['ngRoute'])
 
     .config(['$routeProvider', function($routeProvider) {
         $routeProvider
-            .when('/main/view1', {
-                templateUrl: 'mainView/view1.html',
-                controller: 'View1Ctrl'
-            })
+            //.when('/main/view1', {
+            //    templateUrl: 'mainView/view1.html',
+            //    controller: 'View1Ctrl'
+            //})
             .when('/main/login', {
                 templateUrl: 'mainView/login.html',
                 controller: 'LoginCtrl'
             })
-            //.when('/main/policy', {
-            //    templateUrl: 'mainView/policy.html',
-            //    controller: 'PostPolicyCtrl'
-            //})
             .when('/main/news', {
                 templateUrl: 'users/auth/news',
                 controller: 'PostNewsCtrl'
@@ -84,35 +80,6 @@ angular.module('myApp.home', ['ngRoute'])
             }
         }])
 
-    //.controller('PostPolicyCtrl', ['$scope', '$http', '$document',
-    //    function($scope, $http, $document) {
-    //        // 初始化投诉建议信息
-    //        $scope.policy = {};
-    //
-    //        console.log('in policy');
-    //        // 信息上传函数
-    //        $scope.postMsg = function() {
-    //            console.log('in policy');
-    //            $scope.policy.content =
-    //                $document.find('.note-editable').html();
-    //            console.log('districtId: %s', $scope.districtId);
-    //            $scope.policy.districtId = $scope.districtId;
-    //            $http.post('/postPolicy', {policy: $scope.policy})
-    //                .success(function(res) {
-    //                    if (res.status == 'ok') {
-    //                        alert('您成功转载政策法规信息！');
-    //                    } else {
-    //                        alert('信息提交失败，原因是：' + res.message);
-    //                    }
-    //                })
-    //                .error(function(err) {
-    //                    alert('信息提交失败，原因是：' + err);
-    //                });
-    //        };
-    //
-    //    }
-    //])
-
     .controller('PostNewsCtrl', ['$scope', '$http', '$document', '$location',
         function($scope, $http, $document, $location) {
             // 初始信息
@@ -161,8 +128,7 @@ angular.module('myApp.home', ['ngRoute'])
                     news.content.toString().length > 10;
             }
 
-        }
-    ])
+        }])
 
     .controller('HomeCtrl', ['$scope', '$http', '$sce', 'formatInfo',
         function($scope, $http, $sce, formatInfo) {
@@ -283,8 +249,4 @@ angular.module('myApp.home', ['ngRoute'])
                 }
                 return infoList;
             }
-        }])
-
-    .controller('View1Ctrl', [function() {
-
-    }]);
+        }]);

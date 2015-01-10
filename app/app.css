@@ -2,18 +2,18 @@
 -------------------------------------------------- */
 /* Padding below the footer and lighter body text */
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 body {
-  color: #5a5a5a;
-  margin-bottom: 200px;
-  background-image: url(images/background.jpg);
+    color: #5a5a5a;
+    margin-bottom: 200px;
+    background-image: url(images/background.jpg);
 }
 
 a {
-  cursor: pointer;
-  color: black;
+    cursor: pointer;
+    color: black;
 }
 
 iframe {
@@ -27,6 +27,7 @@ iframe {
 #select-all {
     width: 30px;
 }
+
 /* CUSTOMIZE THE NAVBAR
 -------------------------------------------------- */
 
@@ -36,57 +37,57 @@ iframe {
 }
 
 .navbar {
-  background: #cde;
-  border-bottom: grey solid 1px;
+    background: #cde;
+    border-bottom: grey solid 1px;
 }
 
 .nav.navbar-nav li.active {
-  background: lightgray;
+    background: lightgray;
 }
 
 .nav.navbar-nav li > a {
-  font-weight: bold;
-  color: midnightblue;
-  cursor: pointer;
+    font-weight: bold;
+    color: midnightblue;
+    cursor: pointer;
 }
 
 .dropdown-menu {
-  background-color: lightgray;
+    background-color: lightgray;
 }
 
 /* Special class on .container surrounding .navbar, used for positioning it into place. */
 .navbar-wrapper {
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  z-index: 20;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 20;
 }
 
 /* Flip around the padding for proper display in narrow viewports */
 .navbar-wrapper > .container {
-  padding-right: 0;
-  padding-left: 0;
+    padding-right: 0;
+    padding-left: 0;
 }
 .navbar-wrapper .navbar {
-  padding-right: 15px;
-  padding-left: 15px;
+    padding-right: 15px;
+    padding-left: 15px;
 }
 .navbar-wrapper .navbar .container {
-  width: auto;
+    width: auto;
 }
 
 /* Sticky footer styles
 -------------------------------------------------- */
 .footer {
-  position: absolute;
-  bottom: 0;
-  padding: 20px;
-  width: 100%;
-  /* Set the fixed height of the footer here */
-  height: 200px;
-  background-color: cadetblue;
-  color: black;
+    position: absolute;
+    bottom: 0;
+    padding: 20px;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 200px;
+    background-color: cadetblue;
+    color: black;
 }
 
 /* CUSTOMIZE THE CAROUSEL
@@ -94,30 +95,30 @@ iframe {
 
 /* Carousel base class */
 .carousel {
-  height: 250px;
-  margin-bottom: 20px;
+    height: 250px;
+    margin-bottom: 20px;
 }
 /* Since positioning the image, we need to help out the caption */
 .carousel-caption {
-  z-index: 10;
+    z-index: 10;
 }
 
 .carousel-caption h1 {
-  margin: 20px;
-  font-size: 2.5em;
+    margin: 20px;
+    font-size: 2.5em;
 }
 
 /* Declare heights because of positioning of img element */
 .carousel .item {
-  height: 250px;
-  background-color: #777;
+    height: 250px;
+    background-color: #777;
 }
 .carousel-inner > .item > img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  min-width: 100%;
-  height: 250px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    min-width: 100%;
+    height: 250px;
 }
 
 
@@ -126,15 +127,15 @@ iframe {
 
 /* Center align the text within the three columns below the carousel */
 .marketing .col-lg-4 {
-  margin-bottom: 20px;
-  text-align: center;
+    margin-bottom: 20px;
+    text-align: center;
 }
 .marketing h2 {
-  font-weight: normal;
+    font-weight: normal;
 }
 .marketing .col-lg-4 p {
-  margin-right: 10px;
-  margin-left: 10px;
+    margin-right: 10px;
+    margin-left: 10px;
 }
 
 
@@ -142,86 +143,86 @@ iframe {
 ------------------------- */
 
 .featurette-divider {
-  margin: 80px 0; /* Space out the Bootstrap <hr> more */
+    margin: 80px 0; /* Space out the Bootstrap <hr> more */
 }
 
 /* Thin out the marketing headings */
 .featurette-heading {
-  font-weight: 300;
-  line-height: 1;
-  letter-spacing: -1px;
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: -1px;
 }
 
 /* summernote edit
 ------------------------- */
 .note-editable {
-  background-color: #fff;
+    background-color: #fff;
 }
 
 /* RESPONSIVE CSS
 -------------------------------------------------- */
 
 @media (min-width: 768px) {
-  /* Navbar positioning foo */
-  .navbar-wrapper {
-    margin-top: 20px;
-  }
-  .navbar-wrapper .container {
-    padding-right: 15px;
-    padding-left: 15px;
-  }
-  .navbar-wrapper .navbar {
-    padding-right: 0;
-    padding-left: 0;
-  }
+    /* Navbar positioning foo */
+    .navbar-wrapper {
+        margin-top: 20px;
+    }
+    .navbar-wrapper .container {
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+    .navbar-wrapper .navbar {
+        padding-right: 0;
+        padding-left: 0;
+    }
 
-  /* The navbar becomes detached from the top, so we round the corners */
-  .navbar-wrapper .navbar {
-    border-radius: 4px;
-  }
+    /* The navbar becomes detached from the top, so we round the corners */
+    .navbar-wrapper .navbar {
+        border-radius: 4px;
+    }
 
-  /* Carousel base class */
-  .carousel {
-      height: 350px;
-  }
+    /* Carousel base class */
+    .carousel {
+        height: 350px;
+    }
 
-  /* Declare heights because of positioning of img element */
-  .carousel .item {
-      height: 350px;
-  }
-  .carousel-inner > .item > img {
-      height: 350px;
-  }
-  /* Bump up size of carousel content */
-  .carousel-caption h1 {
-    font-size: 3em;
-  }
-  .carousel-caption p {
-    margin-bottom: 20px;
-    font-size: 21px;
-    line-height: 1.4;
-  }
+    /* Declare heights because of positioning of img element */
+    .carousel .item {
+        height: 350px;
+    }
+    .carousel-inner > .item > img {
+        height: 350px;
+    }
+    /* Bump up size of carousel content */
+    .carousel-caption h1 {
+        font-size: 3em;
+    }
+    .carousel-caption p {
+        margin-bottom: 20px;
+        font-size: 21px;
+        line-height: 1.4;
+    }
 
-  .featurette-heading {
-    font-size: 2em;
-  }
+    .featurette-heading {
+        font-size: 2em;
+    }
 
 }
 
 @media (min-width: 992px) {
-  .carousel-caption h1 {
-    font-size: 4em;
-  }
+    .carousel-caption h1 {
+        font-size: 4em;
+    }
 
 }
 
 @media (min-width: 1200px) {
-  .carousel-caption h1 {
-      font-size: 4em;
-  }
-  .featurette-heading {
-      font-size: 3.2em;
-  }
+    .carousel-caption h1 {
+        font-size: 4em;
+    }
+    .featurette-heading {
+        font-size: 3.2em;
+    }
 }
 
 /* for popup model dialog to show message or organization info
@@ -289,47 +290,47 @@ span.alarm {
 /* mainView
 -------------------------------------------------------*/
 .veryBig {
-  font-size: 2em;
-  font-weight: bold;
-  color: darkblue;
-  text-align: center;
+    font-size: 2em;
+    font-weight: bold;
+    color: darkblue;
+    text-align: center;
 }
 
 .login input {
-  height: auto;
-  font-size: 16px;
-  padding: 6px;
+    height: auto;
+    font-size: 16px;
+    padding: 6px;
 }
 
 .panel-heading {
-  font-size: 1.5em;
+    font-size: 1.5em;
 }
 
 .featurette-divider {
-  margin: 30px 0; /* Space out the Bootstrap <hr> more */
+    margin: 30px 0; /* Space out the Bootstrap <hr> more */
 }
 
 /* Thin out the marketing headings */
 .featurette-heading {
-  font-weight: 300;
-  line-height: 1;
-  letter-spacing: -1px;
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: -1px;
 }
 
 .related-site {
-  font-size: 1.2em;
-  font-weight: bold;
-  color: black;
-  padding: 10px;
-  background-color: #b2dba1;
-  width: 100%;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: black;
+    padding: 10px;
+    background-color: #b2dba1;
+    width: 100%;
 }
 
 /* messageView
 -------------------------------------------------------*/
 label.remark {
-  font-style: italic;
-  font-weight: normal;
+    font-style: italic;
+    font-weight: normal;
 }
 
 /* mainView
@@ -344,14 +345,14 @@ label.remark {
     margin-bottom: 10px;
 }
 .modal-dialog .modal-content {
-  background-image: url(images/background.jpg);
+    background-image: url(images/background.jpg);
 }
 .modal-dialog .modal-content.search {
-  height: 320px;
+    height: 320px;
 }
 
 .modal-dialog .modal-content.type {
-  height: 380px;
+    height: 380px;
 }
 
 .modal-dialog .modal-content a {
@@ -359,15 +360,15 @@ label.remark {
 }
 
 .modal-dialog .modal-content label{
-  cursor: pointer;
+    cursor: pointer;
 }
 
 /* employer
 -------------------------------------------------------*/
 #postAlertMsg .modal-body .container{
-  height: 300px;
-  overflow: auto;
-  width: inherit;
+    height: 300px;
+    overflow: auto;
+    width: inherit;
 }
 
 /* policy
