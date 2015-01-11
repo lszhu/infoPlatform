@@ -512,4 +512,98 @@ angular.module('myApp.service', [])
             }
 
             return init;
+    }])
+
+    .factory('identify', ['$http', function($http) {
+
+        // 校验组织机构代码的合法性，代码共9位，最后一位是校验码
+        function validCode(code) {
+            if (!code || code.length !== 9) {
+                return false;
+            }
+            code = code.toString().toUpperCase();
+            var alphaNum = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            var weight = [3, 7, 9, 10, 5, 8, 4, 2];
+            var sum = 0;
+            var n;
+            for (var i = 0; i < 8; i++) {
+                n = alphaNum.search(code[i]);
+                if (n == -1) {
+                    return false;
+                }
+                sum += n * weight[i];
+            }
+            sum = 11 - sum % 11;
+            if (sum == 10) {
+                sum = 'X';
+            } else if (sum == 11) {
+                sum = '0';
+            }
+            return sum == code[8];
+        }
+
+        // 验证身份证号的合法性，共18位，最后一位是校验码
+        function validIdNumber(idNumber) {
+            if (idNumber.length != 18 || 12 < idNumber.slice(10, 12) ||
+                idNumber.slice(6, 8) < 19 || 20 < idNumber.slice(6, 8)) {
+                return false;
+            }
+            var weights = [
+                '7', '9', '10', '5', '8', '4', '2', '1', '6',
+                '3', '7', '9', '10', '5', '8', '4', '2', '1'
+            ];
+            var sum = 0;
+            for (var i = 0; i < 17; i++) {
+                var digit = idNumber.charAt(i);
+                if (isNaN(Number(digit))) {
+                    return false;
+                }
+                sum += digit * weights[i];
+            }
+            sum = (12 - sum % 11) % 11;
+            return sum == 10 && idNumber.charAt(17).toLowerCase() == 'x' ||
+                sum < 10 && sum == idNumber.charAt(17);
+        }
+
+        // 验证姓名/身份证号或单位名称/组织机构代码是否匹配
+        // param含有collect、name及code三个属性
+        function check(param, callback) {
+            if (param.collect == 'person') {
+                if (!validIdNumber(param.code)) {
+                    alert('您输入的身份证号有误，请重新输入');
+                    return;
+                }
+            } else if (param.collect == 'organization') {
+                if (!validCode(param.code)) {
+                    alert('您输入的组织机构代码有误，请重新输入');
+                    return;
+                }
+            } else {
+                console.log('错误的collect名称');
+                return;
+            }
+            $http.post('users/identification', param)
+                .success(function(res) {
+                    if (res.status == 'ok') {
+                        callback();
+                        return;
+                    }
+                    if (param.collect == 'person') {
+                        alert('您输入的姓名/身份证号不匹配，或者您的信息未在' +
+                            '区县就业局登记，请到户口所在地的乡镇/社区登记。');
+                    } else if (param.collect == 'organization') {
+                        alert('您输入的单位名称/组织机构代码不匹配，请携带' +
+                            '有关证件到' + '区县人社局下属就业局登记。');
+                    }
+                })
+                .error(function(err) {
+                    alert('系统出现异常：\n' + err);
+                });
+        }
+
+        return {
+            validCode: validCode,
+            validIdNumber: validIdNumber,
+            check: check
+        };
     }]);

@@ -177,12 +177,6 @@ angular.module('myApp.manage', ['ngRoute'])
                         console.log('因出现异常，无法查询到相关信息\n' + err);
                     });
             };
-
-            // 删除选中数据项
-            $scope.removeItems = function (p) {
-                $scope.manage.removeItems(p, $scope.page.params.itemList,
-                    $scope.page.params.itemListRaw);
-            };
             */
         }
     ])

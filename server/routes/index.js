@@ -240,6 +240,10 @@ router.post('/postEmployer', function(req, res) {
         res.send({status: 'paramErr', message: '提供的招聘信息不够完整'});
         return;
     }
+    if (!req.session.identity || req.session.identity.code != employer.code) {
+        res.send({status: 'paramErr', message: '未通过身份验证'});
+        return;
+    }
 
     employer.date = new Date();
     // fetch organization introductionId and save with it

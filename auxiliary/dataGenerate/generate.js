@@ -413,6 +413,7 @@ function validCode(code) {
     if (!code || code.length !== 9) {
         return false;
     }
+    code = code.toString().toUpperCase();
     var alphaNum = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     var weight = [3, 7, 9, 10, 5, 8, 4, 2];
     var sum = 0;

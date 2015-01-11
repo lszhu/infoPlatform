@@ -391,6 +391,7 @@ router.post('/modifyAccount', function(req, res) {
         });
 });
 
+/* delete account */
 router.post('/deleteAccount', function(req, res) {
     if (!req.session.user || req.session.user.rights != 'administrator') {
         res.send({status: 'authErr', message: '未授权的非法操作'});
@@ -418,4 +419,37 @@ router.post('/deleteAccount', function(req, res) {
     })
 });
 
+/* check username/idNumber or organization name/code */
+router.post('/identification', function(req, res) {
+    var collect = req.body.collect;
+    if (!collect && !req.body.name && !req.body.code) {
+        send({status: 'paramsErr', message: '验证信息不完整'});
+        return;
+    }
+    var condition = {};
+    if (collect == 'person') {
+        condition.username = req.body.name;
+        condition.idNumber = req.body.code.toString().toUpperCase();
+    } else if (collect == 'organization') {
+        condition.name = req.body.name;
+        condition.code = req.body.code.toString().toUpperCase();
+    } else {
+        send({status: 'paramsErr', message: '验证信息有错误'});
+        return;
+    }
+
+    db.query(collect, condition, function(err, docs) {
+        if (err) {
+            console.log('Db error: ' + JSON.stringify(err));
+            res.send({status: 'dbErr', message: '数据库操作失败'});
+            return;
+        }
+        if (docs.length) {
+            req.session.identity = condition;
+            res.send({status: 'ok'});
+        } else {
+            res.send({status: 'fail'});
+        }
+    });
+});
 module.exports = router;

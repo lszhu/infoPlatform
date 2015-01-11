@@ -21,55 +21,66 @@ angular.module('myApp.message', ['ngRoute'])
             });
     }])
 
-    .controller('EmployerCtrl', ['$scope', '$http', function($scope, $http) {
-        // 信息上传函数
-        $scope.postMsg = function() {
-            var employer = {
-                name: $scope.name,
-                code: $scope.code,
-                districtId: $scope.districtId,
-                phone: $scope.phone,
-                contact: $scope.contact,
-                address: $scope.address,
-                position: $scope.position,
-                description: $scope.description,
-                education: $scope.education,
-                salary: $scope.salary
+    .controller('EmployerCtrl', ['$scope', '$http', 'identify',
+        function($scope, $http, identify) {
+
+            $scope.postMsg = function() {
+                var params = {
+                    collect: 'organization',
+                    name: $scope.name,
+                    code: $scope.code
+                };
+                identify.check(params, postMsg);
             };
-            $http.post('/postEmployer', {employer: employer})
-                .success(function(res) {
-                    if (res.status == 'ok') {
-                        alert('您成功发布了企业招聘信息！');
-                        clearMsg();
-                    } else {
-                        alert('信息发布失败，原因是：' + res.message);
-                    }
-                })
-                .error(function(err) {
-                    alert('信息发布失败，原因是：' + err);
-                });
-        };
 
-        // 控制提交按钮的可用性
-        $scope.postDisabled = function() {
-            var name = $scope.name;
-            var code = $scope.code;
-            var phone = $scope.phone;
-            return !name || !name.trim() || !code ||
-                !code.trim() || !phone || !phone.trim();
-        };
+            // 信息上传函数
+            function postMsg() {
+                var employer = {
+                    name: $scope.name,
+                    code: $scope.code,
+                    districtId: $scope.districtId,
+                    phone: $scope.phone,
+                    contact: $scope.contact,
+                    address: $scope.address,
+                    position: $scope.position,
+                    description: $scope.description,
+                    education: $scope.education,
+                    salary: $scope.salary
+                };
+                $http.post('/postEmployer', {employer: employer})
+                    .success(function(res) {
+                        if (res.status == 'ok') {
+                            alert('您成功发布了企业招聘信息！');
+                            clearMsg();
+                        } else {
+                            alert('信息发布失败，原因是：' + res.message);
+                        }
+                    })
+                    .error(function(err) {
+                        alert('信息发布失败，原因是：' + err);
+                    });
+            }
 
-        // 清除部分表单已填入的信息
-        function clearMsg() {
-            //$scope.name = '';
-            //$scope.code = '';
-            //$scope.phone = '';
-            //$scope.contact = '';
-            $scope.position = '';
-            $scope.description = '';
-            $scope.education = '';
-            $scope.salary = '';
-        }
+            // 控制提交按钮的可用性
+            $scope.postDisabled = function() {
+                var name = $scope.name;
+                var code = $scope.code;
+                var phone = $scope.phone;
+                return !name || !name.trim() || !code ||
+                    !code.trim() || !phone || !phone.trim();
+            };
+
+            // 清除部分表单已填入的信息
+            function clearMsg() {
+                //$scope.name = '';
+                //$scope.code = '';
+                //$scope.phone = '';
+                //$scope.contact = '';
+                $scope.position = '';
+                $scope.description = '';
+                $scope.education = '';
+                $scope.salary = '';
+            }
     }])
 
     .controller('EmployeeCtrl', ['$scope', '$http', function($scope, $http) {

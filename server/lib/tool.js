@@ -154,7 +154,33 @@ function salarySpan(index) {
     return span[index];
 }
 
-// valid ID number
+// 校验组织机构代码的合法性，代码共9位，最后一位是校验码
+function validCode(code) {
+    if (!code || code.length !== 9) {
+        return false;
+    }
+    code = code.toString().toUpperCase();
+    var alphaNum = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    var weight = [3, 7, 9, 10, 5, 8, 4, 2];
+    var sum = 0;
+    var n;
+    for (var i = 0; i < 8; i++) {
+        n = alphaNum.search(code[i]);
+        if (n == -1) {
+            return false;
+        }
+        sum += n * weight[i];
+    }
+    sum = 11 - sum % 11;
+    if (sum == 10) {
+        sum = 'X';
+    } else if (sum == 11) {
+        sum = '0';
+    }
+    return sum == code[8];
+}
+
+// 验证身份证号的合法性，共18位，最后一位是校验码
 function validIdNumber(idNumber) {
     if (idNumber.length != 18 || 12 < idNumber.slice(10, 12) ||
         idNumber.slice(6, 8) < 19 || 20 < idNumber.slice(6, 8)) {
@@ -454,6 +480,7 @@ module.exports = {
     readJsonFile: readJsonFile,
     salarySpan: salarySpan,
     validAge: validAge,
+    validCode: validCode,
     validIdNumber: validIdNumber,
     blurStaffs: blurStaffs,
     blurAge: blurAge,

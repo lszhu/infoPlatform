@@ -161,8 +161,7 @@ angular.module('myApp.home', ['ngRoute'])
             // 用于初始化列表信息
             queryNewsList(limit);
 
-            // 获取新闻或政策信息具体内容（以时间戳为标准）
-            // 通过参数news为'1'决定是新闻，否则是政策
+            // 获取新闻或政策信息具体内容
             $scope.getMsg = function(infoId) {
                 $http.post('/getNewsMsg', {infoId: infoId})
                     .success(function(res) {
