@@ -140,9 +140,14 @@ angular.module('myApp.search', ['ngRoute'])
     ])
 
     .controller('ManpowerCtrl', ['$scope', '$http', 'filterFilter',
-        'pagination', 'management',
-        function($scope, $http, filterFilter, pagination, management) {
+        'pagination', 'management', 'identify',
+        function($scope, $http, filterFilter,
+                 pagination, management, identify) {
 
+            // 在本地记录用户是否通过身份验证
+            var customerIdentified = false;
+            // 用于记录用于验证的单位名和组织机构代码
+            $scope.org = {};
             // 初始化页面参数
             $scope.page = pagination({y: 450, limit: 50,
                 target: '/searchManpower'});
@@ -176,15 +181,44 @@ angular.module('myApp.search', ['ngRoute'])
             };
 
             // 获取指定页面的数据，同时清空删除列表及状态
-            $scope.queryItems = function(p) {
-                // 控制表格的显示
-                $scope.showTable = true;
-                // 清除快速过滤关键字
-                $scope.quickFilter = '';
-                $scope.manage.params.removalList = [];
-                $scope.manage.params.selectedAll = false;
-                $scope.page.queryItems(p);
+            $scope.queryItems = function(page) {
+                var p = 0 < page ? page : 1;
+                if (customerIdentified) {
+                    // 控制表格的显示
+                    $scope.showTable = true;
+                    // 清除快速过滤关键字
+                    $scope.quickFilter = '';
+                    $scope.manage.params.removalList = [];
+                    $scope.manage.params.selectedAll = false;
+                    $scope.page.queryItems(p);
+                    return;
+                }
+                $('#customerChecker').modal('show');
             };
+
+            $scope.checkCustomer = function() {
+                var params = {
+                    collect: 'organization',
+                    name: $scope.org.name,
+                    code: $scope.org.code
+                };
+                identify.check(params, function() {
+                    // 验证成功后执行以下指令
+                    customerIdentified = true;
+                    $scope.queryItems(1);
+                });
+            };
+
+            // 获取指定页面的数据，同时清空删除列表及状态
+            //function queryItems(p) {
+            //    // 控制表格的显示
+            //    $scope.showTable = true;
+            //    // 清除快速过滤关键字
+            //    $scope.quickFilter = '';
+            //    $scope.manage.params.removalList = [];
+            //    $scope.manage.params.selectedAll = false;
+            //    $scope.page.queryItems(p);
+            //}
 
             // 删除选中数据项
             $scope.removeItems = function(p) {

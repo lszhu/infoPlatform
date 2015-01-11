@@ -244,6 +244,7 @@ router.post('/postEmployer', function(req, res) {
         res.send({status: 'paramErr', message: '未通过身份验证'});
         return;
     }
+    req.session.identity = null;
 
     employer.date = new Date();
     // fetch organization introductionId and save with it
@@ -280,6 +281,12 @@ router.post('/postEmployee', function(req, res) {
         res.send({status: 'paramErr', message: '提供的身份证号有误'});
         return;
     }
+    var identity = req.session.identity;
+    if (!identity || identity.idNumber != employee.idNumber) {
+        res.send({status: 'paramErr', message: '未通过身份验证'});
+        return;
+    }
+    req.session.identity = null;
 
     employee.date = new Date();
 
@@ -299,6 +306,11 @@ router.post('/postOrgInfo', function(req, res) {
     if (!employer.name || !employer.code || !employer.address ||
         !employer.phone || !employer.overview) {
         res.send({status: 'paramErr', message: '提供的介绍信息不够完整'});
+        return;
+    }
+    var identity = req.session.identity;
+    if (!identity || identity.code != employer.code) {
+        res.send({status: 'paramErr', message: '未通过身份验证'});
         return;
     }
 
@@ -366,6 +378,12 @@ router.post('/uploadFile', function(req, res) {
         // data[0] is base64 encoded organization code or district id
         var plain = tool.base64ToUtf8(data[0]);
         debug('plain: ' + plain);
+        // check customer identity validation
+        var check = req.session.identity;
+        if (!check || check.code != plain && check.idNumber != plain) {
+            res.send({status: 'paramErr', message: '未通过身份验证'});
+            return;
+        }
         var model = 'orgInfo';
         var condition = {};
         if (plain.length == 9) {

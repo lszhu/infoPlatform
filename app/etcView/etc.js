@@ -27,12 +27,20 @@ angular.module('myApp.etc', ['ngRoute'])
     }])
 
     .controller('IntroductionCtrl', ['$scope', '$http', '$document',
-        function($scope, $http, $document) {
+        'identify', function($scope, $http, $document, identify) {
             // 初始化企业信息
             $scope.employer = {};
 
-            // 信息上传函数
             $scope.postMsg = function() {
+                var params = {
+                    collect: 'organization',
+                    name: $scope.employer.name,
+                    code: $scope.employer.code
+                };
+                identify.check(params, postMsg);
+            };
+            // 信息上传函数
+            function postMsg() {
                 var code = $scope.employer.code;
                 if (!code || code.toString().length != 9) {
                     alert('组织机构代码不正确');
@@ -54,7 +62,7 @@ angular.module('myApp.etc', ['ngRoute'])
                         alert('信息发布失败，原因是：' + err);
                     });
                 postPicture();
-            };
+            }
 
             $scope.postDisabled = function() {
                 //return false;
@@ -88,13 +96,21 @@ angular.module('myApp.etc', ['ngRoute'])
         }
     ])
 
-    .controller('SuggestionCtrl', ['$scope', '$http', '$document',
-        function($scope, $http, $document) {
+    .controller('SuggestionCtrl', ['$scope', '$http', '$document', 'identify',
+        function($scope, $http, $document, identify) {
             // 初始化投诉建议信息
             $scope.suggestion = {};
 
-            // 信息上传函数
             $scope.postMsg = function() {
+                var params = {
+                    collect: 'person',
+                    name: $scope.suggestion.name,
+                    code: $scope.suggestion.idNumber
+                };
+                identify.check(params, postMsg);
+            };
+            // 信息上传函数
+            function postMsg() {
                 $scope.suggestion.suggestion =
                     $document.find('.note-editable').html();
                 console.log('districtId: %s', $scope.districtId);
@@ -111,7 +127,7 @@ angular.module('myApp.etc', ['ngRoute'])
                     .error(function(err) {
                         alert('信息提交失败，原因是：' + err);
                     });
-            };
+            }
 
             $scope.postDisabled = function() {
                 var name = $scope.suggestion.name;

@@ -182,6 +182,7 @@ function validCode(code) {
 
 // 验证身份证号的合法性，共18位，最后一位是校验码
 function validIdNumber(idNumber) {
+    idNumber = idNumber ? idNumber.toString() : '';
     if (idNumber.length != 18 || 12 < idNumber.slice(10, 12) ||
         idNumber.slice(6, 8) < 19 || 20 < idNumber.slice(6, 8)) {
         return false;

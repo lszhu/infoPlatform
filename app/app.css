@@ -16,18 +16,6 @@ a {
     color: black;
 }
 
-iframe {
-    border: 1px gray solid;
-    border-radius: 4px;
-    height: 34px;
-    padding: 0;
-    margin: 0;
-}
-
-#select-all {
-    width: 30px;
-}
-
 /* CUSTOMIZE THE NAVBAR
 -------------------------------------------------- */
 
@@ -285,6 +273,15 @@ span.alarm {
 
 #select-all {
     margin-top: 5px;
+    width: 30px;
+}
+
+iframe {
+    border: 1px gray solid;
+    border-radius: 4px;
+    height: 34px;
+    padding: 0;
+    margin: 0;
 }
 
 /* mainView
