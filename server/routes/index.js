@@ -240,6 +240,7 @@ router.post('/postEmployer', function(req, res) {
         res.send({status: 'paramErr', message: '提供的招聘信息不够完整'});
         return;
     }
+    // check customer identity validation
     if (!req.session.identity || req.session.identity.code != employer.code) {
         res.send({status: 'paramErr', message: '未通过身份验证'});
         return;
@@ -281,6 +282,7 @@ router.post('/postEmployee', function(req, res) {
         res.send({status: 'paramErr', message: '提供的身份证号有误'});
         return;
     }
+    // check customer identity validation
     var identity = req.session.identity;
     if (!identity || identity.idNumber != employee.idNumber) {
         res.send({status: 'paramErr', message: '未通过身份验证'});
@@ -308,6 +310,7 @@ router.post('/postOrgInfo', function(req, res) {
         res.send({status: 'paramErr', message: '提供的介绍信息不够完整'});
         return;
     }
+    // check customer identity validation
     var identity = req.session.identity;
     if (!identity || identity.code != employer.code) {
         res.send({status: 'paramErr', message: '未通过身份验证'});
@@ -446,6 +449,13 @@ router.post('/postSuggestion', function(req, res) {
         return;
     }
     suggestion.date = new Date();
+    // check customer identity validation
+    var identity = req.session.identity;
+    debug('identity: ' + JSON.stringify(identity));
+    if (!identity || identity.idNumber != suggestion.idNumber) {
+        res.send({status: 'paramErr', message: '未通过身份验证'});
+        return;
+    }
 
     db.save('suggestion', {idNumber: suggestion.idNumber}, suggestion,
         function(err) {
@@ -532,6 +542,14 @@ router.post('/searchJob', function(req, res) {
 
 /* search for organization info */
 router.post('/searchOrganization', function(req, res) {
+    // check customer identity validation
+    var identity = req.session.identity;
+    debug('identity: ' + JSON.stringify(identity));
+    if (!req.session.user && (!identity || !identity.idNumber)) {
+        res.send({status: 'paramErr', message: '未通过身份验证'});
+        return;
+    }
+
     // query items limit
     var limit = parseInt(req.body.limit);
     limit = 0 < limit && limit < 500 ? limit : 100;
@@ -610,6 +628,14 @@ router.post('/searchOrganization', function(req, res) {
 
 /* search for manpower info */
 router.post('/searchManpower', function(req, res) {
+    // check customer identity validation
+    var identity = req.session.identity;
+    debug('identity: ' + JSON.stringify(identity));
+    if (!req.session.user && (!identity || !identity.code)) {
+        res.send({status: 'paramErr', message: '未通过身份验证'});
+        return;
+    }
+
     // query items limit
     var limit = parseInt(req.body.limit);
     limit = 0 < limit && limit < 500 ? limit : 100;
@@ -692,6 +718,14 @@ router.post('/searchManpower', function(req, res) {
 
 /* search for worker info */
 router.post('/searchWorker', function(req, res) {
+    // check customer identity validation
+    var identity = req.session.identity;
+    debug('identity: ' + JSON.stringify(identity));
+    if (!req.session.user && (!identity || !identity.code)) {
+        res.send({status: 'paramErr', message: '未通过身份验证'});
+        return;
+    }
+
     var condition = {};
     //if (req.body.gender) {
     //    condition.gender = req.body.gender;

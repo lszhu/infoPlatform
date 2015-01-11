@@ -97,9 +97,10 @@ angular.module('myApp.search', ['ngRoute'])
         }
     ])
 
-    .controller('EnterpriseCtrl', ['$scope', '$http', '$sce', '$window',
-        'pagination', 'formatInfo',
-        function($scope, $http, $sce, $window, pagination, formatInfo) {
+    .controller('EnterpriseCtrl', ['$scope', '$http', '$sce',
+        'pagination', 'management', 'formatInfo', 'identify',
+        function($scope, $http, $sce, pagination,
+                 management, formatInfo, identify) {
             // 初始化页面参数
             $scope.page = pagination({y: 450, limit: 50,
                 target: '/searchOrganization'});
@@ -110,6 +111,40 @@ angular.module('myApp.search', ['ngRoute'])
             $scope.org = $scope.page.params.condition;
             // 初始化查询参数中的区域选择参数districtId
             $scope.org.districtId = $scope.districtId;
+            // 利用其管理功能，但不支持修改
+            $scope.manage = management();
+
+            // 在本地记录用户是否通过身份验证
+            var customerIdentified = false;
+            // 用于记录用于验证的个人姓名与身份证号
+            $scope.person = {};
+
+            // 获取指定页面的数据，同时清空删除列表及状态
+            $scope.queryItems = function(page) {
+                var p = 0 < page ? page : 1;
+                var register = $scope.manage.params.register;
+                if (register && register != 'anonymous') {
+                    customerIdentified = true;
+                }
+                if (customerIdentified) {
+                    $scope.page.queryItems(p);
+                    return;
+                }
+                $('#customerChecker').modal('show');
+            };
+
+            $scope.checkCustomer = function() {
+                var params = {
+                    collect: 'person',
+                    name: $scope.person.name,
+                    code: $scope.person.code
+                };
+                identify.check(params, function() {
+                    // 验证成功后执行以下指令
+                    customerIdentified = true;
+                    $scope.queryItems(1);
+                });
+            };
 
             // 跟踪区域选择参数districtId
             $scope.$watch('districtId', function(newValue, oldValue) {
@@ -183,6 +218,10 @@ angular.module('myApp.search', ['ngRoute'])
             // 获取指定页面的数据，同时清空删除列表及状态
             $scope.queryItems = function(page) {
                 var p = 0 < page ? page : 1;
+                var register = $scope.manage.params.register;
+                if (register && register != 'anonymous') {
+                    customerIdentified = true;
+                }
                 if (customerIdentified) {
                     // 控制表格的显示
                     $scope.showTable = true;
@@ -229,8 +268,8 @@ angular.module('myApp.search', ['ngRoute'])
         }
     ])
 
-    .controller('WorkerCtrl', ['$scope', '$http', 'pagination',
-        function($scope, $http, pagination) {
+    .controller('WorkerCtrl', ['$scope', '$http', 'pagination', 'management',
+        'identify', function($scope, $http, pagination, management, identify) {
             // 初始化页面参数
             $scope.page = pagination({y: 450, limit: 50,
                 target: '/searchWorker'});
@@ -241,6 +280,40 @@ angular.module('myApp.search', ['ngRoute'])
             $scope.worker = $scope.page.params.condition;
             // 初始化查询参数中的区域选择参数districtId
             $scope.worker.districtId = $scope.districtId;
+            // 利用其管理功能，但不支持修改
+            $scope.manage = management();
+
+            // 在本地记录用户是否通过身份验证
+            var customerIdentified = false;
+            // 用于记录用于验证的单位名和组织机构代码
+            $scope.org = {};
+
+            // 获取指定页面的数据，同时清空删除列表及状态
+            $scope.queryItems = function(page) {
+                var p = 0 < page ? page : 1;
+                var register = $scope.manage.params.register;
+                if (register && register != 'anonymous') {
+                    customerIdentified = true;
+                }
+                if (customerIdentified) {
+                    $scope.page.queryItems(p);
+                    return;
+                }
+                $('#customerChecker').modal('show');
+            };
+
+            $scope.checkCustomer = function() {
+                var params = {
+                    collect: 'organization',
+                    name: $scope.org.name,
+                    code: $scope.org.code
+                };
+                identify.check(params, function() {
+                    // 验证成功后执行以下指令
+                    customerIdentified = true;
+                    $scope.queryItems(1);
+                });
+            };
 
             // 跟踪区域选择参数districtId
             $scope.$watch('districtId', function(newValue, oldValue) {

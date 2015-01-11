@@ -1,5 +1,11 @@
 <div class="container">
-  <h3 class="page-header">企业信息查询</h3>
+  <div class="col-sm-8 col-lg-9">
+    <h3 class="page-header">企业信息查询<span class="alarm" ng-show="manage.params.register"><strong>（管理模式）</strong></span></h3>
+  </div>
+  <div class="col-md-4 col-lg-3 management" ng-show="manage.params.register">
+    <a ng-click="manage.gotoPanel()" class="btn btn-default"><i class="fa fa-th fa-2x"></i><br>管理面板</a>&nbsp;
+    <a ng-click="manage.logout()" class="btn btn-default"><i class="fa fa-sign-out fa-2x"></i><br>退出管理</a><br>&nbsp;
+  </div>
 
   <form class="form-horizontal" name="queryCondition" role="form">
     <div class="form-group col-sm-12">
@@ -39,10 +45,43 @@
 
     <div class="form-group">
       <div class="col-sm-offset-4 col-sm-4">
-        <button ng-click="page.queryItems()" class="btn btn-primary btn-block">查&nbsp;&nbsp;询</button>
+        <button ng-click="queryItems()" class="btn btn-primary btn-block">查&nbsp;&nbsp;询</button>
       </div>
     </div>
   </form>
+
+  <!--  用户姓名与身份证号校验对话框  -->
+  <div class="modal fade" id="customerChecker" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content search">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title text-center"><strong>个人身份验证</strong></h4>
+        </div>
+        <div class="modal-body">
+          <div class="col-sm-12">
+            <div class="col-sm-10 col-sm-offset-1">
+              <p>必须是本辖区户口的个人才允许查询，请输入下述信息验证身份。</p>
+            </div>
+            <div class="form-group col-sm-8 col-sm-offset-2">
+              <label for="personName">姓名</label>
+              <input type="text" class="form-control" name="personName" ng-model="person.name" id="personName" placeholder="输入个人姓名">
+            </div>
+            <div class="form-group col-sm-8 col-sm-offset-2">
+              <label for="personIdNumber">身份证号</label>
+              <input type="text" class="form-control" name="personIdNumber" ng-model="person.code" id="personIdNumber" placeholder="输入身份证号码">
+            </div>
+            <div class="form-group col-xs-4 col-xs-offset-1">
+              <button type="button" class="btn btn-success btn-block" data-dismiss="modal">取 消</button>
+            </div>
+            <div class="form-group col-xs-4 col-xs-offset-2">
+              <button class="btn btn-block btn-primary" ng-click="checkCustomer()" data-dismiss="modal">确 认</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
 
   <div class="row"></div>
 
@@ -88,5 +127,14 @@
       <li><a ng-click="page.nextNavBar()" href="">»</a></li>
     </ul>
   </nav>
+
+  <div class="col-sm-6">
+    <dl>
+      <dt><span class="alarm">特别提醒：</span></dd>
+      <dd>
+        本页面的所有信息，只反映信息收集时的情况，并不能保证实时更新。请查阅者请自行甄别内容，并对自身行为负责。
+      </dt>
+    </dl>
+  </div>
 
 </div>

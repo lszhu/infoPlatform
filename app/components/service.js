@@ -472,7 +472,7 @@ angular.module('myApp.service', [])
                     });
             }
 
-            function init(init) {
+            function initiate(init) {
                 if (init) {
                     for (var i in init) {
                         if (init.hasOwnProperty(i)) {
@@ -511,7 +511,7 @@ angular.module('myApp.service', [])
                 };
             }
 
-            return init;
+            return initiate;
     }])
 
     .factory('identify', ['$http', function($http) {
