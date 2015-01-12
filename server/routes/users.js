@@ -215,7 +215,7 @@ router.post('/postCommunity', function(req, res) {
     }
     //var community = req.body.community;
     var community = tool.trimObject(req.body.community);
-    debug('community: ' + JSON.stringify(community));
+    //debug('community: ' + JSON.stringify(community));
     if (!community.name || !community.districtId || !community.address ||
         !community.phone || !community.overview) {
         res.send({status: 'paramErr', message: '提供的信息不够完整'});

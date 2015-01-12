@@ -211,8 +211,16 @@ angular.module('myApp.home', ['ngRoute'])
                         if (res.status == 'ok') {
                             //console.log('res.info: %o', res.info);
                             var orgInfo = res.info || [];
+                            // 有社区信息则放在第一个显示位置
+                            if (res.community) {
+                                orgInfo.unshift(res.community);
+                                // 加上类型标识以区别于企业单位信息
+                                orgInfo[0].type = '?community';
+                                orgInfo[0].name = orgInfo[0].name +
+                                    '就业服务中心';
+                            }
                             $scope.orgInfo = addPlaceholder(orgInfo);
-                            //console.log('orgInfo %o', $scope.orgInfo);
+                            console.log('orgInfo %o', $scope.orgInfo);
                         }
                         //console.log($scope.market);
                     })

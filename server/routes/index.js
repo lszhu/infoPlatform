@@ -24,6 +24,10 @@ router.get('/district', function(req, res) {
 
 /* get organization picture */
 router.get('/picture/:id', function(req, res) {
+    var collect = 'orgInfo';
+    if (req.query.hasOwnProperty('community')) {
+        collect = 'communityInfo';
+    }
     var date = new Date(+req.params.id);
     debug('pictureId: ' + req.params.id);
     if (date == 'Invalid Date') {
@@ -33,7 +37,7 @@ router.get('/picture/:id', function(req, res) {
     }
     debug('date: ' + JSON.stringify(date));
 
-    db.query('orgInfo', {date: date}, function(err, docs) {
+    db.query(collect, {date: date}, function(err, docs) {
         if (err) {
             res.send({status: 'dbErr', message: '访问数据库系统出现异常'});
             return;
@@ -189,7 +193,7 @@ router.get('/searchInformation/:id', function(req, res) {
 
 });
 
-/* get organization introduction */
+/* get organization and community introduction */
 router.post('/searchInformation', function(req, res) {
     var condition = {};
     var fields = '-code -districtId -introduction -picture';
@@ -202,7 +206,7 @@ router.post('/searchInformation', function(req, res) {
         fields = '-code -districtId -picture';
     }
     if (req.body.districtId) {
-        condition.districtId = req.body.districtId;
+        condition.districtId = new RegExp('^' + req.body.districtId);
     }
     if (req.body.queryLimit && parseInt(req.body.queryLimit)) {
         queryLimit = parseInt(req.body.queryLimit);
@@ -210,24 +214,56 @@ router.post('/searchInformation', function(req, res) {
     if (req.body.responseLimit && parseInt(req.body.responseLimit)) {
         responseLimit = parseInt(req.body.responseLimit);
     }
-    debug('responseLimit: ' + responseLimit);
+    debug('searchInformation condition: ' + JSON.stringify(condition));
+
+    // 保存正常的响应数据
+    var response = {status: 'ok'};
+    // 用于并发访问的计数器
+    var counter = {count: 2, error: false};
 
     db.querySort('orgInfo', condition, {date: -1}, function(err, docs) {
+        counter.count--;
         if (err) {
-            res.send({status: 'dbErr', message: '访问数据库系统出现异常'});
+            if (counter.error) {
+                console.log('db access error');
+                return;
+            }
+            counter.error = true;
+            res.send({status: 'dbReadErr', message: '数据库访问错误'});
             return;
         }
+
         if (responseLimit) {
-            debug('docs.length: ' + docs.length);
-            var responseInfo = tool.randomOrgInfo(docs, responseLimit);
-            //debug('responseInfo data: ' + JSON.stringify(responseInfo));
-            res.send({status: 'ok', info: responseInfo});
-                //res.send({status: 'ok', info: docs.slice(0, responseLimit)});
-        } else if (docs[0]) {
-            res.send({status: 'ok', info: docs[0]});
+            response.info = tool.randomOrgInfo(docs, responseLimit);
         } else {
-            res.send({status: 'notFound', message: '未找到相关信息'});
+            response.info = docs[0];
         }
+
+        if (!counter.count) {
+            res.send(response);
+        }
+
+    }, fields, queryLimit);
+
+    delete condition.date;
+    fields = '-districtId -picture';
+    db.querySort('communityInfo', condition, {date: -1}, function(err, docs) {
+        counter.count--;
+        if (err) {
+            if (counter.error) {
+                console.log('db access error');
+                return;
+            }
+            counter.error = true;
+            res.send({status: 'dbReadErr', message: '数据库访问错误'});
+            return;
+        }
+
+        response.community = tool.randomOrgInfo(docs, 1)[0];
+        if (!counter.count) {
+            res.send(response);
+        }
+
     }, fields, queryLimit);
 
 });
@@ -349,73 +385,101 @@ router.post('/postOrgInfo', function(req, res) {
 
 /* used to upload a picture in iframe */
 router.get('/uploadFile', function(req, res) {
-    res.sendfile(path.join(__dirname, '../../app/mainView/upload.html'));
+    res.sendFile(path.join(__dirname, '../../app/mainView/upload.html'));
 });
 
 /* save organization introduction picture */
 router.post('/uploadFile', function(req, res) {
-    // file format, the attribute name is base64 encoded file extension
-    // jpg->anBn, png->cG5n, gif->Z2lm
+    // not register or unchecked client
+    var checkedInfo = req.session.identity;
+    if (!req.session.user && !checkedInfo) {
+        res.send({status: 'paramErr', message: '未通过身份验证'});
+        return;
+    }
+
     var format = {
-        anBn: 'data:image/jpg;base64,',
-        cG5n: 'data:image/png;base64,',
-        Z2lm: 'data:image/gif;base64,'
+        jpg: 'data:image/jpg;base64,',
+        png: 'data:image/png;base64,',
+        gif: 'data:image/gif;base64,'
     };
+    var uploadData = {picture: ''};
     var form = new multiparty.Form({
-        encoding: 'base64',
-        maxFieldsSize: 10485760,
-        autoFiles: false
+        encoding: 'utf8',
+        maxFieldsSize: 10485760
+        //autoFiles: false
     });
-    form.parse(req, function(err, fields) {
-        if (err) {
-            res.send(err);
-            return;
+    form.on('error', function(err) {
+        console.log('Error parsing form: ' + err.stack);
+    });
+    form.on('part', function(part) {
+        var chunks = [];
+        var store;
+        part.on('data', function(chunk) {
+            if (part.filename) {
+                store = new Buffer(chunk.length);
+                chunk.copy(store);
+                chunks.push(store);
+                return;
+            }
+            if (uploadData.hasOwnProperty(part.name)) {
+                uploadData[part.name] += chunk.toString();
+            } else {
+                uploadData[part.name] = chunk.toString();
+            }
+
+        });
+        part.on('end', function() {
+            if (part.filename) {
+                uploadData.picture = Buffer.concat(chunks).toString('base64');
+                debug('upload file length: ' + uploadData.picture.length);
+            } else {
+                debug('upload a field');
+            }
+        });
+    });
+    form.on('close', function() {
+        if (!uploadData.format || !format.hasOwnProperty(uploadData.format)) {
+            uploadData.format = format['jpg'];
+        } else {
+            uploadData.format = format[uploadData.format];
         }
-        var data = fields[Object.keys(fields)[0]];
-        // no file data
-        if (!data[2]) {
-            res.redirect('/uploadFile');
-            return;
-        }
-        var picture = format[data[1]] + data[2];
-        // data[0] is base64 encoded organization code or district id
-        var plain = tool.base64ToUtf8(data[0]);
+        var plain = uploadData.code;
         debug('plain: ' + plain);
         // check customer identity validation
-        var check = req.session.identity;
-        if (!check || check.code != plain && check.idNumber != plain) {
+        if (!req.session.user &&
+            checkedInfo.code != plain && checkedInfo.idNumber != plain) {
             res.send({status: 'paramErr', message: '未通过身份验证'});
             return;
         }
         var model = 'orgInfo';
         var condition = {};
         if (plain.length == 9) {
-            // organization code
+            // plain save organization code
             //model = 'orgInfo';
             condition.code = plain;
         } else if (plain.length % 2 == 0) {
-            // district id
+            // plain save district id
             model = 'communityInfo';
             condition.districtId = plain;
         } else {
             res.send({status: 'typeErr', message: '错误的上传信息'});
             return;
         }
-        debug('condition: ' + JSON.stringify(condition));
-        debug('model ' + model);
-        debug('picture length: ' + picture.length);
-
+        debug('upload complete');
+        debug('uploadData attr: ' + JSON.stringify(Object.keys(uploadData)));
+        var picture = uploadData['format'] + uploadData['picture'];
         db.save(model, condition, {picture: picture},
             function(err) {
                 if (err) {
-                    res.send({status: 'dbSaveErr',
-                        message: '图片文件上传失败'});
+                    res.send({status: 'dbSaveErr', message: '文件上传失败'});
                     return;
                 }
                 //res.send({status: 'ok', message: '图片文件上传成功'});
                 res.redirect('/uploadFile');
             });
     });
+    form.parse(req);
+
 });
 
 /* save policy submitted by staff */

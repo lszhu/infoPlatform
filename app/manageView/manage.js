@@ -46,6 +46,11 @@ angular.module('myApp.manage', ['ngRoute'])
                     alert('请选择宣传图片');
                     return;
                 }
+                if ($scope.districtId != $scope.community.districtId) {
+                    alert('行政区名称与代码不一致，请重新设置。');
+                    return;
+                }
+                $scope.community.name = $scope.districtName;
                 $http.post('/users/postCommunity',
                     {community: $scope.community})
                     .success(function(res) {
@@ -63,12 +68,11 @@ angular.module('myApp.manage', ['ngRoute'])
 
             $scope.postDisabled = function() {
                 //return false;
-                var name = $scope.community.name;
                 var districtId = $scope.community.districtId;
                 var phone = $scope.community.phone;
                 var address = $scope.community.address;
                 var overview = $scope.community.overview;
-                return !name || !districtId || !phone || !address || !overview;
+                return !districtId || !phone || !address || !overview;
             };
 
             $scope.test = postPicture;
@@ -87,6 +91,7 @@ angular.module('myApp.manage', ['ngRoute'])
                 var picture = frame.getElementById('picture');
                 format.value = picture.value.split('.').slice(-1)[0];
                 districtId.value = $scope.community.districtId;
+                console.log('districtId: ' + districtId.value);
                 frame.getElementById('submit').click();
             }
 

@@ -4,7 +4,7 @@ var path = require('path');
 var fs = require('fs');
 var _ = require('lodash-node');
 
-var refPath = require('../config').path;
+var refPath = require('../config').uploadPath;
 var jobType = require('./jobType');
 var districtName = require('./districtId');
 
@@ -362,7 +362,7 @@ function filterWorkerMsg(worker) {
         o.experience =  worker.employmentInfo.jobType;
     } else if (worker.unemploymentInfo) {
         o.salary = worker.unemploymentInfo.preferredSalary;
-        o.experience =  worker.unemploymentInfo.preferredjobType;
+        o.experience =  worker.unemploymentInfo.preferredJobType;
     }
     // 将年薪改为月薪，单位由万元改为元（如果本身大于10000，则默认就是以元为单位）
     if (!o.salary) {
@@ -387,7 +387,9 @@ function randomOrgInfo(docs, responseLimit) {
     var limit = responseLimit || 3;
     var data = _.sample(docs, limit);
     for (var i = 0, len = data.length; i < len; i++) {
-        data[i].date = data[i].date.getTime().toString();
+        if (data[i].hasOwnProperty('date')) {
+            data[i].date = data[i].date.getTime().toString();
+        }
     }
     debug('random data length: ' + data.length);
     return data;
