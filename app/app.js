@@ -9,8 +9,8 @@ angular.module('myApp', [
     'myApp.etc',
     'myApp.message',
     'myApp.search',
-    'myApp.manage',
-    'myApp.version'
+    'myApp.manage'
+    //'myApp.version'
 ]).
     config(['$routeProvider', function($routeProvider) {
         $routeProvider.otherwise({redirectTo: '/main/home'});
@@ -65,21 +65,24 @@ angular.module('myApp')
                 var tmpId = districtId.slice(0, -2);
                 $scope.districtName = $scope.districts[tmpId][districtId];
             };
-
-            // 网页加载后200ms之后设置登录控制参数，2秒后再恢复禁用
-            $timeout(function() {
-                $scope.initLogin = true;
-            }, 500);
-            $timeout(function() {
-                $scope.initLogin = false;
-            }, 2000);
+            // 用于记录定时器
+            var start, end;
             // 登录管理后台
             $scope.login = function() {
                 if ($scope.initLogin) {
                     $location.url('/main/login');
                     return;
                 }
-                location.reload();
+                // 先清除定时器后重设，200ms之后设置登录控制参数，2秒后再恢复禁用
+                $timeout.cancel(start);
+                start = $timeout(function() {
+                    $scope.initLogin = true;
+                }, 500);
+                $timeout.cancel(end);
+                end = $timeout(function() {
+                    $scope.initLogin = false;
+                }, 2000);
+                //location.reload();
             }
         }
     ]);

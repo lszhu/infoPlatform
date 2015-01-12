@@ -34,16 +34,16 @@
         <tbody>
         <tr ng-repeat="a in accounts">
           <td>{{$index + 1}}</td>
-          <td><span>{{a.username}}</span></td>
-          <td><span>{{a.description}}</span></td>
-          <td><span>{{a.rights}}</span></td>
+          <td><span ng-bind="a.name"></span></td>
+          <td><span ng-bind="a.description"></span></td>
+          <td><span ng-bind="a.rights"></span></td>
           <td>
             <span ng-show="a.enabled" class="fa fa-check green"></span>
             <span ng-hide="a.enabled" class="fa fa-exclamation-circle red"></span>
             <span>{{a.enabled ? ' 启用' : ' 停用'}}</span>
           </td>
           <td>
-            <button ng-click="deleteUser(a.username)" class="btn btn-xs btn-default">
+            <button ng-click="deleteUser(a.name)" class="btn btn-xs btn-default">
               <span class="fa fa-times red"></span>&nbsp;删除&nbsp;
             </button>
           </td>

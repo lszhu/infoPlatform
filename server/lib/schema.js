@@ -83,6 +83,7 @@ var log = {
     status: String
 };
 var account = {
+    name: String,
     username: String,
     password: String,
     enabled: Boolean,

@@ -53,6 +53,7 @@ angular.module('myApp.home', ['ngRoute'])
                         if (res.status == 'ok') {
                             console.log('登录成功');
                             $location.url('/users/panel');
+                            $location.replace();
                         } else {
                             console.log('res: %o', res);
                             alert('用户名或密码错误');
@@ -220,7 +221,7 @@ angular.module('myApp.home', ['ngRoute'])
                                     '就业服务中心';
                             }
                             $scope.orgInfo = addPlaceholder(orgInfo);
-                            console.log('orgInfo %o', $scope.orgInfo);
+                            //console.log('orgInfo %o', $scope.orgInfo);
                         }
                         //console.log($scope.market);
                     })

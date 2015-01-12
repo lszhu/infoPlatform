@@ -30,8 +30,25 @@ angular.module('myApp.manage', ['ngRoute'])
             });
     }])
 
-    .controller('PanelCtrl', ['$scope', 'logout', function($scope, logout) {
-            $scope.logout = logout;
+    //.controller('PanelCtrl', ['$scope', 'logout', function($scope, logout) {
+    //    $scope.logout = logout;
+    //}])
+    .controller('PanelCtrl', ['$scope', '$http', '$location',
+        function($scope, $http, $location) {
+            $scope.logout = function() {
+                $http.get('/users/logout')
+                    .success(function(res) {
+                        console.log(res.message);
+                        $location.search('management', null);
+                        $location.path('/main/home');
+                        $location.replace();
+                        //location.hash = '';
+                        //location.reload();
+                    })
+                    .error(function(err) {
+                        alert('系统出现异常：\n' + JSON.stringify(err));
+                    });
+            };
         }])
 
     .controller('CommunityCtrl', ['$scope', '$http', '$document', 'logout',
@@ -188,13 +205,6 @@ angular.module('myApp.manage', ['ngRoute'])
 
     .controller('SystemCtrl', ['$scope', '$http', 'logout',
         function($scope, $http, logout) {
-            $scope.figureNum = 32353;
-            $scope.carryOverNum = 231;
-            $scope.boundFileNum = 12342;
-            $scope.logNum = 63421;
-            $scope.logOk = 23523;
-            $scope.login = 1233;
-            $scope.loginErr = 328;
 
             // 退出登录函数
             $scope.logout = logout;
@@ -265,8 +275,8 @@ angular.module('myApp.manage', ['ngRoute'])
 
             $scope.loadUser = function(account) {
                 var a = account || {};
-                $scope.account.username = a.username;
-                $scope.account.originalName = a.username;
+                $scope.account.username = a.name;
+                $scope.account.originalName = a.name;
                 $scope.account.description = a.description;
                 $scope.account.rights = a.rights;
                 $scope.account.enabled = a.enabled;
@@ -281,12 +291,12 @@ angular.module('myApp.manage', ['ngRoute'])
                     return;
                 }
                 console.log('account name: ' + name);
-                $http.post('/users/deleteAccount', {username: name})
+                $http.post('/users/deleteAccount', {name: name})
                     .success(function(res) {
                         if (res.status == 'ok') {
                             $scope.msgClass = 'alert-success';
                             $scope.accounts = $scope.accounts.filter(
-                                function(e) {return e.username != name;});
+                                function(e) {return e.name != name;});
                         } else {
                             $scope.msgClass = 'alert-danger';
                             $scope.message = res.message ?
@@ -309,11 +319,18 @@ angular.module('myApp.manage', ['ngRoute'])
                     return;
                 }
 
+                // 加密用户名和密码
+                //$scope.account.username = CryptoJS
+                //    .SHA1($scope.account.username.toString()).toString();
+                var password = $scope.account.password;
+                password = password ? password.toString() : '';
+                $scope.account.password = CryptoJS.SHA1(password).toString();
                 console.log('upload account: %o', $scope.account);
                 $http.post('/users/modifyAccount', {account: $scope.account})
                     .success(function(res) {
                         if (res.status == 'ok') {
                             fetchUser();
+                            $scope.account = {};
                             $scope.msgClass = 'alert-success';
                         } else {
                             $scope.msgClass = 'alert-danger';

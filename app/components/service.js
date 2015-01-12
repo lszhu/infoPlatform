@@ -9,8 +9,11 @@ angular.module('myApp.service', [])
                 $http.get('/users/logout')
                     .success(function(res) {
                         console.log(res.message);
-                        $location.path('/main/homepage');
-                        location.reload();
+                        $location.search('management', null);
+                        $location.path('/main/home');
+                        $location.replace();
+                        //location.hash = '';
+                        //location.reload();
                     })
                     .error(function(err) {
                         alert('系统出现异常：\n' + JSON.stringify(err));
@@ -374,6 +377,7 @@ angular.module('myApp.service', [])
                         $location.search('management', null);
                         // 如果target存在，则转到对应页面
                         target && $location.path(target);
+                        //$location.replace();
                         location.reload();
                     })
                     .error(function(err) {

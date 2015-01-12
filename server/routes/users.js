@@ -29,13 +29,16 @@ router.post('/token', function(req, res) {
         var token = '';
         // 账号不存在，或可用状态为禁用
         if (!docs[0] || !docs[0].enabled) {
-            // 存在相应内置账号
+            //debug('get token: ');
+            // 如果存在相应内置账号
             if (auth.isInternalUser(username)) {
                 // 通过用户名（hash字符串）引用内置账号生成token
                 token = auth.createToken(username);
+                //debug(token);
                 res.send({status: 'ok', token: token});
                 return;
             }
+            debug('get token error');
             res.send({status: 'accErr', message: '用户名或密码错误'});
             return;
         }
@@ -67,7 +70,7 @@ router.post('/login', function(req, res) {
 
 /* user logout */
 router.all('/logout', function(req, res) {
-    req.session.user = null;
+    delete req.session.user;
     res.send({status: 'ok', message: '成功退出管理面板'});
     //var url = req.body.url || '/main/homepage';
     //res.redirect(url);
@@ -163,8 +166,13 @@ router.post(/\/remove(\w+)/, function(req, res) {
 
 /* management webPage */
 router.get('/auth/:page', function(req, res) {
+    if (!req.session.user) {
+        res.redirect('/main/home');
+        return;
+    }
+
     var page = req.params.page;
-    debug('target:' + page);
+    debug('user:' + JSON.stringify(req.session.user));
 
     var pages = {
         news: 'app/mainView/news.html',
@@ -344,7 +352,7 @@ router.get('/getAccount', function(req, res) {
         //    docs[i].password = '';
         //}
         res.send({status: 'ok', accounts: docs});
-    }, '-password');
+    }, '-username -password');
 });
 
 /* add or modify account */
@@ -359,10 +367,14 @@ router.post('/modifyAccount', function(req, res) {
         res.send({status: 'emptyName', message: '用户名不能为空'});
         return;
     }
-    var account = {username: acc.username};
+    var account = {name: acc.username, username: auth.hash(acc.username)};
+    // when creating new account
     if (!acc.originalName && (!acc.password || !acc.rights)) {
         res.send({status: 'emptyName', message: '用户密码和权限必须设置'});
         return;
+    }
+    if (!acc.originalName) {
+        acc.originalName = account.name;
     }
     if (acc.rights) {
         account.rights = acc.rights;
@@ -380,7 +392,7 @@ router.post('/modifyAccount', function(req, res) {
         account.enabled = acc.enabled;
     }
 
-    db.save('account', {username: acc.originalName}, account,
+    db.save('account', {name: acc.originalName}, account,
         function(err) {
             if (err) {
                 console.log('Db error: ' + JSON.stringify(err));
@@ -398,18 +410,18 @@ router.post('/deleteAccount', function(req, res) {
         return;
     }
 
-    var username = req.body.username;
+    var username = req.body.name;
     if (!username) {
         res.send({status: 'emptyName', message: '用户名不能为空'});
         return;
     }
 
-    if (req.session.user.username == username) {
+    if (req.session.user.name == username) {
         res.send({status: 'curUserErr', message: '无法删除当前登录用户'});
         return;
     }
 
-    db.remove('account', {username: username}, function(err) {
+    db.remove('account', {name: username}, function(err) {
         if (err) {
             console.log('Db error: ' + JSON.stringify(err));
             res.send({status: 'dbErr', message: '数据库操作失败'});
