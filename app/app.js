@@ -34,8 +34,9 @@ angular.module('myApp')
                         $scope.districtName = $scope
                             .districts[upLevel][res.districtId];
                         $scope.tmpDistrictName = $scope.districtName;
-                        // 显示对话框让用户选择所在区域
-                        $('#district').modal('show');
+                        initDistrict(res.districtId);
+                        //// 显示对话框让用户选择所在区域
+                        //$('#district').modal('show');
                     }).error(function(err) {
                         console.log('未知外界原因，无法获取行政区信息，%o', err);
                         alert('未知外界原因，无法获取行政区信息' +
@@ -61,12 +62,31 @@ angular.module('myApp')
                     .districts[tmpId][$scope.tmpDistrictId];
             };
 
-            // 设置当前行政区域
+            // 设置当前行政区域，对参数未作校验
             $scope.setDistrict = function(districtId) {
                 $scope.districtId = districtId;
                 var tmpId = districtId.slice(0, -2);
                 $scope.districtName = $scope.districts[tmpId][districtId];
+                // 将用户选中的districtId保存在url的查询参数中
+                location.search = '?district=' + $scope.districtId;
             };
+
+            // 通过地址栏信息或用户设定初始化行政区设定
+            function initDistrict(initId) {
+                var district = location.search;
+                console.log('district: ' + district);
+                district = district ? district.split('=')[1] : '';
+                var tmpId = district.slice(0, -2);
+                if (!$scope.districts.hasOwnProperty(tmpId) ||
+                    !$scope.districts[tmpId].hasOwnProperty(district)) {
+                    //$scope.setDistrict(initId);
+                    // 显示对话框让用户选择所在区域
+                    $('#district').modal('show');
+                    return;
+                }
+                $scope.setDistrict(district);
+            }
+
             // 用于记录定时器
             var start, end;
             // 登录管理后台
