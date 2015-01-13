@@ -66,8 +66,32 @@ angular.module('myApp.message', ['ngRoute'])
                 var name = $scope.name;
                 var code = $scope.code;
                 var phone = $scope.phone;
-                return !name || !name.trim() || !code ||
-                    !code.trim() || !phone || !phone.trim();
+                return !name  || !code || !phone;
+            };
+
+            // 改变列表显示的行政区域
+            $scope.changeDistrict = function(newId) {
+                if (!newId) {
+                    return;
+                }
+                var tmpId = $scope.tmpDistrictId;
+                if (newId == '..') {
+                    if (tmpId.length > 6) {
+                        $scope.tmpDistrictId = tmpId.slice(0, -2);
+                    }
+                } else if (4 < newId.length && newId.length < 10) {
+                    $scope.tmpDistrictId = newId;
+                }
+                tmpId = $scope.tmpDistrictId.slice(0, -2);
+                $scope.tmpDistrictName = $scope
+                    .districts[tmpId][$scope.tmpDistrictId];
+            };
+
+            // 设置当前行政区域
+            $scope.setDistrict = function(districtId) {
+                $scope.districtId = districtId;
+                var tmpId = districtId.slice(0, -2);
+                $scope.districtName = $scope.districts[tmpId][districtId];
             };
 
             // 清除部分表单已填入的信息
@@ -88,9 +112,15 @@ angular.module('myApp.message', ['ngRoute'])
             $scope.postMsg = function() {
                 var params = {
                     collect: 'person',
+                    resident: $scope.resident,
                     name: $scope.name,
                     code: $scope.idNumber
                 };
+                if ($scope.resident == 'no') {
+                    if (!confirm('您确实是外地户口吗？')) {
+                        return;
+                    }
+                }
                 identify.check(params, postMsg);
             };
 
@@ -100,6 +130,7 @@ angular.module('myApp.message', ['ngRoute'])
                     name: $scope.name,
                     idNumber: $scope.idNumber,
                     districtId: $scope.districtId,
+                    resident: $scope.resident,
                     phone: $scope.phone,
                     contact: $scope.contact,
                     education: $scope.education,
@@ -129,7 +160,6 @@ angular.module('myApp.message', ['ngRoute'])
 
             // 检测输入的身份证信息
             $scope.checkIdNumber = function() {
-                $scope.idNumber = $scope.idNumber ? $scope.idNumber.trim() : '';
                 if (!validIdNumber($scope.idNumber)) {
                     alert('身份证输入有无，请重新输入');
                 }
@@ -139,13 +169,44 @@ angular.module('myApp.message', ['ngRoute'])
             $scope.postDisabled = function() {
                 var name = $scope.name;
                 var idNumber = $scope.idNumber;
+                var districtId = $scope.districtId;
                 var phone = $scope.phone;
-                return !name || !name.trim() || !idNumber || !idNumber.trim() ||
-                    !validIdNumber(idNumber.trim()) || !phone || !phone.trim();
+                return !name || !idNumber || !validIdNumber(idNumber) ||
+                    !districtId || !phone;
+            };
+
+            $scope.resident = 'yes';
+            $scope.districtName = '';
+            $scope.districtId = '';
+            // 改变列表显示的行政区域
+            $scope.changeDistrict = function(newId) {
+                if (!newId) {
+                    return;
+                }
+                var tmpId = $scope.tmpDistrictId;
+                if (newId == '..') {
+                    if (tmpId.length > 6) {
+                        $scope.tmpDistrictId = tmpId.slice(0, -2);
+                    }
+                } else if (4 < newId.length && newId.length < 10) {
+                    $scope.tmpDistrictId = newId;
+                }
+                tmpId = $scope.tmpDistrictId.slice(0, -2);
+                $scope.tmpDistrictName = $scope
+                    .districts[tmpId][$scope.tmpDistrictId];
+            };
+
+            // 设置当前行政区域
+            $scope.setDistrict = function(districtId) {
+                $scope.districtId = districtId;
+                var tmpId = districtId.slice(0, -2);
+                $scope.districtName = $scope.districts[tmpId][districtId];
             };
 
             // 清除部分表单已填入的信息
             function clearMsg() {
+                $scope.districtName = '';
+                $scope.districtId = '';
                 $scope.name = '';
                 $scope.idNumber = '';
                 $scope.phone = '';

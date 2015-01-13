@@ -89,24 +89,25 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title text-center"><strong>设定所在区域</strong></h4>
+        <h4 class="modal-title text-center"><strong>选择您所在区域</strong></h4>
       </div>
       <div class="modal-body">
         <div class="col-xs-12">
           <div class="col-sm-4 col-xs-6">
             <label ng-click="changeDistrict('..')">
-              <span class="fa fa-mail-reply"></span>
+              <span class="fa fa-mail-reply fa-2x green"></span>
               <span>&nbsp;返回上级行政区</span>
-              <span class="caret"></span>
             </label>
           </div>
+          <!-- 当前浏览地区 -->
           <div class="col-sm-7 col-xs-6">
             <label ng-click="setDistrict(tmpDistrictId)" onclick="$('#district').modal('hide')">
-              <span class="fa fa-map-marker"></span>
+              <span class="fa fa-map-marker fa-2x green"></span>
               <span>&nbsp;{{tmpDistrictName}}</span>
             </label>
           </div>
           <hr>
+          <!-- 所属下级地区列表 -->
           <div ng-show="tmpDistrictId.length < 8" class="col-sm-4 col-xs-6" ng-repeat="(key, value) in districts[tmpDistrictId]">
             <label ng-click="changeDistrict(key)">
               {{value}}
@@ -115,7 +116,7 @@
           </div>
           <div ng-hide="tmpDistrictId.length < 8" class="col-sm-4 col-xs-6" ng-repeat="(key, value) in districts[tmpDistrictId]">
             <label ng-click="setDistrict(key)" onclick="$('#district').modal('hide')">
-              <span class="fa fa-map-marker"></span>
+              <span class="fa fa-map-marker green"></span>
               {{value}}
             </label>
           </div>

@@ -16,6 +16,7 @@ var employee = {
     name: String,
     idNumber: String,
     districtId: String,
+    floatingPop: String,
     phone: String,
     contact: String,
     education: String,

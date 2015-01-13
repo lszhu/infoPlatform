@@ -458,6 +458,12 @@ router.post('/identification', function(req, res) {
         send({status: 'paramsErr', message: '验证信息有错误'});
         return;
     }
+    // for floating population
+    if (req.body.resident == 'no') {
+        req.session.identity = condition;
+        res.send({status: 'ok'});
+        return;
+    }
 
     db.query(collect, condition, function(err, docs) {
         if (err) {

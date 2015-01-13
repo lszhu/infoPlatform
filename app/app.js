@@ -34,6 +34,8 @@ angular.module('myApp')
                         $scope.districtName = $scope
                             .districts[upLevel][res.districtId];
                         $scope.tmpDistrictName = $scope.districtName;
+                        // 显示对话框让用户选择所在区域
+                        $('#district').modal('show');
                     }).error(function(err) {
                         console.log('未知外界原因，无法获取行政区信息，%o', err);
                         alert('未知外界原因，无法获取行政区信息' +
