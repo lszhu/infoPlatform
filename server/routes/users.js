@@ -459,9 +459,9 @@ router.post('/identification', function(req, res) {
         return;
     }
     // for floating population
-    if (req.body.resident == 'no') {
+    if (collect == 'person' && req.body.resident == 'no') {
         req.session.identity = condition;
-        res.send({status: 'ok'});
+        res.send({status: 'ok', message: 'floating population'});
         return;
     }
 

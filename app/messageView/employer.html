@@ -17,6 +17,13 @@
       <label class="control-label remark"><strong>必填，</strong>组织机构代码必须与在工商注册的一致，否则无法通过审核</label>
     </div>
     <div class="form-group col-sm-12">
+      <label for="region" class="col-sm-2 control-label">所在地区</label>
+      <div class="col-sm-4">
+        <input type="button" class="form-control text-left" name="region" ng-model="districtId" id="region" value="{{districtName}}" onclick="$('#preferCommunity').modal('show')">
+      </div>
+      <label class="control-label remark"><strong>必填，</strong>必须具体到居住地或户口所在地的社区或村里</label>
+    </div>
+    <div class="form-group col-sm-12">
       <label for="phone" class="col-sm-2 control-label">联系电话</label>
       <div class="col-sm-4">
         <input type="text" class="form-control" name="phone" ng-model="phone" id="phone" placeholder="可输入多个电话">
@@ -77,6 +84,51 @@
       </div>
     </div>
   </form>
+
+  <!--  显示选择所属行政区的对话框  -->
+  <div class="modal fade" id="preferCommunity">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title text-center"><strong>选择您所在区域</strong></h4>
+        </div>
+        <div class="modal-body">
+          <div class="col-xs-12">
+            <div class="col-sm-4 col-xs-6">
+              <label ng-click="changeDistrict('..')">
+                <span class="fa fa-mail-reply fa-2x green"></span>
+                <span>&nbsp;返回上级行政区</span>
+              </label>
+            </div>
+            <!-- 当前浏览地区 -->
+            <div class="col-sm-7 col-xs-6" ng-show="">
+              <label ng-click="setDistrict(tmpDistrictId)" onclick="$('#district').modal('hide')">
+                <span class="fa fa-map-marker fa-2x green"></span>
+                <span>&nbsp;{{tmpDistrictName}}</span>
+              </label>
+            </div>
+            <hr>
+            <!-- 所属下级地区列表 -->
+            <div ng-show="tmpDistrictId.length < 8" class="col-sm-4 col-xs-6" ng-repeat="(key, value) in districts[tmpDistrictId]">
+              <label ng-click="changeDistrict(key)">
+                {{value}}
+                <span class="caret"></span>
+              </label>
+            </div>
+            <div ng-hide="tmpDistrictId.length < 8" class="col-sm-4 col-xs-6" ng-repeat="(key, value) in districts[tmpDistrictId]">
+              <label ng-click="setDistrict(key)" onclick="$('#preferCommunity').modal('hide')">
+                <span class="fa fa-map-marker green"></span>
+                {{value}}
+              </label>
+            </div>
+          </div>&nbsp;
+        </div>
+        <div class="modal-footer">
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
 
   <!--  显示网站法律声明的对话框  -->
   <div class="modal fade" id="postAlertMsg" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

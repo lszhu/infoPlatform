@@ -65,10 +65,13 @@ angular.module('myApp.message', ['ngRoute'])
             $scope.postDisabled = function() {
                 var name = $scope.name;
                 var code = $scope.code;
+                var districtId = $scope.districtId;
                 var phone = $scope.phone;
-                return !name  || !code || !phone;
+                return !name  || !code || !districtId || !phone;
             };
 
+            $scope.districtName = '';
+            $scope.districtId = '';
             // 改变列表显示的行政区域
             $scope.changeDistrict = function(newId) {
                 if (!newId) {
