@@ -13,13 +13,20 @@ var db = require('../lib/mongodb');
 var tool = require('../lib/tool');
 // get district name and id
 var district = require('../lib/districtId');
+// load configuration
+var configuration = require('../config');
 // set default districtId;
-//var districtId = '431103';
-var districtId = require('../config').districtId;
+var districtId = configuration.districtId;
 
 /* get district info */
 router.get('/district', function(req, res) {
     res.send({status: 'ok', district: district, districtId: districtId});
+});
+
+/* get auxiliary information showing on home page */
+router.get('/auxInfo', function(req, res) {
+    var auxInfo = configuration.auxiliaryInfo;
+    res.send({status: 'ok', info: auxInfo});
 });
 
 /* get organization picture */

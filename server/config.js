@@ -43,6 +43,19 @@ var dbParameters = {
 // 对查询数据库结果数目作出限制，以保证系统性能，避免假死
 var queryLimit = 100000;
 
+// 系统各类辅助信息
+var auxiliaryInfo = {
+    title: '冷水滩就业服务平台',
+    copyRight: '冷水滩就业局主办 © 版权所有 2015 备案序号：湘ICP备*****号',
+    links: [
+        {name: '冷水滩区人力资源网',
+            link: 'http://www.hnrlzysc.com/lengshuitanqu.asp'},
+        {name: '冷水滩区人社局', link: 'http://ldj.lst.gov.cn/'},
+        {name: '冷水滩区政府', link: 'http://www.lst.gov.cn/'},
+        {name: '永州市人社局', link: 'http://www.yz12333.cn/'}
+    ]
+};
+
 module.exports = {
     port: httpPort,
     runningEnv: runningEnvironment,
@@ -53,5 +66,6 @@ module.exports = {
         server: dbServer,
         parameter: dbParameters
     },
-    queryLimit: queryLimit
+    queryLimit: queryLimit,
+    auxiliaryInfo: auxiliaryInfo
 };

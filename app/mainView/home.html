@@ -136,9 +136,9 @@
 
 </div> <!-- /container -->
 
-<div class="container text-center related-site">
-  <div class="col-sm-3"><a href="">当地政府网站</a></div>
-  <div class="col-sm-3"><a href="">当地直属机关网站</a></div>
-  <div class="col-sm-3"><a href="">上级政府人力资源网站</a></div>
-  <div class="col-sm-3"><a href="">其他相关网站</a></div>
+<div class="related-site">
+  <div class="container text-center">
+    <div class="col-sm-3" ng-repeat="l in auxInfo.links">
+      <a href="{{l.link}}" ng-bind="l.name"></a></div>
+  </div>
 </div>

@@ -34,8 +34,8 @@ app.use(cookieParser());
 app.use(session({
     name: 'messagePostSys.sid',
     secret: 'DoNotTouchMe',
-    resave: true,
-    saveUninitialized: true
+    resave: false,
+    saveUninitialized: false
 }));
 
 // unauthenticated user query with a "management" search part will be

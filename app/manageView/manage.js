@@ -30,26 +30,30 @@ angular.module('myApp.manage', ['ngRoute'])
             });
     }])
 
-    //.controller('PanelCtrl', ['$scope', 'logout', function($scope, logout) {
-    //    $scope.logout = logout;
-    //}])
-    .controller('PanelCtrl', ['$scope', '$http', '$location',
-        function($scope, $http, $location) {
-            $scope.logout = function() {
-                $http.get('/users/logout')
-                    .success(function(res) {
-                        console.log(res.message);
-                        $location.search('management', null);
-                        $location.path('/main/home');
-                        $location.replace();
-                        //location.hash = '';
-                        //location.reload();
-                    })
-                    .error(function(err) {
-                        alert('系统出现异常：\n' + JSON.stringify(err));
-                    });
-            };
-        }])
+    .controller('PanelCtrl', ['$scope', 'logout', function($scope, logout) {
+        $scope.logout = logout;
+    }])
+    //.controller('PanelCtrl', ['$scope', '$http', '$location',
+    //    function($scope, $http, $location) {
+    //        $scope.logout = function() {
+    //            $http.get('/users/logout')
+    //                .success(function(res) {
+    //                    if (res.status == 'ok') {
+    //                        console.log(res.message);
+    //                        $location.search('management', null);
+    //                        $location.path('/main/home');
+    //                        $location.replace();
+    //                        location.hash = '';
+    //                        location.reload();
+    //                    } else {
+    //                        alert('内部错误，未正常退出\n' + JSON.stringify(res));
+    //                    }
+    //                })
+    //                .error(function(err) {
+    //                    alert('系统出现异常：\n' + JSON.stringify(err));
+    //                });
+    //        };
+    //    }])
 
     .controller('CommunityCtrl', ['$scope', '$http', '$document', 'logout',
         function($scope, $http, $document, logout) {
@@ -252,14 +256,6 @@ angular.module('myApp.manage', ['ngRoute'])
                     $scope.message = 'system error: ' + JSON.stringify(res);
                 })
             }
-
-            //counter('figureNum', 'figure', {});
-            //counter('carryOverNum', 'figure', {'voucher.id': '10000'});
-            //counter('boundFileNum', 'figure', {}, {'voucher.path': '.+'});
-            //counter('logNum', 'log', {});
-            //counter('logOk', 'log', {status: '成功'});
-            //counter('login', 'log', {operation: '登录操作'});
-            //counter('loginErr', 'log', {operation: '登录操作', status: '失败'});
 
     }])
 

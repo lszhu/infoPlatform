@@ -83,6 +83,25 @@ angular.module('myApp')
                     $scope.initLogin = false;
                 }, 2000);
                 //location.reload();
+            };
+
+            $scope.auxInfo = {};
+            getAuxInfo();
+            // 获取辅助显示信息，如筹备单位、备案号，友情链接等
+            function getAuxInfo() {
+                $http.get('/auxInfo')
+                    .success(function(res) {
+                        if (res.status == 'ok') {
+                            $scope.auxInfo = res.info;
+                            // 修改网页标题
+                            document.title = (res.info.title);
+                        } else {
+                            console.log('无法获取辅助信息');
+                        }
+                    })
+                    .error(function(err) {
+                        console.log('无法获取辅助信息：\n%o', err);
+                    });
             }
         }
     ]);

@@ -12,8 +12,8 @@ angular.module('myApp.service', [])
                         $location.search('management', null);
                         $location.path('/main/home');
                         $location.replace();
-                        //location.hash = '';
-                        //location.reload();
+                        location.hash = '';
+                        location.reload();
                     })
                     .error(function(err) {
                         alert('系统出现异常：\n' + JSON.stringify(err));

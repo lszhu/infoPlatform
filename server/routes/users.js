@@ -71,9 +71,16 @@ router.post('/login', function(req, res) {
 /* user logout */
 router.all('/logout', function(req, res) {
     delete req.session.user;
-    res.send({status: 'ok', message: '成功退出管理面板'});
+    req.session.destroy(function(err) {
+        if (err) {
+            res.send({status: 'errLogout', message: '内部错误'});
+        } else {
+            res.send({status: 'ok', message: '成功退出管理面板'});
+        }
+    });
+
     //var url = req.body.url || '/main/homepage';
-    //res.redirect(url);
+    //res.redirect('/main/homepage');
 });
 
 /* management panel */
@@ -409,6 +416,7 @@ router.post('/deleteAccount', function(req, res) {
         res.send({status: 'authErr', message: '未授权的非法操作'});
         return;
     }
+    debug('req.session.user: ' + JSON.stringify(req.session.user));
 
     var username = req.body.name;
     if (!username) {
@@ -427,6 +435,7 @@ router.post('/deleteAccount', function(req, res) {
             res.send({status: 'dbErr', message: '数据库操作失败'});
             return;
         }
+        debug('respond ok');
         res.send({status: 'ok'});
     })
 });
