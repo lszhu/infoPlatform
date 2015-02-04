@@ -2,7 +2,7 @@ var debug = require('debug')('tool');
 var path = require('path');
 //var util = require('util');
 var fs = require('fs');
-var _ = require('lodash-node');
+var _ = require('lodash');
 
 var refPath = require('../config').uploadPath;
 var jobType = require('./jobType');
