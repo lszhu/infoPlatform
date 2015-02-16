@@ -26,21 +26,27 @@ db.createUser(
 	}
 );
 
-db.projects.ensureIndex({name: 1}, {unique: true});
-db.projects.ensureIndex({id: 1});
-
-db.figures.ensureIndex({id: 1, project: 1}, {unique: true});
-db.figures.ensureIndex({project: 1});
-db.figures.ensureIndex({date: 1});
-db.figures.ensureIndex({subjectId: 1});
-db.figures.ensureIndex({project: 1, subjectId: 1});
+// db.projects.ensureIndex({name: 1}, {unique: true});
+// db.projects.ensureIndex({id: 1});
+//
+// db.figures.ensureIndex({id: 1, project: 1}, {unique: true});
+// db.figures.ensureIndex({project: 1});
+// db.figures.ensureIndex({project: 1, subjectId: 1});
 
 db.organizations.ensureIndex({staffs: -1});
+
 db.policies.ensureIndex({date: -1});
+
 db.employees.ensureIndex({date: -1});
+
 db.employers.ensureIndex({date: -1});
+
 db.orginfos.ensureIndex({date: -1});
+db.orginfos.ensureIndex({code: 1}, {unique: true});
+
 db.communityinfos.ensureIndex({districtId: -1}, {unique: true});
+
+db.news.ensureIndex({date: -1});
 
 //////////////////////////////////////////////////////////////
 
