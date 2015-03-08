@@ -74,7 +74,7 @@ a {
     width: 100%;
     /* Set the fixed height of the footer here */
     height: 200px;
-    background-color: cadetblue;
+    background-color: cornflowerblue;
     color: black;
 }
 
@@ -202,6 +202,13 @@ a {
         font-size: 3em;
     }
 
+    .panel .table a {
+        display: inline-block;
+        max-width: 385px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }
 
 @media (min-width: 1200px) {
@@ -210,6 +217,14 @@ a {
     }
     .featurette-heading {
         font-size: 2.5em;
+    }
+
+    .panel .table a {
+        display: inline-block;
+        max-width: 500px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
 
@@ -319,8 +334,11 @@ iframe {
     font-weight: bold;
     color: black;
     padding: 10px;
-    background-color: #b2dba1;
+    background-color: #428bca;
     width: 100%;
+}
+.related-site a {
+    color: #fafafa;
 }
 
 /* messageView

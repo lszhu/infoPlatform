@@ -1,5 +1,6 @@
 ﻿// 此处设置web服务的端口号
 var httpPort = 12345;
+//var httpPort = 80;
 
 // 此处设置web服务使用环境，可以是开发环境或生产环境
 var runningEnvironment = 'development';
@@ -46,7 +47,8 @@ var queryLimit = 100000;
 // 系统各类辅助信息
 var auxiliaryInfo = {
     title: '冷水滩就业网',
-    copyRight: '冷水滩就业局主办 © 版权所有 2015 备案序号：湘ICP备15002952号',
+    copyRight: '冷水滩区就业服务管理局主办 © 版权所有 2015 ' +
+        '备案序号：湘ICP备15002952号',
     links: [
         {name: '冷水滩区人力资源网',
             link: 'http://www.hnrlzysc.com/lengshuitanqu.asp'},
