@@ -22,6 +22,7 @@ angular.module('myApp.search', ['ngRoute'])
             });
     }])
 
+    // 单位招聘信息查询
     .controller('JobCtrl', ['$scope', '$http', '$sce', 'management',
         'pagination', 'formatInfo', 'filterFilter',
         function($scope, $http, $sce, management,
@@ -97,6 +98,7 @@ angular.module('myApp.search', ['ngRoute'])
         }
     ])
 
+    // 处理企业单位信息查询
     .controller('EnterpriseCtrl', ['$scope', '$http', '$sce',
         'pagination', 'management', 'formatInfo', 'identify',
         function($scope, $http, $sce, pagination,
@@ -114,12 +116,12 @@ angular.module('myApp.search', ['ngRoute'])
             // 利用其管理功能，但不支持修改
             $scope.manage = management();
 
-            // 在本地记录用户是否通过身份验证
+            // 在本地记录用户是否通过身份验证，已不再使用
             var customerIdentified = false;
             // 用于记录用于验证的个人姓名与身份证号
             $scope.person = {};
 
-            // 获取指定页面的数据，同时清空删除列表及状态
+            // 验证身份后，获取指定页面的数据，已不再使用
             $scope.queryItems = function(page) {
                 var p = 0 < page ? page : 1;
                 var register = $scope.manage.params.register;
@@ -133,6 +135,7 @@ angular.module('myApp.search', ['ngRoute'])
                 $('#customerChecker').modal('show');
             };
 
+            // 用于验证查询者身份，已不再使用
             $scope.checkCustomer = function() {
                 var params = {
                     collect: 'person',
@@ -174,6 +177,7 @@ angular.module('myApp.search', ['ngRoute'])
         }
     ])
 
+    // 个人求职信息查询
     .controller('ManpowerCtrl', ['$scope', '$http', 'filterFilter',
         'pagination', 'management', 'identify',
         function($scope, $http, filterFilter,
@@ -268,6 +272,7 @@ angular.module('myApp.search', ['ngRoute'])
         }
     ])
 
+    // 劳动力资源信息查询
     .controller('WorkerCtrl', ['$scope', '$http', 'pagination', 'management',
         'identify', function($scope, $http, pagination, management, identify) {
             // 初始化页面参数

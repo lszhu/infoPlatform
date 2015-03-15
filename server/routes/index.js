@@ -613,6 +613,7 @@ router.post('/searchJob', function(req, res) {
 
 /* search for organization info */
 router.post('/searchOrganization', function(req, res) {
+    /*
     // check customer identity validation
     var identity = req.session.identity;
     debug('identity: ' + JSON.stringify(identity));
@@ -620,6 +621,7 @@ router.post('/searchOrganization', function(req, res) {
         res.send({status: 'paramErr', message: '未通过身份验证'});
         return;
     }
+    */
 
     // query items limit
     var limit = parseInt(req.body.limit);
