@@ -21,6 +21,7 @@ angular.module('myApp.message', ['ngRoute'])
             });
     }])
 
+    // 单位招聘信息发布管理
     .controller('EmployerCtrl', ['$scope', '$http', 'identify',
         function($scope, $http, identify) {
 
@@ -110,6 +111,7 @@ angular.module('myApp.message', ['ngRoute'])
             }
     }])
 
+    // 个人求职信息发布管理
     .controller('EmployeeCtrl', ['$scope', '$http', 'identify',
         function($scope, $http, identify) {
             $scope.postMsg = function() {
@@ -119,6 +121,10 @@ angular.module('myApp.message', ['ngRoute'])
                     name: $scope.name,
                     code: $scope.idNumber
                 };
+                if ($scope.resident == 'unregistered') {
+                    alert('您可以到居住地的社区服务中心登记个人的就业信息，' +
+                        '这样您可以获得更多的就业机会及更多优惠政策。');
+                }
                 if ($scope.resident == 'no') {
                     if (!confirm('您确实是外地户口吗？')) {
                         return;
@@ -178,7 +184,7 @@ angular.module('myApp.message', ['ngRoute'])
                     !districtId || !phone;
             };
 
-            $scope.resident = 'yes';
+            $scope.resident = 'register';
             $scope.districtName = '';
             $scope.districtId = '';
             // 改变列表显示的行政区域

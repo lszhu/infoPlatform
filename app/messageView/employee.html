@@ -41,8 +41,9 @@
       <label for="resident" class="col-sm-2 control-label">本地居民</label>
       <div class="col-sm-4">
         <select class="form-control" name="resident" ng-model="resident" id="resident">
-          <option value="yes">是的，户口在本区县</option>
-          <option value="no">不是，是外地户口</option>
+          <option value="register">是的，且已登记个人就业信息</option>
+          <option value="unregistered">是的，但未登记个人就业信息</option>
+          <option value="no">不是，为外地户口</option>
         </select>
       </div>
     </div>
