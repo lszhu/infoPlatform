@@ -204,10 +204,14 @@ a {
 
     .panel .table a {
         display: inline-block;
-        max-width: 385px;
+        max-width: 650px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+    }
+
+    .panel .table .titles a {
+        width: 385px;
     }
 }
 
@@ -221,10 +225,14 @@ a {
 
     .panel .table a {
         display: inline-block;
-        max-width: 500px;
+        max-width: 900px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+    }
+
+    .panel .table .titles a {
+        width: 500px;
     }
 }
 
