@@ -547,10 +547,17 @@ router.post('/searchJob', function(req, res) {
     var skip = parseInt(req.body.skip);
     skip = skip > 0 ? skip : 0;
 
-    var now = new Date();
-    // half a year before
-    var date = new Date(now.getFullYear(), now.getMonth() - 6, now.getDate());
-    var condition = {date: {$gt: date}};
+    //var now = new Date();
+    //// half a year before
+    //var date = new Date(now.getFullYear(), now.getMonth() - 6, now.getDate());
+    //var condition = {date: {$gt: date}};
+
+    // milliseconds in a day minus one;
+    var delta = 24 * 60 * 60 * 1000 - 1;
+
+    var condition = tool.period(req.body.dateFrom, req.body.dateTo, delta);
+    condition = condition ? {date: condition} : {};
+
     if (req.body.name) {
         condition.name = new RegExp(req.body.name);
     }
@@ -720,6 +727,7 @@ router.post('/searchManpower', function(req, res) {
     var delta = 24 * 60 * 60 * 1000 - 1;
 
     var condition = tool.period(req.body.dateFrom, req.body.dateTo, delta);
+    condition = condition ? {date: condition} : {};
 
     var salary = tool.salarySpan(req.body.salary);
     if (salary) {

@@ -58,7 +58,7 @@ angular.module('myApp.search', ['ngRoute'])
                 ref.dateFrom = y + '-' + (m < 11 ? '0' + m : m) + '-' +
                 (d < 10 ? '0' + d : d);
             }
-            initDateInterval($scope);
+            initDateInterval($scope.job);
 
             // 用于初始化列表信息
             $scope.page.queryItems(1);
