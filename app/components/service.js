@@ -90,6 +90,7 @@ angular.module('myApp.service', [])
             x: 0,                   // 自动滚屏到横坐标
             y: 450,                 // 自动滚屏到纵坐标
             condition: {},          // 查询条件
+            count: 0,               // 满足查询条目的条目总数
             curPage: 0,             // 当前页码（为1时不会自动加载第一页）
             totalPage: 0,           // 符合条件的条目分页后的页面数
             pageList: [],           // 导航条的页面列表
@@ -204,6 +205,7 @@ angular.module('myApp.service', [])
                     params.itemList = res.list;
                     console.log('itemList.length: %o', params.itemList.length);
                     var limit = params.limit;
+                    params.count = res.count;
                     params.totalPage = Math.ceil(res.count / limit);
                     params.pageList = pageList();
                     params.baseNumber = (page - 1) * limit + 1;
