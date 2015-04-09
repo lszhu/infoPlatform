@@ -43,8 +43,8 @@ function log(db, doc, comment, status) {
 // 返回格式为{$gte: from, $lte: to}，时间值为国际标准时间
 function period(start, end, delta, timezone) {
     if (isNaN(timezone) || timezone < -720 || 720 < timezone) {
-        // 默认为东八区（北京时间）
-        timezone = -480;
+        // 默认服务端与客户端时区一致
+        timezone = 0;
     }
     var span = {};
     if (start) {

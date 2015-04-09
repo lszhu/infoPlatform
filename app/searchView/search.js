@@ -227,7 +227,7 @@ angular.module('myApp.search', ['ngRoute'])
                 ref.dateFrom = y + '-' + (m < 11 ? '0' + m : m) + '-' +
                     (d < 10 ? '0' + d : d);
             }
-            initDateInterval($scope);
+            initDateInterval($scope.manpower);
 
             // 跟踪区域选择参数districtId
             $scope.$watch('districtId', function(newValue, oldValue) {
