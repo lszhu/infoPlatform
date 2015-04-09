@@ -49,13 +49,13 @@ angular.module('myApp.search', ['ngRoute'])
                 var y = t.getFullYear();
                 var m = t.getMonth() + 1;
                 var d = t.getDate();
-                ref.dateTo = y + '-' + (m < 11 ? '0' + m : m) + '-' +
+                ref.dateTo = y + '-' + (m < 10 ? '0' + m : m) + '-' +
                 (d < 10 ? '0' + d : d);
 
-                t = new Date(y, m - 6, d);
+                t = new Date(y, m - 7, d);
                 y = t.getFullYear();
                 m = t.getMonth() + 1;
-                ref.dateFrom = y + '-' + (m < 11 ? '0' + m : m) + '-' +
+                ref.dateFrom = y + '-' + (m < 10 ? '0' + m : m) + '-' +
                 (d < 10 ? '0' + d : d);
             }
             initDateInterval($scope.job);
@@ -218,13 +218,13 @@ angular.module('myApp.search', ['ngRoute'])
                 var y = t.getFullYear();
                 var m = t.getMonth() + 1;
                 var d = t.getDate();
-                ref.dateTo = y + '-' + (m < 11 ? '0' + m : m) + '-' +
+                ref.dateTo = y + '-' + (m < 10 ? '0' + m : m) + '-' +
                     (d < 10 ? '0' + d : d);
 
-                t = new Date(y, m - 6, d);
+                t = new Date(y, m - 7, d);
                 y = t.getFullYear();
                 m = t.getMonth() + 1;
-                ref.dateFrom = y + '-' + (m < 11 ? '0' + m : m) + '-' +
+                ref.dateFrom = y + '-' + (m < 10 ? '0' + m : m) + '-' +
                     (d < 10 ? '0' + d : d);
             }
             initDateInterval($scope.manpower);

@@ -156,6 +156,34 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<!--  显示选择“发布招聘信息”或“发布应聘信息”等选项的对话框  -->
+<div class="modal fade" id="messageOption">
+  <div class="modal-dialog">
+    <div class="modal-content search">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title text-center"><strong>发布内容类型选择</strong></h4>
+      </div>
+      <div class="modal-body">
+        <div class="col-sm-12">
+          <div class="col-sm-6 col-sm-offset-3">
+            <a type="button" class="btn btn-lg btn-primary btn-block" onclick="$('#messageOption').modal('hide');" href="#/message/employee">发布求职信息</a>
+          </div>
+          <div class="col-sm-6 col-sm-offset-3">
+            <a type="button" class="btn btn-lg btn-primary btn-block" onclick="$('#messageOption').modal('hide');" href="#/message/employer">发布招聘信息</a>
+          </div>
+          <div class="col-sm-6 col-sm-offset-3">
+            <a type="button" class="btn btn-lg btn-primary btn-block" onclick="$('#messageOption').modal('hide');" href="#/etc/introduction">刊登企业介绍</a>
+          </div>
+          <div class="col-sm-6 col-sm-offset-3">
+            <a type="button" class="btn btn-lg btn-primary btn-block" onclick="$('#messageOption').modal('hide');" href="#/etc/suggestion">投诉与建议</a>
+          </div>
+        </div>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 <!-- Carousel
    ================================================== -->
 <div id="myCarousel" class="carousel slide" data-ride="carousel">
