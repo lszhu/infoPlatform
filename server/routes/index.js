@@ -716,7 +716,11 @@ router.post('/searchManpower', function(req, res) {
     var skip = parseInt(req.body.skip);
     skip = skip > 0 ? skip : 0;
 
-    var condition = {};
+    // milliseconds in a day minus one;
+    var delta = 24 * 60 * 60 * 1000 - 1;
+
+    var condition = tool.period(req.body.dateFrom, req.body.dateTo, delta);
+
     var salary = tool.salarySpan(req.body.salary);
     if (salary) {
         condition.salary = salary;

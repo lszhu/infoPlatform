@@ -43,6 +43,23 @@ angular.module('myApp.search', ['ngRoute'])
                 $scope.job.districtId = newValue;
             });
 
+            // 将时间范围初始化为最近半年范围
+            function initDateInterval(ref) {
+                var t = new Date();
+                var y = t.getFullYear();
+                var m = t.getMonth() + 1;
+                var d = t.getDate();
+                ref.dateTo = y + '-' + (m < 11 ? '0' + m : m) + '-' +
+                (d < 10 ? '0' + d : d);
+
+                t = new Date(y, m - 6, d);
+                y = t.getFullYear();
+                m = t.getMonth() + 1;
+                ref.dateFrom = y + '-' + (m < 11 ? '0' + m : m) + '-' +
+                (d < 10 ? '0' + d : d);
+            }
+            initDateInterval($scope);
+
             // 用于初始化列表信息
             $scope.page.queryItems(1);
             // 初始化管理操作
@@ -194,6 +211,23 @@ angular.module('myApp.search', ['ngRoute'])
             $scope.manpower = $scope.page.params.condition;
             // 初始化查询参数中的区域选择参数districtId
             $scope.manpower.districtId = $scope.districtId;
+
+            // 将时间范围初始化为最近半年范围
+            function initDateInterval(ref) {
+                var t = new Date();
+                var y = t.getFullYear();
+                var m = t.getMonth() + 1;
+                var d = t.getDate();
+                ref.dateTo = y + '-' + (m < 11 ? '0' + m : m) + '-' +
+                    (d < 10 ? '0' + d : d);
+
+                t = new Date(y, m - 6, d);
+                y = t.getFullYear();
+                m = t.getMonth() + 1;
+                ref.dateFrom = y + '-' + (m < 11 ? '0' + m : m) + '-' +
+                    (d < 10 ? '0' + d : d);
+            }
+            initDateInterval($scope);
 
             // 跟踪区域选择参数districtId
             $scope.$watch('districtId', function(newValue, oldValue) {
