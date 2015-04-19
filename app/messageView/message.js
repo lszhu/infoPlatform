@@ -26,6 +26,14 @@ angular.module('myApp.message', ['ngRoute'])
         function($scope, $http, identify) {
 
             $scope.postMsg = function() {
+                // 如果code即组织机构代码是10位，则假设倒数第二位是连字符，
+                // 因此在此提前去除
+                var code = $scope.code;
+                if (code.length == 10) {
+                    code = code.split('');
+                    code.splice(8, 1);
+                    $scope.code = code.join('');
+                }
                 var params = {
                     collect: 'organization',
                     name: $scope.name,
