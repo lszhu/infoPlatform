@@ -468,8 +468,9 @@ function formatOrgData(org) {
 }
 
 // 将单位信息批量写入数据库
-function addOrg() {
-    var data = parseCsv('org.csv');
+function addOrg(filename) {
+    //var data = parseCsv('org.csv');
+    var data = parseCsv(filename);
     var count = 0;
     var org;
     for (var i = 0, len = data.length; i < len; i++) {
@@ -491,11 +492,13 @@ function addOrg() {
 console.log(new Date());
 //console.log(parseCsv('org.csv'));
 // 从文件读取单位信息并加入数据库
-//addOrg();
+//addOrg('org.csv');
+addOrg('newAddOrg.csv');
+
 // 批量创建伪造求职数据并写入数据库
 //addManpower(1000);
 // 批量创建伪造招聘信息并写入数据库
-addJob(1000);
+//addJob(1000);
 //console.log(createJob());
 console.log(new Date());
 
